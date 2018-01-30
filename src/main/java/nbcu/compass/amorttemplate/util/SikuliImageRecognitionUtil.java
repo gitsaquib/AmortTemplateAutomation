@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
@@ -22,6 +23,32 @@ import io.appium.java_client.windows.WindowsDriver;
 
 public class SikuliImageRecognitionUtil {
 	
+	
+	public static void main(String args[]) {
+		double[] iconCoords = null;
+		int screenWidth = 1366;
+		int screenHeight = 728;
+		File screenshot = new File("C:\\Users\\mohammed.saquib\\Downloads\\images\\test.png");
+		BufferedImage fullscreen;
+		try {
+			fullscreen = resizeImage(ImageIO.read(screenshot), screenWidth, screenHeight);
+			File assistiveTouchIcon = new File("C:\\Users\\mohammed.saquib\\Downloads\\images\\iconDark.png");
+			BufferedImage icon = resizeImage(ImageIO.read(assistiveTouchIcon), 19, 18);
+			iconCoords = findSubImageBySikuli(fullscreen, icon);
+			if(null == iconCoords) {
+				iconCoords = findSubimage(toGreyScale(fullscreen), toGreyScale(icon));
+			}
+			if(null != iconCoords) {
+				iconCoords[0] += (icon.getWidth() / 2); 
+				iconCoords[1] += (icon.getHeight() / 2);
+			}
+			System.out.println(iconCoords[0] + " - " + iconCoords[1]);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("rawtypes")
 	public static void clickImage(WindowsDriver appSession) throws Exception {
 		double[] iconCoords = null;
 		String iconPath = System.getProperty("user.dir") + File.separator + "images" + File.separator;
@@ -43,7 +70,7 @@ public class SikuliImageRecognitionUtil {
 		}
 		
 		if(null != iconCoords) {
-			iconCoords[0] += (icon.getWidth() / 2); // to tap at the center
+			iconCoords[0] += (icon.getWidth() / 2); 
 			iconCoords[1] += (icon.getHeight() / 2);
 		}
 		System.out.println(iconCoords[0] + " - " + iconCoords[1]);
@@ -51,6 +78,7 @@ public class SikuliImageRecognitionUtil {
 		tapAt(appSession, (int) iconCoords[0], (int) iconCoords[1]);
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public static void tapAt(WindowsDriver appSession, int tapPointX, int tapPointY) {
 		Actions vActions = new Actions(appSession);
 		vActions.moveByOffset(-170, 0);
@@ -88,7 +116,7 @@ public class SikuliImageRecognitionUtil {
 		double defaultMinSimilarity = Settings.MinSimilarity;
 		if (MinSimilarity.length > 0)
 			Settings.MinSimilarity = MinSimilarity[0];
-		screen.find(new Image(img2));
+		System.out.println(screen.find(new Image(img2)));
 		if (screen.hasNext()) {
 			Match match = screen.next();
 			iconCoords = new double[] { match.getX(), match.getY(), Settings.MinSimilarity };
@@ -98,7 +126,13 @@ public class SikuliImageRecognitionUtil {
 		return iconCoords;
 	}
 	
-	public static double[] findSubimage(BufferedImage im1, BufferedImage im2) {
+	public static double[] findSubimage(BufferedImage im1, BufferedImage im2) throws IOException {
+		File fullscreen = new File("C:\\Users\\mohammed.saquib\\Downloads\\fullscreen.png");
+	    ImageIO.write(im1, "png", fullscreen);
+	    
+	    File icon = new File("C:\\Users\\mohammed.saquib\\Downloads\\icon.png");
+	    ImageIO.write(im2, "png", icon);
+	    
 		int w1 = im1.getWidth();
 		int h1 = im1.getHeight();
 		int w2 = im2.getWidth();

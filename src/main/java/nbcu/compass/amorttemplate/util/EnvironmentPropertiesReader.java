@@ -6,12 +6,10 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.commons.lang3.StringUtils;
-import org.testng.log4testng.Logger;
 
 
 public class EnvironmentPropertiesReader {
 
-	private static final Logger log = Logger.getLogger(EnvironmentPropertiesReader.class);
 	private static EnvironmentPropertiesReader envProperties;
 
 	private Properties properties;
@@ -27,9 +25,9 @@ public class EnvironmentPropertiesReader {
 			props.load(cpr);
 			cpr.close();
 		} catch (FileNotFoundException e) {
-			log.error("config.properties is missing or corrupt : " + e.getMessage());
+			e.printStackTrace();
 		} catch (IOException e) {
-			log.error("read failed due to: " + e.getMessage());
+			e.printStackTrace();
 		}
 		return props;
 	}

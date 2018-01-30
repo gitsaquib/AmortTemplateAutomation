@@ -15,12 +15,6 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class AmortExcelReader {
 	
-	public static void main(String args[]) {
-		AmortExcelReader amortExcelReader = new AmortExcelReader();
-		Map<String, AmortTemplateGrid> map = amortExcelReader.readAmortTemplateGrid("US");
-		System.out.println(map);
-	}
-	
 	private static String basePath() throws IOException {
 		File directory = new File(".");
 		String strBasepath = directory.getCanonicalPath();
@@ -82,7 +76,7 @@ public class AmortExcelReader {
 				usersMap.put(sheetRow.getCell(headerMap.get(HeaderEnum.TestUser.toString())).getStringCellValue(), user);
 			}
 		} catch (Exception e) {
-		
+			System.out.println(e.getMessage());
 		}
 		return usersMap;
 	}

@@ -6,7 +6,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -21,9 +23,12 @@ import io.appium.java_client.windows.WindowsElement;
 
 public class AutomationAgent {
 	
+	@SuppressWarnings("rawtypes")
 	private static WindowsDriver appSession = null;
 	
-	private void clickAt(int x, int y) {
+	private Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
+	
+	public void clickAt(int x, int y) {
 		Actions vActions = new Actions(appSession);
 		vActions.moveToElement(appSession.findElementByName("System"), 0,0);
 		Action vClickAction = vActions.build();
@@ -34,55 +39,35 @@ public class AutomationAgent {
 		vClickAction.perform();
     }
 
-	public void generateAmort() throws InterruptedException {
-		
+	public Map<Integer, String> generateAmort() throws InterruptedException {
 		appSession.findElementByName("Amortize").click();
 		appSession.findElementByName("Generate Amort").click();
-		
 		clickYesOnPopup("All old amort data will be deleted. Do you want to continue?");
 		clickYesOnPopup("Effective Date should be earlier or equal to the Amort Window Start Date");
+		readAmortAmtRows(12);
+		return amorts;
+	}
 
-		List<WebElement> months = appSession.findElementsByName("Amort Amt");
-		int count = 0;
-		for(WebElement month:months) {
-			if(!month.getText().equalsIgnoreCase("Amort Amt")) {
-				Point point = month.getLocation();
-				if(point.getY()>0) {
-					month.click();
-					System.out.println(month.getText());
-					count++;
+	@SuppressWarnings("unchecked")
+	private void readAmortAmtRows(int totalMonths) {
+		int scrollCount = 0, totalCounts = 1;
+		while(totalCounts < totalMonths) {
+			List<WebElement> amortAmts = appSession.findElementsByName("Amort Amt");
+			for(WebElement amortAmt:amortAmts) {
+				if(!amortAmt.getText().equalsIgnoreCase("Amort Amt")) {
+					Point point = amortAmt.getLocation();
+					if(point.getY()>0) {
+						amortAmt.click();
+						scrollCount++;
+						amorts.put(totalCounts, amortAmt.getText());
+						totalCounts++;
+					}
 				}
 			}
-		}
-		for(int i=0; i<count; i++) {
-			appSession.getKeyboard().sendKeys(Keys.ARROW_DOWN);
-		}
-		count=0;
-		months = appSession.findElementsByName("Amort Amt");
-		for(WebElement month:months) {
-			if(!month.getText().equalsIgnoreCase("Amort Amt")) {
-				Point point = month.getLocation();
-				if(point.getY()>0) {
-					month.click();
-					System.out.println(month.getText());
-					count++;
-				}
+			for(int i=0; i<scrollCount; i++) {
+				appSession.getKeyboard().sendKeys(Keys.ARROW_DOWN);
 			}
-		}
-		for(int i=0; i<count; i++) {
-			appSession.getKeyboard().sendKeys(Keys.ARROW_DOWN);
-		}
-		count=0;
-		months = appSession.findElementsByName("Amort Amt");
-		for(WebElement month:months) {
-			if(!month.getText().equalsIgnoreCase("Amort Amt")) {
-				Point point = month.getLocation();
-				if(point.getY()>0) {
-					month.click();
-					System.out.println(month.getText());
-					count++;
-				}
-			}
+			scrollCount=0;
 		}
 	}
 	
@@ -127,6 +112,7 @@ public class AutomationAgent {
 		vClickAction.perform();
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void clickElement(String ele) {
 		List<WebElement> elements;
 		elements = appSession.findElementsByName(ele);
@@ -145,6 +131,7 @@ public class AutomationAgent {
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
 	private void setPlayWindowAttribute(String key, String value) throws InterruptedException {
 		List<WebElement> elements = appSession.findElementsByName(key);
 		for(WebElement element:elements) {
@@ -156,22 +143,26 @@ public class AutomationAgent {
 		}
 	}
 
-	public void openTitleAndWindow(String financeType, String startDate, String endDate, String runsInPlayDay, String runsPDAllowed) throws InterruptedException {
+	public void openTitleAndWindow(String financeType, List<Window> windows) throws InterruptedException {
 		appSession.findElementByAccessibilityId("Row_0").click();
 		Actions vActions = new Actions(appSession);
 		vActions.moveByOffset(-170, 0);
 		vActions.doubleClick();
 		Action vClickAction = vActions.build();
 		vClickAction.perform();
-		
 		Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-		appSession.findElementByAccessibilityId("AddWindow").click();
-		Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-		
-		setPlayWindowAttribute("Start Date", startDate);
-		setPlayWindowAttribute("End Date", endDate);
-		setPlayWindowAttribute("Runs in Play Day", runsInPlayDay);
-		setPlayWindowAttribute("Runs/PD Allowed", runsPDAllowed);
+		setValueInDropdown("FinanceTypeCombobox", financeType);
+		setValueInDropdown("MasterSeriesCombobox", "TEST 123");
+		appSession.findElementByName("TEST 123").click();
+		for(Window window:windows) {
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			appSession.findElementByName("AddWindow").click();
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			setPlayWindowAttribute("Start Date", window.getStartDate());
+			setPlayWindowAttribute("End Date", window.getEndDate());
+			setPlayWindowAttribute("Runs in Play Day", window.getRunInPlayDay());
+			setPlayWindowAttribute("Runs/PD Allowed", window.getRunsPDAllowed());
+		}
 		appSession.findElementByAccessibilityId("SaveButton").click();
 	}
 	
@@ -226,34 +217,43 @@ public class AutomationAgent {
 		
 	}
 
-	private void addTitle(String titleName, String titleType) throws InterruptedException {
-		List<WebElement> elements = appSession.findElements(By.className("HeaderFooterCell"));
-		boolean titleNameSet = false, titleTypeSet = false;
-		for(WebElement element:elements) {
-			if(titleNameSet && titleTypeSet) {
-				return;
-			}
-			element.click();
-			try {
-				WebElement textBox = element.findElement(By.className("TextBox"));
-				if(null != textBox) 
-				{
-					textBox.click();
-					textBox.sendKeys(titleName);
-					titleNameSet= true;
+	@SuppressWarnings("unchecked")
+	private void addTitle(String titleName, String titleType) {
+		try {
+			List<WebElement> elements = appSession.findElements(By.className("HeaderFooterCell"));
+			boolean titleNameSet = false, titleTypeSet = false;
+			for(WebElement element:elements) {
+				if(titleNameSet && titleTypeSet) {
+					return;
 				}
-			} catch (Exception e) {
-				WebElement comboBox = element.findElement(By.className("RadComboBox"));
-				if(null != comboBox) 
-				{
-					comboBox.click();
-					Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-					appSession.findElementByName(titleType).click();
-					titleTypeSet= true;
+				element.click();
+				try {
+					WebElement textBox = element.findElement(By.className("TextBox"));
+					if(null != textBox) 
+					{
+						textBox.click();
+						textBox.sendKeys(titleName);
+						titleNameSet= true;
+					}
+				} catch (Exception e) {
+					WebElement comboBox = element.findElement(By.className("RadComboBox"));
+					if(null != comboBox) 
+					{
+						comboBox.click();
+						Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+						WebElement webElement = appSession.findElementByName(titleType);
+						if(null != webElement) {
+							webElement.click();
+							appSession.getKeyboard().sendKeys(titleType);
+							titleTypeSet= true;
+						}
+					}
 				}
 			}
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+		} catch(InterruptedException e) {
+			System.out.println(e.getMessage());
 		}
-		Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 	}
 	
 	private void setValueInDropdown(String key, String value) {

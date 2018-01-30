@@ -12,8 +12,6 @@ import javax.imageio.ImageIO;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.interactions.Action;
-import org.openqa.selenium.interactions.Actions;
 import org.sikuli.basics.Settings;
 import org.sikuli.script.Finder;
 import org.sikuli.script.Image;
@@ -23,71 +21,32 @@ import io.appium.java_client.windows.WindowsDriver;
 
 public class SikuliImageRecognitionUtil {
 	
-	
-	public static void main(String args[]) {
-		double[] iconCoords = null;
-		int screenWidth = 1366;
-		int screenHeight = 728;
-		File screenshot = new File("C:\\Users\\mohammed.saquib\\Downloads\\images\\test.png");
-		BufferedImage fullscreen;
-		try {
-			fullscreen = resizeImage(ImageIO.read(screenshot), screenWidth, screenHeight);
-			File assistiveTouchIcon = new File("C:\\Users\\mohammed.saquib\\Downloads\\images\\iconDark.png");
-			BufferedImage icon = resizeImage(ImageIO.read(assistiveTouchIcon), 19, 18);
-			iconCoords = findSubImageBySikuli(fullscreen, icon);
-			if(null == iconCoords) {
-				iconCoords = findSubimage(toGreyScale(fullscreen), toGreyScale(icon));
-			}
-			if(null != iconCoords) {
-				iconCoords[0] += (icon.getWidth() / 2); 
-				iconCoords[1] += (icon.getHeight() / 2);
-			}
-			System.out.println(iconCoords[0] + " - " + iconCoords[1]);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	@SuppressWarnings("rawtypes")
-	public static void clickImage(WindowsDriver appSession) throws Exception {
+	public static double[] clickImage(WindowsDriver appSession, String image, int width, int height) throws Exception {
 		double[] iconCoords = null;
-		String iconPath = System.getProperty("user.dir") + File.separator + "images" + File.separator;
+		File directory = new File(".");
+		String strBasepath = directory.getCanonicalPath();
+		String iconPath = strBasepath + File.separator + "images" + File.separator;
 		Dimension screen = appSession.manage().window().getSize();
 		int screenWidth = screen.getWidth();
 		int screenHeight = screen.getHeight();
-		
-		
 		File screenshot = ((TakesScreenshot) appSession).getScreenshotAs(OutputType.FILE);
 		BufferedImage fullscreen = resizeImage(ImageIO.read(screenshot), screenWidth, screenHeight);
-
-		File assistiveTouchIcon = new File(iconPath + "iconDark.png");
-		BufferedImage icon = resizeImage(ImageIO.read(assistiveTouchIcon), 76 * (screenWidth / 768), 76 * (screenWidth / 768));
-
+		File iconImage = new File(iconPath + image);
+		BufferedImage icon = resizeImage(ImageIO.read(iconImage), width, height);
 		iconCoords = findSubImageBySikuli(fullscreen, icon);
-
 		if(null == iconCoords) {
 			iconCoords = findSubimage(toGreyScale(fullscreen), toGreyScale(icon));
 		}
-		
 		if(null != iconCoords) {
 			iconCoords[0] += (icon.getWidth() / 2); 
 			iconCoords[1] += (icon.getHeight() / 2);
 		}
 		System.out.println(iconCoords[0] + " - " + iconCoords[1]);
-		
-		tapAt(appSession, (int) iconCoords[0], (int) iconCoords[1]);
+		return iconCoords; 			
 	}
 	
-	@SuppressWarnings("rawtypes")
-	public static void tapAt(WindowsDriver appSession, int tapPointX, int tapPointY) {
-		Actions vActions = new Actions(appSession);
-		vActions.moveByOffset(-170, 0);
-		vActions.doubleClick();
-		Action vClickAction = vActions.build();
-		vClickAction.perform();
-	}
-	
-	public static BufferedImage toGreyScale(BufferedImage img) {
+	private static BufferedImage toGreyScale(BufferedImage img) {
 		int width = img.getWidth();
 		int height = img.getHeight();
 
@@ -110,7 +69,7 @@ public class SikuliImageRecognitionUtil {
 		return img;
 	}
 	
-	public static double[] findSubImageBySikuli(BufferedImage img1, BufferedImage img2, double... MinSimilarity) {
+	private static double[] findSubImageBySikuli(BufferedImage img1, BufferedImage img2, double... MinSimilarity) {
 		double[] iconCoords = null;
 		Finder screen = new Finder(img1);
 		double defaultMinSimilarity = Settings.MinSimilarity;
@@ -126,7 +85,7 @@ public class SikuliImageRecognitionUtil {
 		return iconCoords;
 	}
 	
-	public static double[] findSubimage(BufferedImage im1, BufferedImage im2) throws IOException {
+	private static double[] findSubimage(BufferedImage im1, BufferedImage im2) throws IOException {
 		File fullscreen = new File("C:\\Users\\mohammed.saquib\\Downloads\\fullscreen.png");
 	    ImageIO.write(im1, "png", fullscreen);
 	    
@@ -177,7 +136,7 @@ public class SikuliImageRecognitionUtil {
 		return new double[] { bestX, bestY, lowestDiff };
 	}
 	
-	public static double compareImages(BufferedImage im1, BufferedImage im2) {
+	private static double compareImages(BufferedImage im1, BufferedImage im2) {
 		assert (im1.getHeight() == im2.getHeight() && im1.getWidth() == im2.getWidth());
 		double variation = 0.0;
 		for (int x = 0; x < im1.getWidth(); x++) {
@@ -188,7 +147,7 @@ public class SikuliImageRecognitionUtil {
 		return variation / (im1.getWidth() * im1.getHeight());
 	}
 	
-	public static double compareARGB(int rgb1, int rgb2) {
+	private static double compareARGB(int rgb1, int rgb2) {
 		double r1 = ((rgb1 >> 16) & 0xFF) / 255.0;
 		double r2 = ((rgb2 >> 16) & 0xFF) / 255.0;
 		double g1 = ((rgb1 >> 8) & 0xFF) / 255.0;

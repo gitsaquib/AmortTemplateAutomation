@@ -48,11 +48,12 @@ public class AmortTest {
 		if(null == user) {
 			System.out.println("Unable to read user data");
 		}
-		
+		/*
 		automationAgent.loginCompass(user.getUsername(), user.getPassword());
 		automationAgent.createContract(testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), testData.getTitleName(), amortTemplateGrid.getTitleTypeName());
+		*/
 		automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows());
-		
+		/*
 		License license = licenses.get("TC1");
 		double amt = automationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName());
 		Map<Integer, String> amortsFromApplication = automationAgent.generateAmort(amt);
@@ -60,6 +61,7 @@ public class AmortTest {
 		for(Integer key:keys) {
 			Assert.isTrue(amortsFromApplication.get(key).equalsIgnoreCase(amortsFromCalculation.get(key)), "Amorts are equal");
 		}
+		*/
 		
 	}
 }

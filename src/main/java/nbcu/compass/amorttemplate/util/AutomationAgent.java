@@ -39,35 +39,33 @@ public class AutomationAgent {
 		vClickAction.perform();
     }
 
-	public Map<Integer, String> generateAmort() throws InterruptedException {
+	public Map<Integer, String> generateAmort(double totalLicenseFee) throws InterruptedException {
 		appSession.findElementByName("Amortize").click();
 		appSession.findElementByName("Generate Amort").click();
 		clickYesOnPopup("All old amort data will be deleted. Do you want to continue?");
 		clickYesOnPopup("Effective Date should be earlier or equal to the Amort Window Start Date");
-		readAmortAmtRows(12);
+		readAmortAmtRows(totalLicenseFee);
 		return amorts;
 	}
 
 	@SuppressWarnings("unchecked")
-	private void readAmortAmtRows(int totalMonths) {
-		int scrollCount = 0, totalCounts = 1;
-		while(totalCounts < totalMonths) {
+	private void readAmortAmtRows(double totalLicenseFee) {
+		int totalCounts = 1;
+		while(totalLicenseFee > 0) {
 			List<WebElement> amortAmts = appSession.findElementsByName("Amort Amt");
 			for(WebElement amortAmt:amortAmts) {
 				if(!amortAmt.getText().equalsIgnoreCase("Amort Amt")) {
-					Point point = amortAmt.getLocation();
-					if(point.getY()>0) {
-						amortAmt.click();
-						scrollCount++;
-						amorts.put(totalCounts, amortAmt.getText());
-						totalCounts++;
-					}
+					String amtStr = amortAmt.getText();
+					amortAmt.click();
+					amorts.put(totalCounts, amtStr);
+					amtStr = amtStr.replace("$", "");
+					amtStr = amtStr.replace(",", "");
+					double amtDouble = Double.parseDouble(amtStr);
+					totalLicenseFee = totalLicenseFee - amtDouble;
+					System.out.println(totalCounts +") Total license fee: "+totalLicenseFee);
+					totalCounts++;
 				}
 			}
-			for(int i=0; i<scrollCount; i++) {
-				appSession.getKeyboard().sendKeys(Keys.ARROW_DOWN);
-			}
-			scrollCount=0;
 		}
 	}
 	
@@ -82,16 +80,21 @@ public class AutomationAgent {
 		}
 	}
 	
-	public void setAllocationData() throws InterruptedException {
+	public double setAllocationData(String licenseType, String licenseAmount, String amortTemplate) throws InterruptedException {
+		double totalLicenseFee = 0.0;
 		appSession.findElementByName("Allocation").click();
+		
 		appSession.findElementByAccessibilityId("Row_0").click();
+		Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 		Actions vActions = new Actions(appSession);
 		moveByOffsetAndClick(vActions, -125, 0);
 		moveByOffsetAndClick(vActions, -7, 28);
 		moveByOffsetAndClick(vActions, 45, 0);
-		appSession.getKeyboard().sendKeys("Breakage");
+		Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+		appSession.getKeyboard().sendKeys("");
+		appSession.getKeyboard().sendKeys(licenseType);
 		moveByOffsetAndClick(vActions, 60, 0);
-		appSession.getKeyboard().sendKeys("AmortTemplateConstants.FIVESECONDSWAITTIME");
+		appSession.getKeyboard().sendKeys(licenseAmount);
 		appSession.findElementByAccessibilityId("SaveButton").click();
 		Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 		clickElement("License Fee Type");
@@ -100,9 +103,21 @@ public class AutomationAgent {
 		moveByOffsetAndClick(vActions, 0, 30);
 		clickElement("License Fee Type");
 		clickElement("Amortization Template");
-		appSession.getKeyboard().sendKeys("Acquired Movies");
+		appSession.getKeyboard().sendKeys(amortTemplate);
 		appSession.findElementByAccessibilityId("SaveButton").click();
 		Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+		
+		List<WebElement> elements = appSession.findElementsByName("Total License Fee");
+		for(WebElement element:elements) {
+			WebElement textBlock = element.findElement(By.className("TextBlock"));
+			String text = textBlock.getText();
+			if(!text.endsWith("Total License Fee")) {
+				text = text.replace("$","");
+				text = text.replace(",", "");
+				totalLicenseFee = Double.parseDouble(text);
+			}
+		}
+		return totalLicenseFee;
 	}
 
 	private void moveByOffsetAndClick(Actions vActions, int x, int y) {
@@ -151,6 +166,7 @@ public class AutomationAgent {
 		Action vClickAction = vActions.build();
 		vClickAction.perform();
 		Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+		appSession.findElementByName("Window").click();
 		setValueInDropdown("FinanceTypeCombobox", financeType);
 		setValueInDropdown("MasterSeriesCombobox", "TEST 123");
 		appSession.findElementByName("TEST 123").click();
@@ -164,6 +180,7 @@ public class AutomationAgent {
 			setPlayWindowAttribute("Runs/PD Allowed", window.getRunsPDAllowed());
 		}
 		appSession.findElementByAccessibilityId("SaveButton").click();
+		Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
 	}
 	
 	public void launchAppUsingNativeWindowHandle(String appPath, String url, String appName) {
@@ -171,6 +188,7 @@ public class AutomationAgent {
 		DesiredCapabilities appCapabilities = new DesiredCapabilities();
 		appCapabilities.setCapability("app", "Root");
 		try {
+			
 			process = new ProcessBuilder(appPath).start();
 			InputStream is = process.getInputStream();
 			InputStreamReader isr = new InputStreamReader(is);
@@ -180,6 +198,7 @@ public class AutomationAgent {
 				System.out.println(line);
 			}
 			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+			
 			WindowsDriver<WindowsElement> driver = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities);
 			WebElement cortana = driver.findElementByName(appName);
 			String handleStr = cortana.getAttribute("NativeWindowHandle");

@@ -24,5 +24,7 @@ public enum HeaderEnum {
 	StartDate,
 	EndDate,
 	RunsInPlayDay,
-	RunsPDAllowed
+	RunsPDAllowed,
+	LicenseType,
+	LicenseAmount
 }

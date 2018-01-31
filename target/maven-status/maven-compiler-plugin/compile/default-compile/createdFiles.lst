@@ -1,6 +1,7 @@
 nbcu\compass\amorttemplate\util\TestData.class
 nbcu\compass\amorttemplate\util\AmortTemplateConstants.class
 nbcu\compass\amorttemplate\util\AmortExcelReader.class
+nbcu\compass\amorttemplate\util\License.class
 nbcu\compass\amorttemplate\test\MainClass.class
 nbcu\compass\amorttemplate\util\AmortTemplateUtil.class
 nbcu\compass\amorttemplate\test\AmortTest.class

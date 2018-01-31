@@ -1,13 +1,13 @@
 package nbcu.compass.amorttemplate.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -71,7 +71,8 @@ public class AmortExcelReader {
 			for(int j = 1; j <= users.getLastRowNum(); j++) {
 				User user = new User();
 				sheetRow = users.getRow(j);
-				user.setUsername(sheetRow.getCell(headerMap.get(HeaderEnum.Username.toString())).getStringCellValue());
+				Double username = sheetRow.getCell(headerMap.get(HeaderEnum.Username.toString())).getNumericCellValue();
+				user.setUsername(username.intValue()+"");
 				user.setPassword(sheetRow.getCell(headerMap.get(HeaderEnum.Password.toString())).getStringCellValue());
 				usersMap.put(sheetRow.getCell(headerMap.get(HeaderEnum.TestUser.toString())).getStringCellValue(), user);
 			}
@@ -79,6 +80,31 @@ public class AmortExcelReader {
 			System.out.println(e.getMessage());
 		}
 		return usersMap;
+	}
+	
+	public Map<String, License> readLicense() {
+		Map<String, License> licensesMap = new HashMap<String, License>();
+		File inputFile = null;
+		XSSFWorkbook workbook = null;
+		try {
+			inputFile = new File(basePath() + File.separator + "TestData"+ File.separator + "TestCaseData.xlsx");
+			workbook = new XSSFWorkbook(inputFile);
+			XSSFSheet licenses = workbook.getSheet("License");
+			Map<String, Integer> headerMap = populateHeaderMap(licenses);
+			XSSFRow sheetRow;
+			for(int j = 1; j <= licenses.getLastRowNum(); j++) {
+				License license = new License();
+				sheetRow = licenses.getRow(j);
+				license.setTcId(sheetRow.getCell(headerMap.get(HeaderEnum.TcNo.toString())).getStringCellValue());
+				license.setLicenseType(sheetRow.getCell(headerMap.get(HeaderEnum.LicenseType.toString())).getStringCellValue());
+				Double licenseAmount = sheetRow.getCell(headerMap.get(HeaderEnum.LicenseAmount.toString())).getNumericCellValue();
+				license.setLicenseAmount(licenseAmount.intValue()+"");
+				licensesMap.put(sheetRow.getCell(headerMap.get(HeaderEnum.TcNo.toString())).getStringCellValue(), license);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return licensesMap;
 	}
 
 	public Map<String, TestData> readTestData() {
@@ -109,6 +135,7 @@ public class AmortExcelReader {
 	}
 	
 	private List<Window> getWindowData(String tcNo) {
+		SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 		List<Window> windowsList = new ArrayList<Window>();
 		File inputFile = null;
 		XSSFWorkbook workbook = null;
@@ -122,10 +149,14 @@ public class AmortExcelReader {
 				sheetRow = windows.getRow(j);
 				if(sheetRow.getCell(headerMap.get(HeaderEnum.TcNo.toString())).getStringCellValue().equalsIgnoreCase(tcNo)) {
 					Window window = new Window();
-					window.setStartDate(sheetRow.getCell(headerMap.get(HeaderEnum.StartDate.toString())).getStringCellValue());
-					window.setEndDate(sheetRow.getCell(headerMap.get(HeaderEnum.EndDate.toString())).getStringCellValue());
-					window.setRunInPlayDay(sheetRow.getCell(headerMap.get(HeaderEnum.RunsInPlayDay.toString())).getStringCellValue());
-					window.setRunsPDAllowed(sheetRow.getCell(headerMap.get(HeaderEnum.RunsPDAllowed.toString())).getStringCellValue());
+					Date startDate = sheetRow.getCell(headerMap.get(HeaderEnum.StartDate.toString())).getDateCellValue();
+					window.setStartDate(df.format(startDate));
+					Date endDate = sheetRow.getCell(headerMap.get(HeaderEnum.EndDate.toString())).getDateCellValue();
+					window.setEndDate(df.format(endDate));
+					Double runInPlayDay = sheetRow.getCell(headerMap.get(HeaderEnum.RunsInPlayDay.toString())).getNumericCellValue();
+					window.setRunInPlayDay(runInPlayDay.intValue()+"");
+					Double runsPDAllowed = sheetRow.getCell(headerMap.get(HeaderEnum.RunsPDAllowed.toString())).getNumericCellValue();
+					window.setRunsPDAllowed(runsPDAllowed.intValue()+"");
 					windowsList.add(window);
 				}
 			}

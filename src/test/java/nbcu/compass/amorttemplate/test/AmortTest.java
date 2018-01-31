@@ -12,6 +12,7 @@ import nbcu.compass.amorttemplate.util.AmortTemplateGrid;
 import nbcu.compass.amorttemplate.util.AmortTemplateUtil;
 import nbcu.compass.amorttemplate.util.AutomationAgent;
 import nbcu.compass.amorttemplate.util.EnvironmentPropertiesReader;
+import nbcu.compass.amorttemplate.util.License;
 import nbcu.compass.amorttemplate.util.TestData;
 import nbcu.compass.amorttemplate.util.User;
 
@@ -20,6 +21,7 @@ public class AmortTest {
 	private static EnvironmentPropertiesReader configProperty = EnvironmentPropertiesReader.getInstance();
 	private AutomationAgent automationAgent = null;
 	private Map<String, User> users = null;
+	private Map<String, License> licenses = null;
 	private Map<String, AmortTemplateGrid> amortTemplateGrids = null;
 	private Map<String, TestData> testDatas = null;
 	
@@ -28,6 +30,7 @@ public class AmortTest {
 		AmortExcelReader excelReader = new AmortExcelReader();
 		users = excelReader.readUser();
 		testDatas = excelReader.readTestData();
+		licenses = excelReader.readLicense();
 		amortTemplateGrids = excelReader.readAmortTemplateGrid("US");
 		automationAgent = new AutomationAgent();
 	}
@@ -45,11 +48,14 @@ public class AmortTest {
 		if(null == user) {
 			System.out.println("Unable to read user data");
 		}
+		
 		automationAgent.loginCompass(user.getUsername(), user.getPassword());
 		automationAgent.createContract(testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), testData.getTitleName(), amortTemplateGrid.getTitleTypeName());
 		automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows());
-		automationAgent.setAllocationData();
-		Map<Integer, String> amortsFromApplication = automationAgent.generateAmort();
+		
+		License license = licenses.get("TC1");
+		double amt = automationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName());
+		Map<Integer, String> amortsFromApplication = automationAgent.generateAmort(amt);
 		Set<Integer> keys = amortsFromApplication.keySet();
 		for(Integer key:keys) {
 			Assert.isTrue(amortsFromApplication.get(key).equalsIgnoreCase(amortsFromCalculation.get(key)), "Amorts are equal");

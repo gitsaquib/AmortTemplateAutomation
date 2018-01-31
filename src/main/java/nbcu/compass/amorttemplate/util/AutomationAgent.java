@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -67,8 +66,6 @@ public class AutomationAgent {
 				amtStr = amtStr.replace(",", "");
 				double amtDouble = Double.parseDouble(amtStr);
 				totalLicenseFee = totalLicenseFee - amtDouble;
-				DecimalFormat df = new DecimalFormat("#.##");
-				System.out.println(Integer.parseInt(month.getText()) +") Total license fee: "+df.format(totalLicenseFee));
 				lastMonth = Integer.parseInt(month.getText());
 				scrollCount++;
 			}
@@ -80,6 +77,8 @@ public class AutomationAgent {
 						appSession.getKeyboard().sendKeys(Keys.ARROW_DOWN);
 					}
 					readAmortAmtRows(totalLicenseFee, lastMonth);
+				} else {
+					System.out.println("TotalLicenseFee left:"+totalLicenseFee);
 				}
 			}
 		} catch (Exception ex) {
@@ -186,9 +185,6 @@ public class AutomationAgent {
 		vClickAction.perform();
 		Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 		appSession.findElementByName("Window").click();
-		clearAndSetValueInDropdown("FinanceTypeCombobox", financeType);
-		setValueInDropdown("MasterSeriesCombobox", "TEST 123");
-		appSession.findElementByName("TEST 123").click();
 		for(Window window:windows) {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			appSession.findElementByName("AddWindow").click();
@@ -198,6 +194,9 @@ public class AutomationAgent {
 			setPlayWindowAttribute("Runs in Play Day", window.getRunInPlayDay());
 			setPlayWindowAttribute("Runs/PD Allowed", window.getRunsPDAllowed());
 		}
+		clearAndSetValueInDropdown("FinanceTypeCombobox", financeType);
+		setValueInDropdown("MasterSeriesCombobox", "TEST 123");
+		appSession.findElementByName("TEST 123").click();
 		appSession.findElementByAccessibilityId("SaveButton").click();
 		Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
 	}
@@ -300,15 +299,6 @@ public class AutomationAgent {
         textBox.click();
         for(int i=0; i<existingValue.length(); i++) {
         	appSession.getKeyboard().sendKeys(Keys.BACK_SPACE);
-        	try {
-        		WebElement yes = appSession.findElementByName("Yes");
-        		if(null != yes) {
-        			appSession.findElementByName("Yes").click();
-        		}
-        	} catch (Exception ex) {
-        		;
-        	}
-        	
         }
         appSession.getKeyboard().sendKeys(Keys.CLEAR);
         appSession.getKeyboard().sendKeys(value);

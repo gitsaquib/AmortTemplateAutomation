@@ -1,11 +1,16 @@
+nbcu\compass\amorttemplate\util\FolderZiper.class
 nbcu\compass\amorttemplate\util\TestData.class
 nbcu\compass\amorttemplate\util\AmortTemplateConstants.class
+nbcu\compass\amorttemplate\util\EmailReport.class
+nbcu\compass\amorttemplate\util\ExtentReporter.class
 nbcu\compass\amorttemplate\util\AmortExcelReader.class
 nbcu\compass\amorttemplate\util\License.class
 nbcu\compass\amorttemplate\test\MainClass.class
 nbcu\compass\amorttemplate\util\AmortTemplateUtil.class
 nbcu\compass\amorttemplate\test\AmortTest.class
 nbcu\compass\amorttemplate\util\AmortTemplateGrid.class
+nbcu\compass\amorttemplate\util\Log.class
+nbcu\compass\amorttemplate\util\ScreenshotManager.class
 nbcu\compass\amorttemplate\util\EnvironmentPropertiesReader.class
 nbcu\compass\amorttemplate\util\HeaderEnum.class
 nbcu\compass\amorttemplate\util\Window.class

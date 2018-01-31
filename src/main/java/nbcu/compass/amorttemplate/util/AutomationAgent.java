@@ -27,6 +27,11 @@ public class AutomationAgent {
 	
 	private Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 	
+	public void closeApplication() {
+		appSession.closeApp();
+		clickYesOnPopup("Are you sure you want to exit the application?");
+	}
+	
 	public void clickAt(int x, int y) {
 		Actions vActions = new Actions(appSession);
 		vActions.moveToElement(appSession.findElementByName("System"), 0,0);

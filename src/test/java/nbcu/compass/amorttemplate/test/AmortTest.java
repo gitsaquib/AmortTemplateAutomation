@@ -3,6 +3,7 @@ package nbcu.compass.amorttemplate.test;
 import java.util.Map;
 import java.util.Set;
 
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
@@ -46,6 +47,7 @@ public class AmortTest {
 		automationAgent.launchAppUsingNativeWindowHandle(configProperty.getProperty("appPath"), 
 														 configProperty.getProperty("url"), 
 														 configProperty.getProperty("appName"));
+		
 		TestData testData = testDatas.get("TC1"); 
 		if(null == user) {
 			System.out.println("Unable to read user data");
@@ -64,5 +66,6 @@ public class AmortTest {
 				Log.fail("Amorts are not equal: From Application: "+amortsFromApplication.get(key)+", From Calculation: "+(amortsFromCalculation.get(key)));
 			}
 		}
+		automationAgent.closeApplication();
 	}
 }

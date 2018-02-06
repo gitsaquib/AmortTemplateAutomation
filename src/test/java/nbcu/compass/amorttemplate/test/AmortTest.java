@@ -70,6 +70,12 @@ public class AmortTest {
 				overAllPassOrFail = false;
 			}
 		}
+		reportStr += automationAgent.closeTable();
+		if(overAllPassOrFail) {
+			Log.pass(reportStr);
+		} else {
+			Log.pass(reportStr);
+		}
 		automationAgent.closeApplication();
 	}
 }

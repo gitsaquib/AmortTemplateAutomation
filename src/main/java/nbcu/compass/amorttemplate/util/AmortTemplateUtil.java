@@ -3,7 +3,9 @@ package nbcu.compass.amorttemplate.util;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.Period;
+import java.time.format.DateTimeFormatter;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -11,46 +13,74 @@ import java.util.Set;
 public class AmortTemplateUtil {
 	
 	
-	public static Map<Integer, String> calculateAmort(Map<String, AmortTemplateGrid> amortTemplateGrids) {
-		Set<String> uniqueNames = amortTemplateGrids.keySet();
-		for(String uniqueName:uniqueNames) {
-			System.out.println("### " + uniqueName + " ###");
-			AmortTemplateGrid amortTemplateGrid = amortTemplateGrids.get(uniqueName);
-			
-			Double licenseFee = 4000.00;
-			int sectionPercentage[] = {80, 20};
-			
-			LocalDate startDate = LocalDate.of(2017, 12, 01);
-			LocalDate endDate = LocalDate.of(2018, 07, 01);
-			Period diff = Period.between(startDate, endDate);
-			int amortPeriod1 = diff.getMonths();
-			
-			startDate = LocalDate.of(2018, 07, 01);
-			endDate = LocalDate.of(2018, 8, 31);
-			diff = Period.between(startDate, endDate);
-			int amortPeriod2 = diff.getMonths();
-			
-			Integer amortPeriods[] = new Integer[sectionPercentage.length];
-			amortPeriods[0] = amortPeriod1;
-			amortPeriods[1] = amortPeriod2;
-			
-			DecimalFormat df = new DecimalFormat("#.##");
-			
-			if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.STRAIGHT_LINE)) {
-				return amortStraightLine(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getMaxMonths(), licenseFee, amortTemplateGrid.getTimePlayName(), amortPeriod1, df);
-			} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.MAX_STRAIGHT_LINE)) {
-				return amortMaxStraightLine(amortTemplateGrid.getMaxMonths(), licenseFee, df);
-			} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.QUARTILE)) {
-				return amortQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
-						amortTemplateGrid.getTimePlayName(), amortPeriod1, amortPeriods, df);
-			}
-			return null;
+	public static Map<Integer, String> calculateAmort(AmortTemplateGrid amortTemplateGrid, String licenseFeeStr, TestData testData) {
+		Double licenseFee = Double.parseDouble(licenseFeeStr);
+		Double sectionPercentage[] = new Double[amortTemplateGrid.getAmortSectionGrids().size()];
+		Map<Integer, Double> sectionGrids = amortTemplateGrid.getAmortSectionGrids();
+		Set<Integer> sectionNos = sectionGrids.keySet();
+		for(Integer sectionNo:sectionNos) {
+			sectionPercentage[sectionNo-1] = sectionGrids.get(sectionNo);
+		}
+
+		List<Window> windows = testData.getWindows();
+		Integer amortPeriods[] = new Integer[windows.size()];
+		int index = 0;
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+		for(Window window:windows) {
+			LocalDate localStartDate = LocalDate.parse(window.getStartDate(), formatter);
+			LocalDate localEndDate = LocalDate.parse(window.getEndDate(), formatter);
+			Period diff = Period.between(localStartDate, localEndDate);
+			amortPeriods[index] = diff.getMonths();
+			index++;
+		}
+		
+		DecimalFormat df = new DecimalFormat("#.##");
+		
+		if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.STRAIGHT_LINE)) {
+			return amortStraightLine(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getMaxMonths(), licenseFee, amortTemplateGrid.getTimePlayName(), amortPeriods[0], df);
+		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.MAX_STRAIGHT_LINE)) {
+			return amortMaxStraightLine(amortTemplateGrid.getMaxMonths(), licenseFee, df);
+		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.QUARTILE)) {
+			return amortQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
+					amortTemplateGrid.getTimePlayName(), amortPeriods[0], amortPeriods, df);
+		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.MAX_QUARTILE)) {
+			return amortMaxQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
+					amortTemplateGrid.getTimePlayName(), amortPeriods[0], amortPeriods, df, amortTemplateGrid.getMaxMonths());
 		}
 		return null;
 	}
 
+	private static Map<Integer, String> amortMaxQuartile(double firstMonthPercent, Integer straightLineMonths, Double licenseFee,
+			String multipleWindow, Double[] sectionPercentage, String windowsBasedOrTimeBased, int amortPeriod1,
+			Integer[] amortPeriods, DecimalFormat df, Integer maxMonths) {
+		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
+		Double[] lineItemAmtSecs = new Double[sectionPercentage.length];
+		int index = 0;
+		for(Double sectionPer:sectionPercentage) {
+			lineItemAmtSecs[index] = Double.valueOf(df.format((licenseFee*sectionPer)/100));
+			index++;
+		}
+		index = 1; double grandSec = 0;
+		for(Double lineItemAmtSec:lineItemAmtSecs) {
+			double lineItemAmt;
+			lineItemAmt = lineItemAmtSec*lineItemAmtSecs.length/maxMonths;
+			lineItemAmt = Double.valueOf(df.format(lineItemAmt));
+			for(int month = 1; month <= maxMonths/lineItemAmtSecs.length; month++) {
+				if(index==lineItemAmtSecs.length && month == maxMonths/lineItemAmtSecs.length) {
+					amorts.put(month, AmortTemplateConstants.DOLLARSIGN+df.format(licenseFee-grandSec));
+					System.out.println(AmortTemplateConstants.DOLLARSIGN+df.format(licenseFee-grandSec));
+				} else {
+					grandSec += lineItemAmt;
+					amorts.put(month, AmortTemplateConstants.DOLLARSIGN+df.format(lineItemAmt));
+				}
+			}
+			index++;
+		}
+		return amorts;
+	}
+	
 	private static Map<Integer, String> amortQuartile(double firstMonthPercent, Integer straightLineMonths, Double licenseFee,
-			String multipleWindow, int[] sectionPercentage, String windowsBasedOrTimeBased, int amortPeriod1,
+			String multipleWindow, Double[] sectionPercentage, String windowsBasedOrTimeBased, int amortPeriod1,
 			Integer[] amortPeriods, DecimalFormat df) {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.WINDOWS_BASED)) {

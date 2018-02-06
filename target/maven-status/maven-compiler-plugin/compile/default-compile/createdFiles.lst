@@ -8,6 +8,7 @@ nbcu\compass\amorttemplate\util\License.class
 nbcu\compass\amorttemplate\test\MainClass.class
 nbcu\compass\amorttemplate\util\AmortTemplateUtil.class
 nbcu\compass\amorttemplate\test\AmortTest.class
+nbcu\compass\amorttemplate\util\AmortDataProvider.class
 nbcu\compass\amorttemplate\util\AmortTemplateGrid.class
 nbcu\compass\amorttemplate\util\Log.class
 nbcu\compass\amorttemplate\util\ScreenshotManager.class

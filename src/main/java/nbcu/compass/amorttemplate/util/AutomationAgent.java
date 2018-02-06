@@ -1,18 +1,26 @@
 package nbcu.compass.amorttemplate.util;
 
+import java.awt.event.KeyEvent;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -26,6 +34,38 @@ public class AutomationAgent {
 	private static WindowsDriver appSession = null;
 	
 	private Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
+	
+	@SuppressWarnings("rawtypes")
+	public void launchApplicationFromBrowser(String url, String appWebUrl) {
+		WebDriver ieDriver = null;
+		File directory = new File(".");
+		String strBasepath;
+		try {
+			strBasepath = directory.getCanonicalPath();
+			System.setProperty("webdriver.ie.driver", strBasepath + File.separator + "TestData"+ File.separator +"IEDriverServer.exe");
+			DesiredCapabilities ieCapabilities = DesiredCapabilities.internetExplorer();
+			ieCapabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+			ieDriver = new InternetExplorerDriver(ieCapabilities);
+			ieDriver.manage().window().maximize();
+			ieDriver.navigate().to(appWebUrl);
+			Thread.sleep(10000);
+			DesiredCapabilities appCapabilities = new DesiredCapabilities();
+			appCapabilities.setCapability("app", "Root");
+			WindowsDriver<WindowsElement> driver = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities);
+			WebElement cortana = driver.findElementByName("TrustManagerDialog");
+			String handleStr = cortana.getAttribute("NativeWindowHandle");
+			int handleInt = Integer.parseInt(handleStr);
+			String handleHex = Integer.toHexString(handleInt);
+			DesiredCapabilities appCapabilities2 = new DesiredCapabilities();
+			appCapabilities2.setCapability("appTopLevelWindow", handleHex);
+			WindowsDriver driver2 = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities2);
+			driver2.getKeyboard().sendKeys(Keys.chord(Keys.ALT, "r"));
+		} catch (IOException | InterruptedException e) {
+			e.printStackTrace();
+		} finally {
+			ieDriver.quit();
+		}
+	}
 	
 	public void closeApplication() {
 		appSession.closeApp();
@@ -241,20 +281,22 @@ public class AutomationAgent {
 		appSession.findElementByAccessibilityId("password").sendKeys(password);
 		appSession.findElementByName("Sign In").click();
 		Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+		Log.pass("User ["+username+"] successfully logged in Compass application");
 	}
 
 	public void createContract(String distributor, String dealType, String negotiatedBy, String titleName, String titleType) throws InterruptedException {
 		appSession.findElementByName("Create New Contract").click();
 		Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 		SimpleDateFormat df = new SimpleDateFormat("YYYYMMDDHHmmss");
-		appSession.findElementByAccessibilityId("DistributorPackageTextBox").sendKeys("TestPackage_" + df.format(new Date()));
+		String packageName = "TestPackage_" + df.format(new Date());
+		appSession.findElementByAccessibilityId("DistributorPackageTextBox").sendKeys(packageName);
 		setValueInDropdown("DistributorComboBox", distributor);
 		setValueInDropdown("DealTypeCombobox", dealType);
 		setValueInDropdown("NegotiatedByCombobox", negotiatedBy);
 		addTitle(titleName, titleType);
 		appSession.findElementByAccessibilityId("SaveButton").click();
 		Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-		
+		Log.pass("Successfully created contract with DistributorPackage: "+ packageName);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -315,5 +357,32 @@ public class AutomationAgent {
         WebElement textBox = parent.findElement(By.className("TextBox"));
     	textBox.click();
     	textBox.sendKeys(value);
+	}
+	
+	public String setTableStyleForExtentReport() {
+		return
+				"<style type=\"text/css\">\r\n" + 
+                ".tg  {border-collapse:collapse;border-spacing:0;border-color:#999;}\r\n" + 
+                ".tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;}\r\n" + 
+                ".tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;}\r\n" + 
+                ".tg .tg-3fs7{font-size:11px;font-family:Tahoma, Geneva, sans-serif !important;;vertical-align:top}\r\n" + 
+                ".tg .tg-yw4l{vertical-align:top}\r\n" + 
+                "</style>";
+	}
+	
+	public String openTable() {
+		return "<table class=\"tg\">";
+	}
+	
+	public String addTableHeader() {
+		return "<th><td class=\"tg-3fs7\">Month</td><td class=\"tg-yw4l\">Application</td><td class=\"tg-yw4l\">Amort Calulation</td></th>";
+	}
+	
+	public String setTableBodyForExtentReport(String month, String valueFromApp, String valueFromCalculation) {
+		return "<tr><td class=\"tg-yw4l\">"+month+"</td><td class=\"tg-yw4l\">"+valueFromApp+"</td><td class=\"tg-yw4l\">+"+valueFromCalculation+"+</td></tr>";
+	}
+	
+	public String closeTable() {
+		return "</table>";
 	}
 }

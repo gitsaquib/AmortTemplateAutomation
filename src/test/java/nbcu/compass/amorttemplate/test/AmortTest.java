@@ -3,11 +3,11 @@ package nbcu.compass.amorttemplate.test;
 import java.util.Map;
 import java.util.Set;
 
-import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
+import nbcu.compass.amorttemplate.util.AmortDataProvider;
 import nbcu.compass.amorttemplate.util.AmortExcelReader;
 import nbcu.compass.amorttemplate.util.AmortTemplateGrid;
 import nbcu.compass.amorttemplate.util.AmortTemplateUtil;
@@ -26,7 +26,7 @@ public class AmortTest {
 	private AutomationAgent automationAgent = null;
 	private Map<String, User> users = null;
 	private Map<String, License> licenses = null;
-	private Map<String, AmortTemplateGrid> amortTemplateGrids = null;
+	private Map<Integer, AmortTemplateGrid> amortTemplateGrids = null;
 	private Map<String, TestData> testDatas = null;
 	
 	@BeforeSuite
@@ -39,31 +39,35 @@ public class AmortTest {
 		automationAgent = new AutomationAgent();
 	}
 	
-	@Test(priority=1, description="Validating amort templaate for US networks")
-	public void testAmort() throws InterruptedException {
-		Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrids);
+	@Test(priority=1, description="Validating amort template for US networks", dataProviderClass=AmortDataProvider.class, dataProvider="amortDataProvider")
+	public void testAmortTemplateUS(int uniqueId) throws InterruptedException {
+		Log.message("Validating amort templaate for US networks: "+uniqueId);
+		License license = licenses.get("TC1");
+		TestData testData = testDatas.get("TC1"); 
+		AmortTemplateGrid amortTemplateGrid= amortTemplateGrids.get(uniqueId);
+		Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);
 		User user = users.get("User1");
-		AmortTemplateGrid amortTemplateGrid= amortTemplateGrids.get("Original Movies_Series_Original Movies");
 		automationAgent.launchAppUsingNativeWindowHandle(configProperty.getProperty("appPath"), 
 														 configProperty.getProperty("url"), 
 														 configProperty.getProperty("appName"));
-		
-		TestData testData = testDatas.get("TC1"); 
 		if(null == user) {
-			System.out.println("Unable to read user data");
+			Log.message("Unable to read user data");
+			return;
 		}
 		automationAgent.loginCompass(user.getUsername(), user.getPassword());
 		automationAgent.createContract(testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), testData.getTitleName(), amortTemplateGrid.getTitleTypeName());
 		automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows());
-		License license = licenses.get("TC1");
 		double amt = automationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName());
 		Map<Integer, String> amortsFromApplication = automationAgent.generateAmort(amt);
 		Set<Integer> keys = amortsFromApplication.keySet();
+		boolean overAllPassOrFail = true;
+		String reportStr = automationAgent.setTableStyleForExtentReport();
+		reportStr += automationAgent.openTable();
+		reportStr += automationAgent.addTableHeader();
 		for(Integer key:keys) {
-			if(amortsFromApplication.get(key).equalsIgnoreCase(amortsFromCalculation.get(key))) {
-				Log.pass("Amorts are equal: From Application: "+amortsFromApplication.get(key)+", From Calculation: "+(amortsFromCalculation.get(key)));
-			} else {
-				Log.fail("Amorts are not equal: From Application: "+amortsFromApplication.get(key)+", From Calculation: "+(amortsFromCalculation.get(key)));
+			reportStr += automationAgent.setTableBodyForExtentReport(key+"", amortsFromApplication.get(key), amortsFromCalculation.get(key));
+			if(!amortsFromApplication.get(key).equalsIgnoreCase(amortsFromCalculation.get(key))) {
+				overAllPassOrFail = false;
 			}
 		}
 		automationAgent.closeApplication();

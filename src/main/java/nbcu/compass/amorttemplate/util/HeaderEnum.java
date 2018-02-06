@@ -1,6 +1,7 @@
 package nbcu.compass.amorttemplate.util;
 
 public enum HeaderEnum {
+	AmortTemplateNo,
 	AmortTemplateName,
 	TitleTypeName,
 	FinanceTypeName,
@@ -26,5 +27,7 @@ public enum HeaderEnum {
 	RunsInPlayDay,
 	RunsPDAllowed,
 	LicenseType,
-	LicenseAmount
+	LicenseAmount,
+	AmortSectionNo,
+	AmortSectionPercent
 }

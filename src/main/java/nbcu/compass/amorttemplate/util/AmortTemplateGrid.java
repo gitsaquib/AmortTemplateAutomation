@@ -1,8 +1,10 @@
 package nbcu.compass.amorttemplate.util;
 
+import java.util.Map;
+
 public class AmortTemplateGrid {
 	
-	private String uniqueName;
+	private int amortTemplateNo;
 	private String amortTemplateName;
 	private String titleTypeName;
 	private String financeTypeName;
@@ -11,14 +13,14 @@ public class AmortTemplateGrid {
 	private String timePlayName;
 	private double maxMonths;
 	private double firstMonthAmortPercent;
-	private String projectionScheduleName;
 	private String isMultipleWindowFlag;
+	private Map<Integer, Double> amortSectionGrids; 
 	
-	public String getUniqueName() {
-		return uniqueName;
+	public Map<Integer, Double> getAmortSectionGrids() {
+		return amortSectionGrids;
 	}
-	public void setUniqueName(String uniqueName) {
-		this.uniqueName = uniqueName;
+	public void setAmortSectionGrids(Map<Integer, Double> amortSectionGrids) {
+		this.amortSectionGrids = amortSectionGrids;
 	}
 	public String getAmortTemplateName() {
 		return amortTemplateName;
@@ -70,16 +72,16 @@ public class AmortTemplateGrid {
 	public void setFirstMonthAmortPercent(double firstMonthAmortPercent) {
 		this.firstMonthAmortPercent = firstMonthAmortPercent;
 	}
-	public String getProjectionScheduleName() {
-		return projectionScheduleName;
-	}
-	public void setProjectionScheduleName(String projectionScheduleName) {
-		this.projectionScheduleName = projectionScheduleName;
-	}
 	public String getIsMultipleWindowFlag() {
 		return isMultipleWindowFlag;
 	}
 	public void setIsMultipleWindowFlag(String isMultipleWindowFlag) {
 		this.isMultipleWindowFlag = isMultipleWindowFlag;
+	}
+	public int getAmortTemplateNo() {
+		return amortTemplateNo;
+	}
+	public void setAmortTemplateNo(int amortTemplateNo) {
+		this.amortTemplateNo = amortTemplateNo;
 	}
 }

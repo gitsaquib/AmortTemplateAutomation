@@ -21,7 +21,7 @@ public class AmortExcelReader {
 		return strBasepath;
 	}
 
-	public Map<String, AmortTemplateGrid> readAmortTemplateGrid(String network) {
+	public Map<Integer, AmortTemplateGrid> readAmortTemplateGrid(String network) {
 		File inputFile = null;
 		XSSFWorkbook workbook = null;
 		try {
@@ -33,27 +33,51 @@ public class AmortExcelReader {
 		XSSFRow sheetRow;
 		XSSFSheet templateGrid = workbook.getSheet("AmortTemplateGrid");
 		Map<String, Integer> headerMap = populateHeaderMap(templateGrid);
-		Map<String, AmortTemplateGrid> amortTemplateGridMap = new HashMap<String, AmortTemplateGrid>();
-		for(int j = 1; j < templateGrid.getLastRowNum(); j++) {
+		Map<Integer, AmortTemplateGrid> amortTemplateGridMap = new HashMap<Integer, AmortTemplateGrid>();
+		for(int j = 1; j <= templateGrid.getLastRowNum(); j++) {
 			AmortTemplateGrid amortTemplateGrid = new AmortTemplateGrid();
 			sheetRow = templateGrid.getRow(j);
-			String uniqueName = sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue()
-								+ "_"
-								+ sheetRow.getCell(headerMap.get(HeaderEnum.TitleTypeName.toString())).getStringCellValue()
-								+ "_"
-								+ sheetRow.getCell(headerMap.get(HeaderEnum.FinanceTypeName.toString())).getStringCellValue();
-			amortTemplateGrid.setUniqueName(uniqueName);
+			amortTemplateGrid.setAmortTemplateNo((int) sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue());
 			amortTemplateGrid.setFirstMonthAmortPercent(sheetRow.getCell(headerMap.get(HeaderEnum.FirstMonthAmortPercent.toString())).getNumericCellValue());
 			amortTemplateGrid.setAmortTemplateName(sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue());
 			amortTemplateGrid.setFinanceTypeName(sheetRow.getCell(headerMap.get(HeaderEnum.FinanceTypeName.toString())).getStringCellValue());
 			amortTemplateGrid.setIsMultipleWindowFlag(sheetRow.getCell(headerMap.get(HeaderEnum.IsMultipleWindowFlag.toString())).getStringCellValue());
 			amortTemplateGrid.setMaxMonths(sheetRow.getCell(headerMap.get(HeaderEnum.MaxMonths.toString())).getNumericCellValue());
-			amortTemplateGrid.setProjectionScheduleName(sheetRow.getCell(headerMap.get(HeaderEnum.ProjectionScheduleName.toString())).getStringCellValue());
 			amortTemplateGrid.setStraightLineMonths(sheetRow.getCell(headerMap.get(HeaderEnum.StraightLineMonths.toString())).getNumericCellValue());
 			amortTemplateGrid.setStraightLineName(sheetRow.getCell(headerMap.get(HeaderEnum.StraightLineName.toString())).getStringCellValue());
 			amortTemplateGrid.setTimePlayName(sheetRow.getCell(headerMap.get(HeaderEnum.TimePlayName.toString())).getStringCellValue());
 			amortTemplateGrid.setTitleTypeName(sheetRow.getCell(headerMap.get(HeaderEnum.TitleTypeName.toString())).getStringCellValue());
-			amortTemplateGridMap.put(uniqueName, amortTemplateGrid);
+			amortTemplateGrid.setAmortSectionGrids(populateSectionGrid(network, 
+					(int)sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue(),
+					sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue(),
+					sheetRow.getCell(headerMap.get(HeaderEnum.TitleTypeName.toString())).getStringCellValue(),
+					sheetRow.getCell(headerMap.get(HeaderEnum.FinanceTypeName.toString())).getStringCellValue()));
+			amortTemplateGridMap.put((int) sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue(), amortTemplateGrid);
+		}
+		return amortTemplateGridMap;
+	}
+	
+	private Map<Integer, Double> populateSectionGrid(String network, int amortTemplateNo, String templateName, String titleType, String financialType) {
+		File inputFile = null;
+		XSSFWorkbook workbook = null;
+		try {
+			inputFile = new File(basePath() + File.separator + "TestData"+ File.separator + "AmortTemplate"+network+".xlsx");
+			workbook = new XSSFWorkbook(inputFile);
+		} catch (Exception e) {
+		
+		}
+		XSSFRow sheetRow;
+		XSSFSheet templateGrid = workbook.getSheet("AmortTemplateSectionGrid");
+		Map<String, Integer> headerMap = populateHeaderMap(templateGrid);
+		Map<Integer, Double> amortTemplateGridMap = new HashMap<Integer, Double>();
+		for(int j = 1; j < templateGrid.getLastRowNum(); j++) {
+			sheetRow = templateGrid.getRow(j);
+			if(sheetRow.getCell((int)headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue() == amortTemplateNo
+					&& sheetRow.getCell((int)headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue().equalsIgnoreCase(templateName)
+					&& sheetRow.getCell((int)headerMap.get(HeaderEnum.TitleTypeName.toString())).getStringCellValue().equalsIgnoreCase(titleType)
+					&& sheetRow.getCell((int)headerMap.get(HeaderEnum.FinanceTypeName.toString())).getStringCellValue().equalsIgnoreCase(financialType)) {
+				amortTemplateGridMap.put((int)sheetRow.getCell(headerMap.get(HeaderEnum.AmortSectionNo.toString())).getNumericCellValue(), sheetRow.getCell(headerMap.get(HeaderEnum.AmortSectionPercent.toString())).getNumericCellValue());
+			}
 		}
 		return amortTemplateGridMap;
 	}
@@ -98,7 +122,7 @@ public class AmortExcelReader {
 				license.setTcId(sheetRow.getCell(headerMap.get(HeaderEnum.TcNo.toString())).getStringCellValue());
 				license.setLicenseType(sheetRow.getCell(headerMap.get(HeaderEnum.LicenseType.toString())).getStringCellValue());
 				Double licenseAmount = sheetRow.getCell(headerMap.get(HeaderEnum.LicenseAmount.toString())).getNumericCellValue();
-				license.setLicenseAmount(licenseAmount.intValue()+"");
+				license.setLicenseAmount(licenseAmount.doubleValue()+"");
 				licensesMap.put(sheetRow.getCell(headerMap.get(HeaderEnum.TcNo.toString())).getStringCellValue(), license);
 			}
 		} catch (Exception e) {

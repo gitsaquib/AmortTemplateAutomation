@@ -12,5 +12,4 @@ public class AmortTemplateConstants {
 	public static final String WINDOWS_BASED = "W";
 	public static final String TIME_BASED = "T";
 	public static final String HALLMARK = "H";
-	public static final String DOLLARSIGN = "$";
 }

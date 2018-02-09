@@ -16,13 +16,14 @@ import org.sikuli.basics.Settings;
 import org.sikuli.script.Finder;
 import org.sikuli.script.Image;
 import org.sikuli.script.Match;
+import org.springframework.util.FileCopyUtils;
 
 import io.appium.java_client.windows.WindowsDriver;
 
 public class SikuliImageRecognitionUtil {
 	
 	@SuppressWarnings("rawtypes")
-	public static double[] clickImage(WindowsDriver appSession, String image, int width, int height) throws Exception {
+	public static double[] findImage(WindowsDriver appSession, String image, int width, int height) throws Exception {
 		double[] iconCoords = null;
 		File directory = new File(".");
 		String strBasepath = directory.getCanonicalPath();
@@ -86,12 +87,6 @@ public class SikuliImageRecognitionUtil {
 	}
 	
 	private static double[] findSubimage(BufferedImage im1, BufferedImage im2) throws IOException {
-		File fullscreen = new File("C:\\Users\\mohammed.saquib\\Downloads\\fullscreen.png");
-	    ImageIO.write(im1, "png", fullscreen);
-	    
-	    File icon = new File("C:\\Users\\mohammed.saquib\\Downloads\\icon.png");
-	    ImageIO.write(im2, "png", icon);
-	    
 		int w1 = im1.getWidth();
 		int h1 = im1.getHeight();
 		int w2 = im2.getWidth();

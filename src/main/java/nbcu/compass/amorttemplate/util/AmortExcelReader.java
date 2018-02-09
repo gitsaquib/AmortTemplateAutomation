@@ -21,7 +21,7 @@ public class AmortExcelReader {
 		return strBasepath;
 	}
 
-	public Map<Integer, AmortTemplateGrid> readAmortTemplateGrid(String network) {
+	public Map<String, AmortTemplateGrid> readAmortTemplateGrid(String network) {
 		File inputFile = null;
 		XSSFWorkbook workbook = null;
 		try {
@@ -33,10 +33,14 @@ public class AmortExcelReader {
 		XSSFRow sheetRow;
 		XSSFSheet templateGrid = workbook.getSheet("AmortTemplateGrid");
 		Map<String, Integer> headerMap = populateHeaderMap(templateGrid);
-		Map<Integer, AmortTemplateGrid> amortTemplateGridMap = new HashMap<Integer, AmortTemplateGrid>();
+		Map<String, AmortTemplateGrid> amortTemplateGridMap = new HashMap<String, AmortTemplateGrid>();
 		for(int j = 1; j <= templateGrid.getLastRowNum(); j++) {
 			AmortTemplateGrid amortTemplateGrid = new AmortTemplateGrid();
 			sheetRow = templateGrid.getRow(j);
+			String uniqueKey = sheetRow.getCell((int)headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue()
+								+ "_" + sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue()
+								+ "_" + sheetRow.getCell(headerMap.get(HeaderEnum.TitleTypeName.toString())).getStringCellValue()
+								+ "_" + sheetRow.getCell(headerMap.get(HeaderEnum.FinanceTypeName.toString())).getStringCellValue();
 			amortTemplateGrid.setAmortTemplateNo((int) sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue());
 			amortTemplateGrid.setFirstMonthAmortPercent(sheetRow.getCell(headerMap.get(HeaderEnum.FirstMonthAmortPercent.toString())).getNumericCellValue());
 			amortTemplateGrid.setAmortTemplateName(sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue());
@@ -52,7 +56,7 @@ public class AmortExcelReader {
 					sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue(),
 					sheetRow.getCell(headerMap.get(HeaderEnum.TitleTypeName.toString())).getStringCellValue(),
 					sheetRow.getCell(headerMap.get(HeaderEnum.FinanceTypeName.toString())).getStringCellValue()));
-			amortTemplateGridMap.put((int) sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue(), amortTemplateGrid);
+			amortTemplateGridMap.put(uniqueKey, amortTemplateGrid);
 		}
 		return amortTemplateGridMap;
 	}
@@ -98,6 +102,7 @@ public class AmortExcelReader {
 				Double username = sheetRow.getCell(headerMap.get(HeaderEnum.Username.toString())).getNumericCellValue();
 				user.setUsername(username.intValue()+"");
 				user.setPassword(sheetRow.getCell(headerMap.get(HeaderEnum.Password.toString())).getStringCellValue());
+				user.setDisplayName(sheetRow.getCell(headerMap.get(HeaderEnum.DisplayName.toString())).getStringCellValue());
 				usersMap.put(sheetRow.getCell(headerMap.get(HeaderEnum.TestUser.toString())).getStringCellValue(), user);
 			}
 		} catch (Exception e) {

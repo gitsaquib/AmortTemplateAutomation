@@ -1,0 +1,20 @@
+1	Acquired Movies	Movies	Acquired Movies	Pass
+1	Acquired Movies	Acquired MiniSeries	Acquired Movies	Pass
+2	Acquired Series	Bio/Clip (E)	Acquired Series	Pass
+1	Acquired Movies	Original MiniSeries	Acquired Movies	Pass
+1	Acquired Movies	Original Series	Acquired Movies	Pass
+2	Acquired Series	Acquired Specials	Acquired Series	Pass
+2	Acquired Series	Episode	Acquired Series	Pass
+2	Acquired Series	Events	Acquired Series	Pass
+1	Acquired Movies	Series	Acquired Movies	Pass
+1	Acquired Movies	Original	Acquired Movies	Pass
+1	Acquired Movies	Documentary	Acquired Movies	Pass
+1	Acquired Movies	Special	Acquired Movies	Pass
+2	Acquired Series	Documentary	Acquired Series	Pass
+2	Acquired Series	Movies	Acquired Series	Pass
+2	Acquired Series	Concert	Acquired Series	Pass
+1	Acquired Movies	Movies	Acquired Movies	Fail
+1	Acquired Movies	Acquired MiniSeries	Acquired Movies	Fail
+1	Acquired Movies	Acquired MiniSeries	Acquired Movies	Fail
+1	Acquired Movies	Acquired MiniSeries	Acquired Movies	Pass
+1	Acquired Movies	Acquired MiniSeries	Acquired Movies	Fail

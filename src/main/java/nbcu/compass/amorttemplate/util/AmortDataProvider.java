@@ -8,12 +8,13 @@ import org.testng.annotations.DataProvider;
 
 public class AmortDataProvider {
 
+	private static EnvironmentPropertiesReader configProperty = EnvironmentPropertiesReader.getInstance();
 	
-	@DataProvider(parallel = true)
-	public static Iterator<Integer> amortDataProvider() { 
+	@DataProvider(parallel = false)
+	public static Iterator<String> amortDataProvider() { 
 		AmortExcelReader excelReader = new AmortExcelReader();
-		Map<Integer, AmortTemplateGrid> amortTemplateGrids = excelReader.readAmortTemplateGrid("US");
-		Set<Integer> uniqueIds = amortTemplateGrids.keySet();
+		Map<String, AmortTemplateGrid> amortTemplateGrids = excelReader.readAmortTemplateGrid(configProperty.getProperty("network"));
+		Set<String> uniqueIds = amortTemplateGrids.keySet();
 		return uniqueIds.iterator();
 	}
 }

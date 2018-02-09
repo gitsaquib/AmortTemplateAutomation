@@ -16,6 +16,7 @@ public enum HeaderEnum {
 	TestUser,
 	Username,
 	Password,
+	DisplayName,
 	TcNo,
 	Distributor,
 	DealType,

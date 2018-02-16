@@ -21,7 +21,7 @@ public enum HeaderEnum {
 	Distributor,
 	DealType,
 	NegotiatedBy,
-	TitleName,
+	Network,
 	Window,
 	StartDate,
 	EndDate,

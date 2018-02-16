@@ -11,6 +11,8 @@ import java.util.Set;
 
 public class AmortTemplateUtil {
 	
+	private static DecimalFormat df = new DecimalFormat("###.##");
+	private static DecimalFormat df2 = new DecimalFormat("$###,###.##");
 	
 	public static Map<Integer, String> calculateAmort(AmortTemplateGrid amortTemplateGrid, String licenseFeeStr, TestData testData) {
 		Double licenseFee = Double.parseDouble(licenseFeeStr);
@@ -32,25 +34,23 @@ public class AmortTemplateUtil {
 			index++;
 		}
 		
-		DecimalFormat df = new DecimalFormat("$###,###.##");
-		
 		if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.STRAIGHT_LINE)) {
-			return amortStraightLine(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getMaxMonths(), licenseFee, amortTemplateGrid.getTimePlayName(), amortPeriods[0], df);
+			return amortStraightLine(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getMaxMonths(), licenseFee, amortTemplateGrid.getTimePlayName(), amortPeriods[0]);
 		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.MAX_STRAIGHT_LINE)) {
-			return amortMaxStraightLine(amortTemplateGrid.getMaxMonths(), licenseFee, df);
+			return amortMaxStraightLine(amortTemplateGrid.getMaxMonths(), licenseFee);
 		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.QUARTILE)) {
 			return amortQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
-					amortTemplateGrid.getTimePlayName(), amortPeriods[0], amortPeriods, df);
+					amortTemplateGrid.getTimePlayName(), amortPeriods[0], amortPeriods);
 		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.MAX_QUARTILE)) {
 			return amortMaxQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
-					amortTemplateGrid.getTimePlayName(), amortPeriods[0], amortPeriods, df, amortTemplateGrid.getMaxMonths());
+					amortTemplateGrid.getTimePlayName(), amortPeriods[0], amortPeriods, amortTemplateGrid.getMaxMonths());
 		}
 		return null;
 	}
 
 	private static Map<Integer, String> amortMaxQuartile(double firstMonthPercent, Integer straightLineMonths, Double licenseFee,
 			String multipleWindow, Double[] sectionPercentage, String windowsBasedOrTimeBased, int amortPeriod1,
-			Integer[] amortPeriods, DecimalFormat df, Integer maxMonths) {
+			Integer[] amortPeriods, Integer maxMonths) {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		Double[] lineItemAmtSecs = new Double[sectionPercentage.length];
 		int index = 0;
@@ -65,10 +65,10 @@ public class AmortTemplateUtil {
 			lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 			for(int month = 1; month <= maxMonths/lineItemAmtSecs.length; month++) {
 				if(index==lineItemAmtSecs.length && month == maxMonths/lineItemAmtSecs.length) {
-					amorts.put(monthIndex, df.format(licenseFee-grandSec));
+					amorts.put(monthIndex, df2.format(licenseFee-grandSec));
 				} else {
 					grandSec += lineItemAmt;
-					amorts.put(monthIndex, df.format(lineItemAmt));
+					amorts.put(monthIndex, df2.format(lineItemAmt));
 				}
 				monthIndex++;
 			}
@@ -79,7 +79,7 @@ public class AmortTemplateUtil {
 	
 	private static Map<Integer, String> amortQuartile(double firstMonthPercent, Integer straightLineMonths, Double licenseFee,
 			String multipleWindow, Double[] sectionPercentage, String windowsBasedOrTimeBased, int amortPeriod1,
-			Integer[] amortPeriods, DecimalFormat df) {
+			Integer[] amortPeriods) {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.WINDOWS_BASED)) {
 			if(multipleWindow.equalsIgnoreCase("Y")) {
@@ -90,9 +90,9 @@ public class AmortTemplateUtil {
 					lineItemAmt[in] = Double.valueOf(df.format(lineItemAmt[in]));
 					for(int month = 1; month <= amortPeriods[in]; month++) {
 						if(month == amortPeriods[in]) {
-							amorts.put(index, df.format((licenseFee*sectionPercentage[in])/100 - lineItemAmt[in]*(amortPeriods[in]-1)));
+							amorts.put(index, df2.format((licenseFee*sectionPercentage[in])/100 - lineItemAmt[in]*(amortPeriods[in]-1)));
 						} else {
-							amorts.put(index, df.format(lineItemAmt[in]));
+							amorts.put(index, df2.format(lineItemAmt[in]));
 						}
 						index++;
 					}
@@ -105,23 +105,23 @@ public class AmortTemplateUtil {
 				lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 				for(int month = 1; month <= amortPeriod1; month++) {
 					if(month == amortPeriod1) {
-						amorts.put(month, df.format(licenseFee - lineItemAmt*(amortPeriod1-1)));
+						amorts.put(month, df2.format(licenseFee - lineItemAmt*(amortPeriod1-1)));
 					} else {
-						amorts.put(month, df.format(lineItemAmt));
+						amorts.put(month, df2.format(lineItemAmt));
 					}
 				}
 			} else {
 				double lineItemAmt;
 				double firstMonthAmount = Double.valueOf(df.format((licenseFee*firstMonthPercent)/100));
-				amorts.put(1, Double.toString(firstMonthAmount));
+				amorts.put(1, df2.format(firstMonthAmount));
 				amortPeriod1 = amortPeriod1 - 1;
 				lineItemAmt = (licenseFee-firstMonthAmount)/amortPeriod1;
 				lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 				for(int month = 1; month <= amortPeriod1; month++) {
 					if(month == amortPeriod1) {
-						amorts.put(month+1, df.format(licenseFee - firstMonthAmount - lineItemAmt*(amortPeriod1-1)));
+						amorts.put(month+1, df2.format(licenseFee - firstMonthAmount - lineItemAmt*(amortPeriod1-1)));
 					} else {
-						amorts.put(month+1, df.format(lineItemAmt));
+						amorts.put(month+1, df2.format(lineItemAmt));
 					}
 				}
 			}
@@ -134,9 +134,9 @@ public class AmortTemplateUtil {
 				double lineItemAmt = licenseFee/grandMonths;
 				for(int month=1; month<=grandMonths; month++) {
 					if(month == grandMonths) {
-						amorts.put(month, df.format(licenseFee-(lineItemAmt*(grandMonths-1))));
+						amorts.put(month, df2.format(licenseFee-(lineItemAmt*(grandMonths-1))));
 					} else {
-						amorts.put(month, df.format(lineItemAmt));
+						amorts.put(month, df2.format(lineItemAmt));
 					}
 				}
 			} else {
@@ -145,9 +145,9 @@ public class AmortTemplateUtil {
 				lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 				for(int month = 1; month <= amortPeriod1; month++) {
 					if(month == amortPeriod1) {
-						amorts.put(month, df.format(licenseFee - lineItemAmt*(amortPeriod1-1)));
+						amorts.put(month, df2.format(licenseFee - lineItemAmt*(amortPeriod1-1)));
 					} else {
-						amorts.put(month, df.format(lineItemAmt));
+						amorts.put(month, df2.format(lineItemAmt));
 					}
 				}
 			}
@@ -155,26 +155,26 @@ public class AmortTemplateUtil {
 		return amorts;
 	}
 
-	private static Map<Integer, String> amortMaxStraightLine(Integer maxMonths, Double licenseFee, DecimalFormat df) {
+	private static Map<Integer, String> amortMaxStraightLine(Integer maxMonths, Double licenseFee) {
 		double lineItemAmt;
 		lineItemAmt = licenseFee/maxMonths;
 		lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		for(int month = 1; month <= maxMonths; month++) {
 			if(month == maxMonths) {
-				amorts.put(month, df.format(licenseFee - lineItemAmt*(maxMonths-1)));
+				amorts.put(month, df2.format(licenseFee - lineItemAmt*(maxMonths-1)));
 			} else {
-				amorts.put(month, df.format(lineItemAmt));
+				amorts.put(month, df2.format(lineItemAmt));
 			}
 		}
 		return amorts;
 	}
 
 	private static Map<Integer, String> amortStraightLine(double firstMonthPercent, Integer maxMonths, Double licenseFee,
-			String windowsBasedOrTimeBased, int amortPeriod1, DecimalFormat df) {
+			String windowsBasedOrTimeBased, int amortPeriod1) {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.TIME_BASED)) {
-			amorts.put(1, Double.toString(licenseFee));
+			amorts.put(1, df2.format(licenseFee));
 		} else {
 			double lineItemAmt;
 			int toBeUsedPeriod = 0;
@@ -189,16 +189,16 @@ public class AmortTemplateUtil {
 			}
 			if(firstMonthPercent>0) {
 				double firstMonthAmount = Double.valueOf(df.format((licenseFee*firstMonthPercent)/100));
-				amorts.put(1, Double.toString(firstMonthAmount));
+				amorts.put(1, df2.format(firstMonthAmount));
 				toBeUsedPeriod = toBeUsedPeriod - 1;
 				if(toBeUsedPeriod > 0) {
 					lineItemAmt = (licenseFee-firstMonthAmount)/toBeUsedPeriod;
 					lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 					for(int month = 1; month <= toBeUsedPeriod; month++) {
 						if(month == toBeUsedPeriod) {
-							amorts.put(month+1, df.format(licenseFee - firstMonthAmount - lineItemAmt*(toBeUsedPeriod-1)));
+							amorts.put(month+1, df2.format(licenseFee - firstMonthAmount - lineItemAmt*(toBeUsedPeriod-1)));
 						} else {
-							amorts.put(month+1, df.format(lineItemAmt));
+							amorts.put(month+1, df2.format(lineItemAmt));
 						}
 					}
 				}
@@ -207,9 +207,9 @@ public class AmortTemplateUtil {
 				lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 				for(int month = 1; month <= toBeUsedPeriod; month++) {
 					if(month == toBeUsedPeriod) {
-						amorts.put(month, df.format(licenseFee - lineItemAmt*(toBeUsedPeriod-1)));
+						amorts.put(month, df2.format(licenseFee - lineItemAmt*(toBeUsedPeriod-1)));
 					} else {
-						amorts.put(month, df.format(lineItemAmt));
+						amorts.put(month, df2.format(lineItemAmt));
 					}
 				}
 			}

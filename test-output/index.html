@@ -49,7 +49,7 @@
               <ul>
                 <li>
                   <a href="#" class="navigator-link " panel-name="test-xml-Default_suite">
-                    <span>C:\Users\mohammed.saquib\AppData\Local\Temp\testng-eclipse-196994384\testng-customsuite.xml</span>
+                    <span>C:\Users\mohammed.saquib\AppData\Local\Temp\testng-eclipse--2053692336\testng-customsuite.xml</span>
                   </a> <!-- navigator-link  -->
                 </li>
                 <li>
@@ -102,7 +102,7 @@
                     <div class="method-list-content failed suite-Default_suite">
                       <span>
                         <img width="3%" src="failed.png"/>
-                        <a href="#" class="method navigator-link" panel-name="suite-Default_suite" title="nbcu.compass.amorttemplate.test.AmortTest" hash-for-method="testAmortTemplateUS(1.0_Acquired Movies_Acquired MiniSeries_Acquired Movies)">testAmortTemplateUS(1.0_Acquired Movies_Acquired MiniSeries_Acquired Movies)</a> <!-- method navigator-link -->
+                        <a href="#" class="method navigator-link" panel-name="suite-Default_suite" title="nbcu.compass.amorttemplate.test.AmortTest" hash-for-method="testAmortTemplate(2.0_Acquired Series_Episode_Acquired Series)">testAmortTemplate(2.0_Acquired Series_Episode_Acquired Series)</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                     </div> <!-- method-list-content failed suite-Default_suite -->
@@ -125,20 +125,23 @@
             <div class="main-panel-content rounded-window-bottom">
               <div class="method">
                 <div class="method-content">
-                  <a name="testAmortTemplateUS(1.0_Acquired Movies_Acquired MiniSeries_Acquired Movies)">
-                  </a> <!-- testAmortTemplateUS(1.0_Acquired Movies_Acquired MiniSeries_Acquired Movies) -->
-                  <span class="method-name">testAmortTemplateUS</span>
-                  <span class="parameters">(1.0_Acquired Movies_Acquired MiniSeries_Acquired Movies)</span>
-                  <div class="stack-trace">java.lang.AssertionError: An unknown error occurred in the remote end while processing the command. (WARNING: The server did not provide any stacktrace information)
-Command duration or timeout: 390 milliseconds
+                  <a name="testAmortTemplate(2.0_Acquired Series_Episode_Acquired Series)">
+                  </a> <!-- testAmortTemplate(2.0_Acquired Series_Episode_Acquired Series) -->
+                  <span class="method-name">testAmortTemplate</span>
+                  <span class="parameters">(2.0_Acquired Series_Episode_Acquired Series)</span>
+                  <div class="stack-trace">java.lang.AssertionError: An element could not be located on the page using the given search parameters. (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 1.77 seconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html
 Build info: version: &apos;3.7.1&apos;, revision: &apos;8a0099a&apos;, time: &apos;2017-11-06T21:01:39.354Z&apos;
-System info: host: &apos;BSLGDC-L2045&apos;, ip: &apos;100.122.39.127&apos;, os.name: &apos;Windows 7&apos;, os.arch: &apos;x86&apos;, os.version: &apos;6.1&apos;, java.version: &apos;1.8.0_131&apos;
+System info: host: &apos;BSLGDC-L2045&apos;, ip: &apos;100.122.39.68&apos;, os.name: &apos;Windows 7&apos;, os.arch: &apos;x86&apos;, os.version: &apos;6.1&apos;, java.version: &apos;1.8.0_131&apos;
 Driver info: io.appium.java_client.windows.WindowsDriver
-Capabilities [{platformName=Windows, appTopLevelWindow=2b1092, platform=ANY}]
-Session ID: A0D899F4-DF88-411E-BF0C-E7CA455DCB18
+Capabilities [{platformName=Windows, appTopLevelWindow=55085a, platform=ANY}]
+Session ID: 1527A53E-043C-44F8-A1C5-CC3C6E3F0214
+*** Element info: {Using=name, value=Add Episode}
 	at org.testng.Assert.fail(Assert.java:93)
-	at nbcu.compass.amorttemplate.util.Log.fail(Log.java:420)
-	at nbcu.compass.amorttemplate.test.AmortTest.testAmortTemplateUS(AmortTest.java:101)
+	at nbcu.compass.amorttemplate.util.Log.fail(Log.java:405)
+	at nbcu.compass.amorttemplate.util.AutomationAgent.addEpisode(AutomationAgent.java:654)
+	at nbcu.compass.amorttemplate.test.AmortTest.testAmortTemplate(AmortTest.java:71)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
@@ -175,7 +178,7 @@ Session ID: A0D899F4-DF88-411E-BF0C-E7CA455DCB18
         </div> <!-- panel Default_suite -->
         <div panel-name="test-xml-Default_suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">C:\Users\mohammed.saquib\AppData\Local\Temp\testng-eclipse-196994384\testng-customsuite.xml</span>
+            <span class="header-content">C:\Users\mohammed.saquib\AppData\Local\Temp\testng-eclipse--2053692336\testng-customsuite.xml</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <pre>
@@ -226,14 +229,14 @@ data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
 data.addRows(1);
 data.setCell(0, 0, 0)
-data.setCell(0, 1, 'testAmortTemplateUS')
+data.setCell(0, 1, 'testAmortTemplate')
 data.setCell(0, 2, 'nbcu.compass.amorttemplate.test.AmortTest')
-data.setCell(0, 3, 69469);
+data.setCell(0, 3, 57479);
 window.suiteTableData['Default_suite']= { tableData: data, tableDiv: 'times-div-Default_suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 1 minutes</span>
+              <span class="suite-total-time">Total running time: 57 seconds</span>
               <div id="times-div-Default_suite">
               </div> <!-- times-div-Default_suite -->
             </div> <!-- times-div -->
@@ -245,24 +248,29 @@ return data;
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <div class="reporter-method-div">
-              <span class="reporter-method-name">testAmortTemplateUS(1.0_Acquired Movies_Acquired MiniSeries_Acquired Movies)</span>
+              <span class="reporter-method-name">testAmortTemplate(2.0_Acquired Series_Episode_Acquired Series)</span>
               <div class="reporter-method-output-div">
-                <span class="reporter-method-output"><div class="test-message">&emsp;Validating amort templaate for US networks: 1.0_Acquired Movies_Acquired MiniSeries_Acquired Movies</div></span>
-                <span class="reporter-method-output"><div class="test-message">&emsp;launchAppUsingNativeWindowHandle: Launching app using window handle</div></span>
-                <span class="reporter-method-output"><div class="test-message">&emsp;getElement: By: By.name: [PROJECTSTG] - COMPASS</div></span>
-                <span class="reporter-method-output"><div class="test-message">&emsp;loginCompass: Logging in application for user: 206534643</div></span>
-                <span class="reporter-method-output"><div class="test-result"><br><font color="green"><strong> User [206534643] successfully logged in Compass application </strong></font> </div>&emsp;</span>
-                <span class="reporter-method-output"><div class="test-message">&emsp;createContract: distributor: 10X10 Entertainment, dealType: Cash, negotiatedBy: LEGAL</div></span>
-                <span class="reporter-method-output"><div class="test-message">&emsp;writeResultInTxtFile: writing results in txt file: 1	Acquired Movies	Acquired MiniSeries	Acquired Movies	Fail</div></span>
-                <span class="reporter-method-output"><div class="test-message">&emsp;killApp: taskkill /F /IM NBCU.Compass.exe</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Validating amort template for US networks: 2.0_Acquired Series_Episode_Acquired Series</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start launchAppUsingNativeWindowHandle: Launching app using window handle</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start killApp: taskkill /F /IM NBCU.Compass.exe</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End killApp: taskkill /F /IM NBCU.Compass.exe</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start startExeApp: appPath: C:\Compass\RedGate\Compass_4.177.3.4_STGUAT5_Node_A_artifacts\Publish\app\setup.exe</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start getElement: By: By.name: [PROJECTSTG] - COMPASS</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End getElement: By: By.name: [PROJECTSTG] - COMPASS</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End launchAppUsingNativeWindowHandle: Launching app using window handle</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start addEpisode: titleName: Episode-1, titleType: Season1</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start isElementFoundByName: Episodes</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End isElementFoundByName: Episodes</div></span>
                 <span class="reporter-method-output"><!--FAIL--></span>
-                <span class="reporter-method-output"><div class="test-result"><br><font color="red"><strong> An unknown error occurred in the remote end while processing the command. (WARNING: The server did not provide any stacktrace information)
-Command duration or timeout: 390 milliseconds
+                <span class="reporter-method-output"><div class="test-result"><br><font color="red"><strong> An element could not be located on the page using the given search parameters. (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 1.77 seconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html
 Build info: version: '3.7.1', revision: '8a0099a', time: '2017-11-06T21:01:39.354Z'
-System info: host: 'BSLGDC-L2045', ip: '100.122.39.127', os.name: 'Windows 7', os.arch: 'x86', os.version: '6.1', java.version: '1.8.0_131'
+System info: host: 'BSLGDC-L2045', ip: '100.122.39.68', os.name: 'Windows 7', os.arch: 'x86', os.version: '6.1', java.version: '1.8.0_131'
 Driver info: io.appium.java_client.windows.WindowsDriver
-Capabilities [{platformName=Windows, appTopLevelWindow=2b1092, platform=ANY}]
-Session ID: A0D899F4-DF88-411E-BF0C-E7CA455DCB18 </strong></font> </div>&emsp;</span>
+Capabilities [{platformName=Windows, appTopLevelWindow=55085a, platform=ANY}]
+Session ID: 1527A53E-043C-44F8-A1C5-CC3C6E3F0214
+*** Element info: {Using=name, value=Add Episode} </strong></font> <a href=".\ScreenShot\testAmortTemplate_1.png" target="_blank" >[ScreenShot]</a></div>&emsp;</span>
               </div> <!-- reporter-method-output-div -->
             </div> <!-- reporter-method-div -->
           </div> <!-- main-panel-content rounded-window-bottom -->
@@ -288,8 +296,8 @@ Session ID: A0D899F4-DF88-411E-BF0C-E7CA455DCB18 </strong></font> </div>&emsp;</
               <div class="test-method">
                 <img src="failed.png">
                 </img>
-                <span class="method-name">testAmortTemplateUS(1.0_Acquired Movies_Acquired MiniSeries_Acquired Movies)</span>
-                <span class="method-start">2402 ms</span>
+                <span class="method-name">testAmortTemplate(2.0_Acquired Series_Episode_Acquired Series)</span>
+                <span class="method-start">7388 ms</span>
               </div> <!-- test-method -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->

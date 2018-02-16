@@ -153,7 +153,7 @@ public class AmortExcelReader {
 				testData.setDistributor(sheetRow.getCell(headerMap.get(HeaderEnum.Distributor.toString())).getStringCellValue());
 				testData.setDealType(sheetRow.getCell(headerMap.get(HeaderEnum.DealType.toString())).getStringCellValue());
 				testData.setNegotiatedBy(sheetRow.getCell(headerMap.get(HeaderEnum.NegotiatedBy.toString())).getStringCellValue());
-				testData.setTitleName(sheetRow.getCell(headerMap.get(HeaderEnum.TitleName.toString())).getStringCellValue());
+				testData.setNetwork(sheetRow.getCell(headerMap.get(HeaderEnum.Network.toString())).getStringCellValue());
 				testData.setWindows(getWindowData(sheetRow.getCell(headerMap.get(HeaderEnum.TcNo.toString())).getStringCellValue()));
 				testDataMap.put(sheetRow.getCell(headerMap.get(HeaderEnum.TcNo.toString())).getStringCellValue(), testData);
 			}

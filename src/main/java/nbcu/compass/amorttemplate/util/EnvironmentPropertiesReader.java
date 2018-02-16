@@ -1,5 +1,7 @@
 package nbcu.compass.amorttemplate.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,7 +23,8 @@ public class EnvironmentPropertiesReader {
 	private Properties loadProperties() {
 		Properties props = new Properties();
 		try {
-			InputStream cpr = EnvironmentPropertiesReader.class.getResourceAsStream("/amort.properties");		
+			File directory = new File(".");
+			InputStream cpr = new FileInputStream(directory+"/amort.properties");		
 			props.load(cpr);
 			cpr.close();
 		} catch (FileNotFoundException e) {

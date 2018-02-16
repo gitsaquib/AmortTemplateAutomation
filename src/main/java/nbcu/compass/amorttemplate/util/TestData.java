@@ -8,7 +8,8 @@ public class TestData {
 	private String distributor;
 	private String dealType;
 	private String negotiatedBy;
-	private String titleName;
+	private String network;
+	
 	private List<Window> windows;
 
 	public String getTcNo() {
@@ -35,16 +36,16 @@ public class TestData {
 	public void setNegotiatedBy(String negotiatedBy) {
 		this.negotiatedBy = negotiatedBy;
 	}
-	public String getTitleName() {
-		return titleName;
-	}
-	public void setTitleName(String titleName) {
-		this.titleName = titleName;
-	}
 	public List<Window> getWindows() {
 		return windows;
 	}
 	public void setWindows(List<Window> windows) {
 		this.windows = windows;
+	}
+	public String getNetwork() {
+		return network;
+	}
+	public void setNetwork(String network) {
+		this.network = network;
 	}
 }

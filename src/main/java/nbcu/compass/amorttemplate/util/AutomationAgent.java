@@ -32,16 +32,18 @@ public class AutomationAgent {
 	private static WindowsDriver appSession = null;
 	
 	public void writeResultInTxtFile(String network, String status) {
-		Log.message("writeResultInTxtFile: writing results in txt file: "+ status);
 		try {
+			Log.message("Start writeResultInTxtFile: writing results in txt file: "+ status);
 			File directory = new File(".");
 			File txtFile = new File(directory.getCanonicalPath() + File.separator + "TestData"+ File.separator + "AmortTemplate"+network+"-Results.txt");
 			FileWriter fw = new FileWriter(txtFile, true);
 			PrintWriter pw = new PrintWriter(fw);
 			pw.println(status);
 			pw.close();
+			Log.message("End writeResultInTxtFile: writing results in txt file: "+ status);
 		} catch (IOException e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 		}
 	}
 	
@@ -50,11 +52,9 @@ public class AutomationAgent {
 		return appSession;
 	}
 
-	private Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
-	
 	@SuppressWarnings("rawtypes")
 	public void launchApplicationFromBrowser(String url, String appWebUrl) {
-		Log.message("launchApplicationFromBrowser: launching app from web browser");
+		Log.message("Start launchApplicationFromBrowser: launching app from web browser");
 		WebDriver ieDriver = null;
 		File directory = new File(".");
 		String strBasepath;
@@ -79,32 +79,45 @@ public class AutomationAgent {
 			WindowsDriver driver2 = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities2);
 			driver2.getKeyboard().sendKeys(Keys.chord(Keys.ALT, "r"));
 			ieDriver.quit();
+			Log.message("End launchApplicationFromBrowser: launching app from web browser");
 		} catch (IOException | InterruptedException e) {
 			if(null != ieDriver) {
 				ieDriver.quit();
 			}
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 		}
 	}
 	
 	public void closeApplication() {
-		Log.message("closeApplication: Closing app session");
+		Log.message("Start closeApplication: Closing app session");
 		try {
 			if(null != appSession) {
+				closePopupIfAny();
 				appSession.closeApp();
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 				if(!clickYesOrNoOnPopup("Do you want to save the changes?", "No")) {
-					Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 					clickYesOrNoOnPopup("Are you sure you want to exit the application?", "Yes");
+					Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+				} else {
+					Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
 				}
 			}
+			Log.message("End closeApplication: Closing app session");
 		} catch(Exception e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 		}
 	}
 	
-	public void clickAt(int x, int y) {
-		Log.message("clickAt: clicking on x: "+x+", y: "+y);
+	private void closePopupIfAny() {
+		while(isElementFoundByName("COMPASS")) {
+			appSession.findElementByName("Yes").click();
+		}
+	}
+	
+	public void doubelClickAt(int x, int y) {
+		Log.message("Start clickAt: clicking on x: "+x+", y: "+y);
 		Actions vActions = new Actions(appSession);
 		vActions.moveToElement(appSession.findElementByName("System"), 0,0);
 		Action vClickAction = vActions.build();
@@ -113,26 +126,106 @@ public class AutomationAgent {
 		vActions.doubleClick();
 		vClickAction = vActions.build();
 		vClickAction.perform();
+		Log.message("End clickAt: clicking on x: "+x+", y: "+y);
     }
 
+	@SuppressWarnings("unchecked")
+	public void scheduleTitle(String url, String appName, String titleId, String startDate, String endDate, int runCnt) {
+		try {
+			Log.message("Start scheduleTitle: scheduling title: "+titleId);
+			/*
+			appSession.findElementByName("Scheduling").click();
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			appSession.findElementByName("Create New Schedule").click();
+			WebElement parent =  appSession.findElementByAccessibilityId("ScheduleName");
+	        parent.click();
+	        parent.clear();
+	        parent.sendKeys(titleId);
+	        setScheduleDates("ScheduleStartDate", startDate);
+	        setScheduleDates("ScheduleEndDate", endDate);
+	        clickSaveButton();
+	        Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+	        */
+	        appSession.findElementByName(titleId).click();
+	        appSession.findElementByName("Open Schedule").click();
+	        Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+	        DesiredCapabilities appCapabilities = new DesiredCapabilities();
+			appCapabilities.setCapability("app", "Root");
+			WindowsDriver<WindowsElement> driver = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities);
+			WebElement element = getElement(driver, By.name("MONTHLY SCHEDULE"));
+			String handleStr = element.getAttribute("NativeWindowHandle");
+			int handleInt = Integer.parseInt(handleStr);
+			String handleHex = Integer.toHexString(handleInt);
+			DesiredCapabilities appCapabilities2 = new DesiredCapabilities();
+			appCapabilities2.setCapability("appTopLevelWindow", handleHex);
+			appSession = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities2);
+			int cnt = 1;
+			List<WebElement> dayElements = appSession.findElementsByClassName("GroupHeader");
+			for(WebElement dayElement:dayElements) {
+				
+				try {
+					Actions act = new Actions(appSession);
+					act.moveToElement(dayElement).perform();
+					act.contextClick().perform();
+					WebElement newBtn = appSession.findElementByName("New");
+					if(newBtn.isEnabled()) {
+						newBtn.click();
+						WebElement appointmentItem = appSession.findElementByName("AppointmentItem");
+						act = new Actions(appSession);
+						act.moveToElement(appointmentItem).perform();
+						act.contextClick().perform();
+						appSession.findElementByName("Apply Episodes").click();
+						Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
+						appCapabilities = new DesiredCapabilities();
+						appCapabilities.setCapability("app", "Root");
+						driver = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities);
+						element = getElement(driver, By.name("Apply Episodes"));
+						handleStr = element.getAttribute("NativeWindowHandle");
+						handleInt = Integer.parseInt(handleStr);
+						handleHex = Integer.toHexString(handleInt);
+						appCapabilities2 = new DesiredCapabilities();
+						appCapabilities2.setCapability("appTopLevelWindow", handleHex);
+						appSession = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities2);
+						
+						if(cnt == runCnt) {
+							break;
+						}
+						cnt++;
+					}
+					Log.message("End scheduleTitle: scheduling title: "+titleId);
+				} catch(Exception e) {
+					System.out.println("Error");
+				}
+			}
+		} catch(Exception e) {
+			Log.fail(e.getMessage(), appSession);
+			killApp();
+		}
+	}
+	
 	public Map<Integer, String> generateAmort(double totalLicenseFee) {
-		Log.message("generateAmort: generating amort for "+totalLicenseFee);
+		Log.message("Start generateAmort: generating amort for "+totalLicenseFee);
 		try {
 			appSession.findElementByName("Amortize").click();
 			appSession.findElementByName("Generate Amort").click();
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			clickYesOrNoOnPopup("All old amort data will be deleted. Do you want to continue?", "Yes");
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			clickYesOrNoOnPopup("Effective Date should be earlier or equal to the Amort Window Start Date", "Yes");
-			readAmortAmtRows(totalLicenseFee, 0);
+			Map<Integer, String> amorts = readAmortAmtRows(totalLicenseFee, 0);
+			Log.message("End generateAmort: generating amort for "+totalLicenseFee);
 			return amorts;
 		} catch(Exception e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 			return null;
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void readAmortAmtRows(double totalLicenseFee, int previousLastMonth) {
-		Log.message("readAmortAmtRows: read amort amounts");
+	private Map<Integer, String> readAmortAmtRows(double totalLicenseFee, int previousLastMonth) {
+		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
+		Log.message("Start readAmortAmtRows: read amort amounts");
 		try {
 			int scrollCount = 0;
 			List<WebElement> dataRows = appSession.findElements(By.className("DataRow"));
@@ -154,7 +247,7 @@ public class AutomationAgent {
 				scrollCount++;
 			}
 			if(lastMonth==previousLastMonth) {
-				return;
+				return amorts;
 			} else {
 				if(totalLicenseFee > 0) {
 					for(int i=0; i<scrollCount-1; i++) {
@@ -165,18 +258,23 @@ public class AutomationAgent {
 					System.out.println("TotalLicenseFee left:"+totalLicenseFee);
 				}
 			}
+			Log.message("readAmortAmtRows: read amort amounts");
 		} catch (Exception e) {
 			Log.fail(e.getMessage(), appSession);
-			return;
+			killApp();
+			return amorts;
 		}
+		return amorts;
 	}
 	
 	private boolean clickYesOrNoOnPopup(String message, String yesOrNo) {
-		Log.message("clickYesOrNoOnPopup: click on yes or no button");
+		Log.message("Start clickYesOrNoOnPopup: "+message+", "+yesOrNo);
 		try {
 			WebElement element = appSession.findElementByName(message);
 			if(null != element) {
+				Log.message("Popup found with message: "+message);
 				appSession.findElementByName(yesOrNo).click();
+				Log.message("End clickYesOrNoOnPopup: "+message+", "+yesOrNo);
 				return true;
 			}
 		} catch (Exception e) {
@@ -187,7 +285,7 @@ public class AutomationAgent {
 	
 	@SuppressWarnings("unchecked")
 	public Double setAllocationData(String licenseType, String licenseAmount, String amortTemplate) {
-		Log.message("setAllocationData: licenseType"+licenseType+", licenseAmount: "+licenseAmount+", amortTemplate: "+amortTemplate);
+		Log.message("Start setAllocationData: licenseType"+licenseType+", licenseAmount: "+licenseAmount+", amortTemplate: "+amortTemplate);
 		try {
 			double totalLicenseFee = 0.0;
 			appSession.findElementByName("Allocation").click();
@@ -199,7 +297,7 @@ public class AutomationAgent {
 			appSession.getKeyboard().sendKeys(licenseType);
 			moveByOffsetAndClick(vActions, 100, 0);
 			appSession.getKeyboard().sendKeys(licenseAmount);
-			appSession.findElementByAccessibilityId("SaveButton").click();
+			clickSaveButton();
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			clickElement("License Fee Type");
 			moveByOffsetAndClick(vActions, -35, 0);
@@ -208,7 +306,7 @@ public class AutomationAgent {
 			clickElement("License Fee Type");
 			clickElement("Amortization Template");
 			appSession.getKeyboard().sendKeys(amortTemplate);
-			appSession.findElementByAccessibilityId("SaveButton").click();
+			clickSaveButton();
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			List<WebElement> elements = appSession.findElementsByName("Total License Fee");
 			for(WebElement element:elements) {
@@ -220,33 +318,54 @@ public class AutomationAgent {
 					totalLicenseFee = Double.parseDouble(text);
 				}
 			}
+			Log.message("End setAllocationData: licenseType"+licenseType+", licenseAmount: "+licenseAmount+", amortTemplate: "+amortTemplate);
 			return totalLicenseFee;
 		} catch(Exception e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 			return null;
 		}
 	}
 
+	private void clickSaveButton() {
+		try {
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			WebElement saveButtonEle = appSession.findElementByAccessibilityId("SaveButton");
+			int retry = 0;
+			while(retry<3) {
+				if(saveButtonEle.isEnabled()) {
+					saveButtonEle.click();	
+					return;
+				}
+				retry++;
+			}
+		} catch (InterruptedException e) {
+			Log.fail(e.getMessage(), appSession);
+			killApp();
+		}
+	}
+
 	private void moveByOffsetAndClick(Actions vActions, int x, int y) {
-		Log.message("moveByOffsetAndClick: x: "+x+", y: "+y);
+		Log.message("Start moveByOffsetAndClick: x: "+x+", y: "+y);
 		vActions.moveByOffset(x, y);
 		vActions.click();
 		Action vClickAction = vActions.build();
 		vClickAction.perform();
+		Log.message("End moveByOffsetAndClick: x: "+x+", y: "+y);
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void clickElement(String ele) {
-		Log.message("clickElement: "+ele);	
+		Log.message("Start clickElement: "+ele);	
 		List<WebElement> elements;
 		elements = appSession.findElementsByName(ele);
 		for(WebElement element:elements) {
 			try {
 				WebElement textBox = element.findElement(By.className("Cell"));
-				if(null != textBox) 
-				{
+				if(null != textBox) {
 					element.click();
 					textBox.click();
+					Log.message("End clickElement: "+ele);
 					return;
 				}
 			} catch (Exception e) {
@@ -257,7 +376,7 @@ public class AutomationAgent {
 	
 	@SuppressWarnings("unchecked")
 	private void setPlayWindowAttribute(String key, String value) {
-		Log.message("setPlayWindowAttribute: key: "+key+", value: "+value);
+		Log.message("Start setPlayWindowAttribute: key: "+key+", value: "+value);
 		try {
 			List<WebElement> elements = appSession.findElementsByName(key);
 			for(WebElement element:elements) {
@@ -267,17 +386,49 @@ public class AutomationAgent {
 					appSession.getKeyboard().sendKeys(value);
 				}
 			}
+			Log.message("End setPlayWindowAttribute: key: "+key+", value: "+value);
 		} catch(Exception e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void setScheduleDates(String key, String value) {
+		Log.message("Start setScheduleDates: key: "+key+", value: "+value);
+		try {
+			List<WebElement> elements = appSession.findElementsByAccessibilityId(key);
+			for(WebElement element:elements) {
+				element.click();
+				element.clear();
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				appSession.getKeyboard().sendKeys(value);
+			}
+			Log.message("End setScheduleDates: key: "+key+", value: "+value);
+		} catch(Exception e) {
+			Log.fail(e.getMessage(), appSession);
+			killApp();
 		}
 	}
 
+
+	@SuppressWarnings("unchecked")
 	public void openTitleAndWindow(String financeType, List<Window> windows) {
-		Log.message("openTitleAndWindow: financeType: "+financeType+", windows: "+windows);
+		Log.message("Start openTitleAndWindow: financeType: "+financeType+", windows: "+windows);
 		try {
-			appSession.findElementByAccessibilityId("Row_0").click();
 			Actions vActions = new Actions(appSession);
-			vActions.moveByOffset(-170, 0);
+			List<WebElement> titleNames = appSession.findElementsByAccessibilityId("Cell_TitleName");
+			for(WebElement titleName:titleNames) {
+				try {
+					WebElement title = titleName.findElement(By.className("Cell"));
+					title.click();
+					break;
+				} catch (Exception e) {
+					;
+				}
+			}
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			vActions.moveByOffset(-50, 0);
 			vActions.doubleClick();
 			Action vClickAction = vActions.build();
 			vClickAction.perform();
@@ -297,43 +448,44 @@ public class AutomationAgent {
 				setValueInDropdown("MasterSeriesCombobox", "TEST 123");
 				appSession.findElementByName("TEST 123").click();
 			}
-			appSession.findElementByAccessibilityId("SaveButton").click();
+			clickSaveButton();
 			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+			Log.message("End openTitleAndWindow: financeType: "+financeType+", windows: "+windows);
 		} catch(Exception e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 		}
 	}
 	
-	public void launchAppUsingNativeWindowHandle(String appPath, String url, String appName, boolean retry) {
-		Log.message("launchAppUsingNativeWindowHandle: Launching app using window handle");
+	public void launchAppUsingNativeWindowHandle(String appPath, String url, String appName) {
+		Log.message("Start launchAppUsingNativeWindowHandle: Launching app using window handle");
 		try {
+			killApp();
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			startExeApp(appPath);
 			DesiredCapabilities appCapabilities = new DesiredCapabilities();
 			appCapabilities.setCapability("app", "Root");
 			WindowsDriver<WindowsElement> driver = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities);
 			WebElement element = getElement(driver, By.name(appName));
-			if(element == null) {
-				if(!retry) {
-					startExeApp(appPath);
-					launchAppUsingNativeWindowHandle(appPath, url, appName, true);
-				}
-			} else {
-				String handleStr = element.getAttribute("NativeWindowHandle");
-				int handleInt = Integer.parseInt(handleStr);
-				String handleHex = Integer.toHexString(handleInt);
-				DesiredCapabilities appCapabilities2 = new DesiredCapabilities();
-				appCapabilities2.setCapability("appTopLevelWindow", handleHex);
-				appSession = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities2);
-				appSession.manage().window().maximize();
-			}
+			String handleStr = element.getAttribute("NativeWindowHandle");
+			int handleInt = Integer.parseInt(handleStr);
+			String handleHex = Integer.toHexString(handleInt);
+			DesiredCapabilities appCapabilities2 = new DesiredCapabilities();
+			appCapabilities2.setCapability("appTopLevelWindow", handleHex);
+			appSession = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities2);
+			appSession.manage().window().maximize();
+			Log.message("End launchAppUsingNativeWindowHandle: Launching app using window handle");
 		} catch (Exception e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 		}
 	}
 	
 	private WebElement getElement(WindowsDriver<WindowsElement> driver, By by) {
-		Log.message("getElement: By: "+by);
+		Log.message("Start getElement: By: "+by);
 		try {
 			WebElement element = driver.findElement(by);
+			Log.message("End getElement: By: "+by);
 			return element;
 		} catch(Exception e) {
 			return null;
@@ -341,7 +493,7 @@ public class AutomationAgent {
 	}
 
 	private void startExeApp(String appPath) {
-		Log.message("startExeApp: appPath: "+appPath);
+		Log.message("Start startExeApp: appPath: "+appPath);
 		try {
 			Process process = new ProcessBuilder(appPath).start();
 			InputStream is = process.getInputStream();
@@ -352,38 +504,43 @@ public class AutomationAgent {
 				System.out.println(line);
 			}
 			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+			Log.message("End startExeApp: appPath: "+appPath);
 		} catch(Exception e) {
 			return;
 		}
 	}
 	
 	public void killApp() {
-		Log.message("killApp: taskkill /F /IM NBCU.Compass.exe");
+		Log.message("Start killApp: taskkill /F /IM NBCU.Compass.exe");
 		try {
 			Runtime rt = Runtime.getRuntime();
 			rt.exec("taskkill /F /IM NBCU.Compass.exe");
 			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+			Log.message("End killApp: taskkill /F /IM NBCU.Compass.exe");
 		} catch(Exception e) {
 			return;
 		}
 	}
 	
 	public void readPopupMessage() {
-		Log.message("readPopupMessage: read message from popup");
+		Log.message("Start readPopupMessage: read message from popup");
 		try {
 			double coordinates[] = SikuliImageRecognitionUtil.findImage(appSession, "no-amort-rule.png", 169, 18);
 			if(null != coordinates) {
 				System.out.println(coordinates[0]+" - "+coordinates[1]);
 			}
+			Log.message("End readPopupMessage: read message from popup");
 		} catch (Exception e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 		}
 	}
 
 	public void loginCompass(String username, String password, String displayName) {
-		Log.message("loginCompass: Logging in application for user: "+username);
+		Log.message("Start loginCompass: Logging in application for user: "+username);
 		try {
 			if(isElementFoundByAccessibilityId("username")) {
+				Log.message("User ["+username+"] is not already logged in Compass application");
 				appSession.findElementByAccessibilityId("username").clear();
 				appSession.findElementByAccessibilityId("username").sendKeys(username);
 				appSession.findElementByAccessibilityId("password").clear();
@@ -392,45 +549,51 @@ public class AutomationAgent {
 				Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
 				Log.pass("User ["+username+"] successfully logged in Compass application");
 			} else {
+				closePopupIfAny();
 				if(isElementFoundByName(displayName)) {
 					Log.message("User ["+username+"] already logged in Compass application");
-					if(isElementFoundByName("CloseButton")) {
+					while(isElementFoundByName("CloseButton")) {
 						appSession.findElementByName("CloseButton").click();
 						clickYesOrNoOnPopup("Do you want to save the changes?", "No");
-						Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-						appSession.findElementByName("Contract Management").click();
+						Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
 					}
+					appSession.findElementByName("Contract Management").click();
 				}
 				
 			}
+			Log.message("End loginCompass: Logging in application for user: "+username);
 		} catch(Exception e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 		}
 	}
 
-	public void createContract(String distributor, String dealType, String negotiatedBy, String titleName, String titleType) {
-		Log.message("createContract: distributor: "+distributor+", dealType: "+dealType+", negotiatedBy: "+negotiatedBy);
+	public void createContract(String network, String distributor, String dealType, String negotiatedBy, String titleName, String titleType) {
+		Log.message("Start createContract: distributor: "+distributor+", dealType: "+dealType+", negotiatedBy: "+negotiatedBy);
 		try {
 			appSession.findElementByName("Create New Contract").click();
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			SimpleDateFormat df = new SimpleDateFormat("YYYYMMDDHHmmss");
 			String packageName = "TestPackage_" + df.format(new Date());
 			appSession.findElementByAccessibilityId("DistributorPackageTextBox").sendKeys(packageName);
+			clearAndSetValueInDropdown("OriginatingNetworkComboBox", network);
 			setValueInDropdown("DistributorComboBox", distributor);
 			setValueInDropdown("DealTypeCombobox", dealType);
 			setValueInDropdown("NegotiatedByCombobox", negotiatedBy);
 			addTitle(titleName, titleType);
-			appSession.findElementByAccessibilityId("SaveButton").click();
+			clickSaveButton();
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			Log.pass("Successfully created contract with DistributorPackage: "+ packageName);
+			Log.message("End createContract: distributor: "+distributor+", dealType: "+dealType+", negotiatedBy: "+negotiatedBy);
 		} catch(Exception e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	private void addTitle(String titleName, String titleType) {
-		Log.message("addTitle: titleName: "+titleName+", titleType: "+titleType);
+		Log.message("Start addTitle: titleName: "+titleName+", titleType: "+titleType);
 		try {
 			List<WebElement> elements = appSession.findElements(By.className("HeaderFooterCell"));
 			boolean titleNameSet = false, titleTypeSet = false;
@@ -451,23 +614,60 @@ public class AutomationAgent {
 					if(null != comboBox) {
 						comboBox.click();
 						Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+						appSession.getKeyboard().sendKeys(titleType);
 						WebElement webElement = appSession.findElementByName(titleType);
 						if(null != webElement) {
 							webElement.click();
-							appSession.getKeyboard().sendKeys(titleType);
 							titleTypeSet= true;
 						}
 					}
 				}
 			}
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			Log.message("End addTitle: titleName: "+titleName+", titleType: "+titleType);
 		} catch(Exception e) {
 			Log.fail(e.getMessage(), appSession);
+			killApp();
 		}
 	}
 	
+	@SuppressWarnings("unchecked")
+	private void setEpisodeValue(String key, String value) {
+		List<WebElement> elements = appSession.findElementsByAccessibilityId(key);
+		for(WebElement element:elements) {
+			try { 
+				WebElement childElement = element.findElement(By.className("Cell"));
+				childElement.click();
+				appSession.getKeyboard().sendKeys(value);
+				Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+				break;
+			} catch(Exception e) {
+				;
+			}
+		}
+	}
+	
+	public void addEpisode(String episodeName, String season) {
+		Log.message("Start addEpisode: episodeName: "+episodeName+", season: "+season);
+		try {
+			if(isElementFoundByName("Episodes")) {
+				appSession.findElementByName("Episodes").click();
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				appSession.findElementByName("Add Episode").click();
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				setEpisodeValue("Cell_EpisodeTitle.TitleName", "Episode-1");
+				setEpisodeValue("Cell_EpisodeTitle.SeasonNo", "Season1");
+				clickSaveButton();
+				Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+				Log.message("End addEpisode: episodeName: "+episodeName+", season: "+season);
+			}
+		} catch(Exception e) {
+			Log.fail(e.getMessage(), appSession);
+			killApp();
+		}
+	}
 	private void clearAndSetValueInDropdown(String key, String value) {
-		Log.message("clearAndSetValueInDropdown: key:"+key+", value: "+value);
+		Log.message("Start clearAndSetValueInDropdown: key:"+key+", value: "+value);
 		WebElement parent =  appSession.findElementByAccessibilityId(key);
         parent.click();
         WebElement textBox = parent.findElement(By.className("TextBox"));
@@ -478,21 +678,24 @@ public class AutomationAgent {
         }
         appSession.getKeyboard().sendKeys(Keys.CLEAR);
         appSession.getKeyboard().sendKeys(value);
+        Log.message("End clearAndSetValueInDropdown: key:"+key+", value: "+value);
 	}
 	
 	private void setValueInDropdown(String key, String value) {
-		Log.message("setValueInDropdown: key:"+key+", value: "+value);
+		Log.message("Start setValueInDropdown: key:"+key+", value: "+value);
 		WebElement parent =  appSession.findElementByAccessibilityId(key);
         parent.click();
         WebElement textBox = parent.findElement(By.className("TextBox"));
     	textBox.click();
     	textBox.sendKeys(value);
+    	Log.message("End setValueInDropdown: key:"+key+", value: "+value);
 	}
 	
 	private boolean isElementFoundByAccessibilityId(String key) {
-		Log.message("isElementFound: "+key);
+		Log.message("Start isElementFoundByAccessibilityId: "+key);
 		try {
-			WebElement element =  appSession.findElementByAccessibilityId(key);
+			appSession.findElementByAccessibilityId(key);
+			Log.message("End isElementFoundByAccessibilityId: "+key);
 			return true;
 		} catch(Exception e) {
 			return false;	
@@ -500,9 +703,10 @@ public class AutomationAgent {
 	}
 	
 	private boolean isElementFoundByName(String key) {
-		Log.message("isElementFound: "+key);
+		Log.message("Start isElementFoundByName: "+key);
 		try {
-			WebElement element =  appSession.findElementByName(key);
+			appSession.findElementByName(key);
+			Log.message("End isElementFoundByName: "+key);
 			return true;
 		} catch(Exception e) {
 			return false;	

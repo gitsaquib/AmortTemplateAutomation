@@ -1,17 +1,22 @@
-<h2>Reporter output</h2><table><tr><td><div class="test-message">&emsp;Validating amort templaate for US networks: 1.0_Acquired Movies_Acquired MiniSeries_Acquired Movies</div></td></tr>
-<tr><td><div class="test-message">&emsp;launchAppUsingNativeWindowHandle: Launching app using window handle</div></td></tr>
-<tr><td><div class="test-message">&emsp;getElement: By: By.name: [PROJECTSTG] - COMPASS</div></td></tr>
-<tr><td><div class="test-message">&emsp;loginCompass: Logging in application for user: 206534643</div></td></tr>
-<tr><td><div class="test-result"><br><font color="green"><strong> User [206534643] successfully logged in Compass application </strong></font> </div>&emsp;</td></tr>
-<tr><td><div class="test-message">&emsp;createContract: distributor: 10X10 Entertainment, dealType: Cash, negotiatedBy: LEGAL</div></td></tr>
-<tr><td><div class="test-message">&emsp;writeResultInTxtFile: writing results in txt file: 1	Acquired Movies	Acquired MiniSeries	Acquired Movies	Fail</div></td></tr>
-<tr><td><div class="test-message">&emsp;killApp: taskkill /F /IM NBCU.Compass.exe</div></td></tr>
+<h2>Reporter output</h2><table><tr><td><div class="test-message">&emsp;Validating amort template for US networks: 2.0_Acquired Series_Episode_Acquired Series</div></td></tr>
+<tr><td><div class="test-message">&emsp;Start launchAppUsingNativeWindowHandle: Launching app using window handle</div></td></tr>
+<tr><td><div class="test-message">&emsp;Start killApp: taskkill /F /IM NBCU.Compass.exe</div></td></tr>
+<tr><td><div class="test-message">&emsp;End killApp: taskkill /F /IM NBCU.Compass.exe</div></td></tr>
+<tr><td><div class="test-message">&emsp;Start startExeApp: appPath: C:\Compass\RedGate\Compass_4.177.3.4_STGUAT5_Node_A_artifacts\Publish\app\setup.exe</div></td></tr>
+<tr><td><div class="test-message">&emsp;Start getElement: By: By.name: [PROJECTSTG] - COMPASS</div></td></tr>
+<tr><td><div class="test-message">&emsp;End getElement: By: By.name: [PROJECTSTG] - COMPASS</div></td></tr>
+<tr><td><div class="test-message">&emsp;End launchAppUsingNativeWindowHandle: Launching app using window handle</div></td></tr>
+<tr><td><div class="test-message">&emsp;Start addEpisode: titleName: Episode-1, titleType: Season1</div></td></tr>
+<tr><td><div class="test-message">&emsp;Start isElementFoundByName: Episodes</div></td></tr>
+<tr><td><div class="test-message">&emsp;End isElementFoundByName: Episodes</div></td></tr>
 <tr><td><!--FAIL--></td></tr>
-<tr><td><div class="test-result"><br><font color="red"><strong> An unknown error occurred in the remote end while processing the command. (WARNING: The server did not provide any stacktrace information)
-Command duration or timeout: 390 milliseconds
+<tr><td><div class="test-result"><br><font color="red"><strong> An element could not be located on the page using the given search parameters. (WARNING: The server did not provide any stacktrace information)
+Command duration or timeout: 1.77 seconds
+For documentation on this error, please visit: http://seleniumhq.org/exceptions/no_such_element.html
 Build info: version: '3.7.1', revision: '8a0099a', time: '2017-11-06T21:01:39.354Z'
-System info: host: 'BSLGDC-L2045', ip: '100.122.39.127', os.name: 'Windows 7', os.arch: 'x86', os.version: '6.1', java.version: '1.8.0_131'
+System info: host: 'BSLGDC-L2045', ip: '100.122.39.68', os.name: 'Windows 7', os.arch: 'x86', os.version: '6.1', java.version: '1.8.0_131'
 Driver info: io.appium.java_client.windows.WindowsDriver
-Capabilities [{platformName=Windows, appTopLevelWindow=2b1092, platform=ANY}]
-Session ID: A0D899F4-DF88-411E-BF0C-E7CA455DCB18 </strong></font> </div>&emsp;</td></tr>
+Capabilities [{platformName=Windows, appTopLevelWindow=55085a, platform=ANY}]
+Session ID: 0061AA7D-2E30-4D32-AE36-CF808338D170
+*** Element info: {Using=name, value=Add Episode} </strong></font> <a href=".\ScreenShot\testAmortTemplate_1.png" target="_blank" >[ScreenShot]</a></div>&emsp;</td></tr>
 </table>

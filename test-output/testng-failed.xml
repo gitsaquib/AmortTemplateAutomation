@@ -5,7 +5,7 @@
     <classes>
       <class name="nbcu.compass.amorttemplate.test.AmortTest">
         <methods>
-          <include name="testAmortTemplateUS" invocation-numbers="0"/>
+          <include name="testAmortTemplate" invocation-numbers="0"/>
           <include name="init"/>
         </methods>
       </class> <!-- nbcu.compass.amorttemplate.test.AmortTest -->

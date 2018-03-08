@@ -14,6 +14,7 @@ public class AmortTemplateGrid {
 	private double maxMonths;
 	private double firstMonthAmortPercent;
 	private String isMultipleWindowFlag;
+	private String addEpisode;
 	private Map<Integer, Double> amortSectionGrids; 
 	
 	public Map<Integer, Double> getAmortSectionGrids() {
@@ -83,5 +84,11 @@ public class AmortTemplateGrid {
 	}
 	public void setAmortTemplateNo(int amortTemplateNo) {
 		this.amortTemplateNo = amortTemplateNo;
+	}
+	public String getAddEpisode() {
+		return addEpisode;
+	}
+	public void setAddEpisode(String addEpisode) {
+		this.addEpisode = addEpisode;
 	}
 }

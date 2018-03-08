@@ -22,11 +22,16 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.sikuli.script.FindFailed;
+import org.sikuli.script.Pattern;
+import org.sikuli.script.Screen;
 
 import io.appium.java_client.windows.WindowsDriver;
 import io.appium.java_client.windows.WindowsElement;
 
 public class AutomationAgent {
+	
+	private static EnvironmentPropertiesReader configProperty = EnvironmentPropertiesReader.getInstance();
 	
 	@SuppressWarnings("rawtypes")
 	private static WindowsDriver appSession = null;
@@ -42,8 +47,7 @@ public class AutomationAgent {
 			pw.close();
 			Log.message("End writeResultInTxtFile: writing results in txt file: "+ status);
 		} catch (IOException e) {
-			Log.fail(e.getMessage(), appSession);
-			killApp();
+			Log.fail(e.getMessage());
 		}
 	}
 	
@@ -53,7 +57,7 @@ public class AutomationAgent {
 	}
 
 	@SuppressWarnings("rawtypes")
-	public void launchApplicationFromBrowser(String url, String appWebUrl) {
+	public void launchApplicationFromBrowser(String url, String appWebUrl, String statusMessage) {
 		Log.message("Start launchApplicationFromBrowser: launching app from web browser");
 		WebDriver ieDriver = null;
 		File directory = new File(".");
@@ -81,6 +85,7 @@ public class AutomationAgent {
 			ieDriver.quit();
 			Log.message("End launchApplicationFromBrowser: launching app from web browser");
 		} catch (IOException | InterruptedException e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			if(null != ieDriver) {
 				ieDriver.quit();
 			}
@@ -89,7 +94,7 @@ public class AutomationAgent {
 		}
 	}
 	
-	public void closeApplication() {
+	public void closeApplication(String statusMessage) {
 		Log.message("Start closeApplication: Closing app session");
 		try {
 			if(null != appSession) {
@@ -105,6 +110,7 @@ public class AutomationAgent {
 			}
 			Log.message("End closeApplication: Closing app session");
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
@@ -130,7 +136,7 @@ public class AutomationAgent {
     }
 
 	@SuppressWarnings("unchecked")
-	public void scheduleTitle(String url, String appName, String titleId, String startDate, String endDate, int runCnt) {
+	public void scheduleTitle(String url, String appName, String titleId, String startDate, String endDate, int runCnt, String statusMessage) {
 		try {
 			Log.message("Start scheduleTitle: scheduling title: "+titleId);
 			/*
@@ -198,12 +204,13 @@ public class AutomationAgent {
 				}
 			}
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
 	}
 	
-	public Map<Integer, String> generateAmort(double totalLicenseFee) {
+	public Map<Integer, String> generateAmort(double totalLicenseFee, String statusMessage) {
 		Log.message("Start generateAmort: generating amort for "+totalLicenseFee);
 		try {
 			appSession.findElementByName("Amortize").click();
@@ -212,10 +219,11 @@ public class AutomationAgent {
 			clickYesOrNoOnPopup("All old amort data will be deleted. Do you want to continue?", "Yes");
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			clickYesOrNoOnPopup("Effective Date should be earlier or equal to the Amort Window Start Date", "Yes");
-			Map<Integer, String> amorts = readAmortAmtRows(totalLicenseFee, 0);
+			Map<Integer, String> amorts = readAmortAmtRows(totalLicenseFee, 0, statusMessage);
 			Log.message("End generateAmort: generating amort for "+totalLicenseFee);
 			return amorts;
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 			return null;
@@ -223,7 +231,7 @@ public class AutomationAgent {
 	}
 
 	@SuppressWarnings("unchecked")
-	private Map<Integer, String> readAmortAmtRows(double totalLicenseFee, int previousLastMonth) {
+	private Map<Integer, String> readAmortAmtRows(double totalLicenseFee, int previousLastMonth, String statusMessage) {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		Log.message("Start readAmortAmtRows: read amort amounts");
 		try {
@@ -253,13 +261,14 @@ public class AutomationAgent {
 					for(int i=0; i<scrollCount-1; i++) {
 						appSession.getKeyboard().sendKeys(Keys.ARROW_DOWN);
 					}
-					readAmortAmtRows(totalLicenseFee, lastMonth);
+					readAmortAmtRows(totalLicenseFee, lastMonth, statusMessage);
 				} else {
 					System.out.println("TotalLicenseFee left:"+totalLicenseFee);
 				}
 			}
 			Log.message("readAmortAmtRows: read amort amounts");
 		} catch (Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 			return amorts;
@@ -284,7 +293,7 @@ public class AutomationAgent {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public Double setAllocationData(String licenseType, String licenseAmount, String amortTemplate) {
+	public Double setAllocationData(String licenseType, String licenseAmount, String amortTemplate, String statusMessage) {
 		Log.message("Start setAllocationData: licenseType"+licenseType+", licenseAmount: "+licenseAmount+", amortTemplate: "+amortTemplate);
 		try {
 			double totalLicenseFee = 0.0;
@@ -297,7 +306,7 @@ public class AutomationAgent {
 			appSession.getKeyboard().sendKeys(licenseType);
 			moveByOffsetAndClick(vActions, 100, 0);
 			appSession.getKeyboard().sendKeys(licenseAmount);
-			clickSaveButton();
+			clickSaveButton(statusMessage);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			clickElement("License Fee Type");
 			moveByOffsetAndClick(vActions, -35, 0);
@@ -306,7 +315,7 @@ public class AutomationAgent {
 			clickElement("License Fee Type");
 			clickElement("Amortization Template");
 			appSession.getKeyboard().sendKeys(amortTemplate);
-			clickSaveButton();
+			clickSaveButton(statusMessage);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			List<WebElement> elements = appSession.findElementsByName("Total License Fee");
 			for(WebElement element:elements) {
@@ -321,13 +330,14 @@ public class AutomationAgent {
 			Log.message("End setAllocationData: licenseType"+licenseType+", licenseAmount: "+licenseAmount+", amortTemplate: "+amortTemplate);
 			return totalLicenseFee;
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 			return null;
 		}
 	}
 
-	private void clickSaveButton() {
+	private void clickSaveButton(String statusMessage) {
 		try {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			WebElement saveButtonEle = appSession.findElementByAccessibilityId("SaveButton");
@@ -340,6 +350,7 @@ public class AutomationAgent {
 				retry++;
 			}
 		} catch (InterruptedException e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
@@ -375,7 +386,7 @@ public class AutomationAgent {
 	}
 	
 	@SuppressWarnings("unchecked")
-	private void setPlayWindowAttribute(String key, String value) {
+	private void setPlayWindowAttribute(String key, String value, String statusMessage) {
 		Log.message("Start setPlayWindowAttribute: key: "+key+", value: "+value);
 		try {
 			List<WebElement> elements = appSession.findElementsByName(key);
@@ -388,13 +399,14 @@ public class AutomationAgent {
 			}
 			Log.message("End setPlayWindowAttribute: key: "+key+", value: "+value);
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	private void setScheduleDates(String key, String value) {
+	@SuppressWarnings({ "unchecked", "unused" })
+	private void setScheduleDates(String key, String value, String statusMessage) {
 		Log.message("Start setScheduleDates: key: "+key+", value: "+value);
 		try {
 			List<WebElement> elements = appSession.findElementsByAccessibilityId(key);
@@ -406,6 +418,7 @@ public class AutomationAgent {
 			}
 			Log.message("End setScheduleDates: key: "+key+", value: "+value);
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
@@ -413,7 +426,7 @@ public class AutomationAgent {
 
 
 	@SuppressWarnings("unchecked")
-	public void openTitleAndWindow(String financeType, List<Window> windows) {
+	public void openTitleAndWindow(String financeType, List<Window> windows, String statusMessage) {
 		Log.message("Start openTitleAndWindow: financeType: "+financeType+", windows: "+windows);
 		try {
 			Actions vActions = new Actions(appSession);
@@ -438,26 +451,27 @@ public class AutomationAgent {
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 				appSession.findElementByName("AddWindow").click();
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-				setPlayWindowAttribute("Start Date", window.getStartDate());
-				setPlayWindowAttribute("End Date", window.getEndDate());
-				setPlayWindowAttribute("Runs in Play Day", window.getRunInPlayDay());
-				setPlayWindowAttribute("Runs/PD Allowed", window.getRunsPDAllowed());
+				setPlayWindowAttribute("Start Date", window.getStartDate(), statusMessage);
+				setPlayWindowAttribute("End Date", window.getEndDate(), statusMessage);
+				setPlayWindowAttribute("Runs in Play Day", window.getRunInPlayDay(), statusMessage);
+				setPlayWindowAttribute("Runs/PD Allowed", window.getRunsPDAllowed(), statusMessage);
 			}
 			clearAndSetValueInDropdown("FinanceTypeCombobox", financeType);
 			if(isElementFoundByAccessibilityId("MasterSeriesCombobox")) {	
 				setValueInDropdown("MasterSeriesCombobox", "TEST 123");
 				appSession.findElementByName("TEST 123").click();
 			}
-			clickSaveButton();
+			clickSaveButton(statusMessage);
 			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
 			Log.message("End openTitleAndWindow: financeType: "+financeType+", windows: "+windows);
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
 	}
 	
-	public void launchAppUsingNativeWindowHandle(String appPath, String url, String appName) {
+	public void launchAppUsingNativeWindowHandle(String appPath, String url, String appName, String statusMessage) {
 		Log.message("Start launchAppUsingNativeWindowHandle: Launching app using window handle");
 		try {
 			killApp();
@@ -476,6 +490,7 @@ public class AutomationAgent {
 			appSession.manage().window().maximize();
 			Log.message("End launchAppUsingNativeWindowHandle: Launching app using window handle");
 		} catch (Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
@@ -522,7 +537,7 @@ public class AutomationAgent {
 		}
 	}
 	
-	public void readPopupMessage() {
+	public void readPopupMessage(String statusMessage) {
 		Log.message("Start readPopupMessage: read message from popup");
 		try {
 			double coordinates[] = SikuliImageRecognitionUtil.findImage(appSession, "no-amort-rule.png", 169, 18);
@@ -531,12 +546,13 @@ public class AutomationAgent {
 			}
 			Log.message("End readPopupMessage: read message from popup");
 		} catch (Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
 	}
 
-	public void loginCompass(String username, String password, String displayName) {
+	public void loginCompass(String username, String password, String displayName, String statusMessage) {
 		Log.message("Start loginCompass: Logging in application for user: "+username);
 		try {
 			if(isElementFoundByAccessibilityId("username")) {
@@ -563,12 +579,13 @@ public class AutomationAgent {
 			}
 			Log.message("End loginCompass: Logging in application for user: "+username);
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
 	}
 
-	public void createContract(String network, String distributor, String dealType, String negotiatedBy, String titleName, String titleType) {
+	public void createContract(String network, String distributor, String dealType, String negotiatedBy, String titleName, String titleType, String statusMessage) {
 		Log.message("Start createContract: distributor: "+distributor+", dealType: "+dealType+", negotiatedBy: "+negotiatedBy);
 		try {
 			appSession.findElementByName("Create New Contract").click();
@@ -580,19 +597,20 @@ public class AutomationAgent {
 			setValueInDropdown("DistributorComboBox", distributor);
 			setValueInDropdown("DealTypeCombobox", dealType);
 			setValueInDropdown("NegotiatedByCombobox", negotiatedBy);
-			addTitle(titleName, titleType);
-			clickSaveButton();
+			addTitle(titleName, titleType, statusMessage);
+			clickSaveButton(statusMessage);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			Log.pass("Successfully created contract with DistributorPackage: "+ packageName);
 			Log.message("End createContract: distributor: "+distributor+", dealType: "+dealType+", negotiatedBy: "+negotiatedBy);
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
 	}
 
 	@SuppressWarnings("unchecked")
-	private void addTitle(String titleName, String titleType) {
+	private void addTitle(String titleName, String titleType, String statusMessage) {
 		Log.message("Start addTitle: titleName: "+titleName+", titleType: "+titleType);
 		try {
 			List<WebElement> elements = appSession.findElements(By.className("HeaderFooterCell"));
@@ -626,16 +644,18 @@ public class AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			Log.message("End addTitle: titleName: "+titleName+", titleType: "+titleType);
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
-	private void setEpisodeValue(String key, String value) {
+	@SuppressWarnings({ "unchecked", "unused" })
+	private void setEpisodeValue(String key, String value, String statusMessage) {
 		List<WebElement> elements = appSession.findElementsByAccessibilityId(key);
 		for(WebElement element:elements) {
 			try { 
+				element.click();
 				WebElement childElement = element.findElement(By.className("Cell"));
 				childElement.click();
 				appSession.getKeyboard().sendKeys(value);
@@ -647,25 +667,91 @@ public class AutomationAgent {
 		}
 	}
 	
-	public void addEpisode(String episodeName, String season) {
-		Log.message("Start addEpisode: episodeName: "+episodeName+", season: "+season);
+	public void addEpisode() {
+		Screen screen = new Screen();
+		File directory = new File(".");
+		String strBasepath;
 		try {
-			if(isElementFoundByName("Episodes")) {
-				appSession.findElementByName("Episodes").click();
-				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-				appSession.findElementByName("Add Episode").click();
-				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-				setEpisodeValue("Cell_EpisodeTitle.TitleName", "Episode-1");
-				setEpisodeValue("Cell_EpisodeTitle.SeasonNo", "Season1");
-				clickSaveButton();
-				Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-				Log.message("End addEpisode: episodeName: "+episodeName+", season: "+season);
+			strBasepath = directory.getCanonicalPath();
+			String iconPath = strBasepath + File.separator + "images" + File.separator;
+			Pattern episodeTab = new Pattern(iconPath + "episodetab.png");
+			Pattern addEpisodeBtn = new Pattern(iconPath + "addepisodebtn.png");
+			
+			screen.click(episodeTab);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			screen.click(addEpisodeBtn);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+		} catch (IOException | FindFailed | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public void searchTitleWithEpisodes(String showId, String titleName, String titleType, String statusMessage) {
+		try {
+			Actions vActions = new Actions(appSession);
+			appSession.findElementByName("Titles").click();
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			appSession.findElementByAccessibilityId("ShowIdTextBox").clear();
+			appSession.findElementByAccessibilityId("ShowIdTextBox").sendKeys(showId);
+			appSession.findElementByAccessibilityId("SearchButton").click();
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			List<WebElement> types = appSession.findElementsByName("Type");
+			for (WebElement type:types) {
+				try {
+					WebElement typeCell = type.findElement(By.className("Cell"));
+					typeCell.click();
+					vActions.moveByOffset(0, 0);
+					vActions.doubleClick();
+					Action vClickAction = vActions.build();
+					vClickAction.perform();
+				} catch(Exception e) {
+					
+				}
 			}
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			appSession.findElementByAccessibilityId("ActionDropDownButton").click();
+			appSession.findElementByName("Open Contract").click();
+			List<WebElement> titles = appSession.findElementsByName("Type");
+			for (WebElement title:titles) {
+				try {
+					WebElement typeCell = title.findElement(By.className("Cell"));
+					typeCell.click();
+					appSession.getKeyboard().sendKeys(titleType);
+					WebElement webElement = appSession.findElementByName(titleType);
+					if(null != webElement) {
+						webElement.click();
+					}
+				} catch(Exception e) {
+					
+				}
+			}
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			clickSaveButton(statusMessage);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			List<WebElement> titleNames = appSession.findElementsByAccessibilityId("Cell_TitleName");
+			for(WebElement titleN:titleNames) {
+				try {
+					WebElement title = titleN.findElement(By.className("Cell"));
+					title.click();
+					break;
+				} catch (Exception e) {
+					;
+				}
+			}
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			vActions.moveByOffset(-50, 0);
+			vActions.doubleClick();
+			Action vClickAction = vActions.build();
+			vClickAction.perform();
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 		} catch(Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
 	}
+	
 	private void clearAndSetValueInDropdown(String key, String value) {
 		Log.message("Start clearAndSetValueInDropdown: key:"+key+", value: "+value);
 		WebElement parent =  appSession.findElementByAccessibilityId(key);

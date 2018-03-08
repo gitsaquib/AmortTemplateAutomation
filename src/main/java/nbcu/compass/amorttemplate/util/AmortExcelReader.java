@@ -51,6 +51,7 @@ public class AmortExcelReader {
 			amortTemplateGrid.setStraightLineName(sheetRow.getCell(headerMap.get(HeaderEnum.StraightLineName.toString())).getStringCellValue());
 			amortTemplateGrid.setTimePlayName(sheetRow.getCell(headerMap.get(HeaderEnum.TimePlayName.toString())).getStringCellValue());
 			amortTemplateGrid.setTitleTypeName(sheetRow.getCell(headerMap.get(HeaderEnum.TitleTypeName.toString())).getStringCellValue());
+			amortTemplateGrid.setAddEpisode(sheetRow.getCell(headerMap.get(HeaderEnum.AddEpisode.toString())).getStringCellValue());
 			amortTemplateGrid.setAmortSectionGrids(populateSectionGrid(network, 
 					(int)sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue(),
 					sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue(),
@@ -74,7 +75,7 @@ public class AmortExcelReader {
 		XSSFSheet templateGrid = workbook.getSheet("AmortTemplateSectionGrid");
 		Map<String, Integer> headerMap = populateHeaderMap(templateGrid);
 		Map<Integer, Double> amortTemplateGridMap = new HashMap<Integer, Double>();
-		for(int j = 1; j < templateGrid.getLastRowNum(); j++) {
+		for(int j = 1; j <= templateGrid.getLastRowNum(); j++) {
 			sheetRow = templateGrid.getRow(j);
 			if(sheetRow.getCell((int)headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue() == amortTemplateNo
 					&& sheetRow.getCell((int)headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue().equalsIgnoreCase(templateName)

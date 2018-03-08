@@ -1,8 +1,7 @@
-15-Feb-2018 21:43:27:891 INFO  [main] Validating amort template for US networks: 2.0_Acquired Series_Episode_Acquired Series 
-15-Feb-2018 21:43:28:132 INFO  [main] Start launchAppUsingNativeWindowHandle: Launching app using window handle 
-15-Feb-2018 21:43:31:072 INFO  [main] Start getElement: By: By.name: [PROJECTSTG] - COMPASS 
-15-Feb-2018 21:43:31:483 INFO  [main] End getElement: By: By.name: [PROJECTSTG] - COMPASS 
-15-Feb-2018 21:43:34:833 INFO  [main] End launchAppUsingNativeWindowHandle: Launching app using window handle 
-15-Feb-2018 21:43:34:833 INFO  [main] Start addEpisode: titleName: Episode-1, titleType: Season1 
-15-Feb-2018 21:43:34:843 INFO  [main] Start isElementFoundByName: Episodes 
-15-Feb-2018 21:43:35:454 INFO  [main] End isElementFoundByName: Episodes 
+19-Feb-2018 21:54:16:637 INFO  [main] Validating amort template for USA Network: 13.0_Original Series_Pilot_Original Series 
+19-Feb-2018 21:54:17:138 INFO  [main] Validating amort template for USA Network: 13.0_Original Series_Original Series_Original Series 
+19-Feb-2018 21:54:17:558 INFO  [main] Validating amort template for USA Network: 13.0_Original Series_Topicals_Original Series 
+19-Feb-2018 21:54:17:868 INFO  [main] Validating amort template for USA Network: 13.0_Original Series_Bio/Clip (E)_Original Series 
+19-Feb-2018 21:54:18:219 INFO  [main] Validating amort template for USA Network: 13.0_Original Series_Sports_Original Series 
+19-Feb-2018 21:54:18:559 INFO  [main] Validating amort template for USA Network: 13.0_Original Series_Series_Original Series 
+19-Feb-2018 21:54:18:879 INFO  [main] Validating amort template for USA Network: 13.0_Original Series_Special_Original Series 

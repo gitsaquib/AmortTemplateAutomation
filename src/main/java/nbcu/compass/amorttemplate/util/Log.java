@@ -18,6 +18,8 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.Augmenter;
+import org.sikuli.script.Screen;
+import org.sikuli.script.ScreenImage;
 import org.testng.Assert;
 import org.testng.Reporter;
 import org.testng.SkipException;
@@ -113,6 +115,20 @@ public class Log {
 		String inputFile = "";
 		inputFile = Reporter.getCurrentTestResult().getName() + "_" + screenShotIndex.incrementAndGet() + ".png";
 		ScreenshotManager.takeScreenshot(driver, screenShotFolderPath + inputFile);
+		return inputFile;
+	}
+	
+	public static String takeScreenShot(Screen screen) {
+		String inputFile = "";
+		inputFile = Reporter.getCurrentTestResult().getName() + "_" + screenShotIndex.incrementAndGet() + ".png";
+		ScreenImage screenImage =  screen.capture();
+		try {
+			File source = new File(screenImage.getFile());
+			FileUtils.copyFile(source, new File(screenShotFolderPath + inputFile));
+			source.delete();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return inputFile;
 	}
 
@@ -397,6 +413,16 @@ public class Log {
 	 */
 	public static void fail(String description, WebDriver driver) {
 		String inputFile = takeScreenShot(driver);
+		Reporter.log("<!--FAIL-->");
+		Reporter.log(FAIL_HTML_BEGIN + description + FAIL_HTML_END1 + getScreenShotHyperLink(inputFile) + FAIL_HTML_END2);
+		ExtentReporter.fail(description + " " + getScreenShotHyperLink(inputFile));
+		ExtentReporter.logStackTrace(new AssertionError(description));
+		lsLog4j().log(callerClass(), Level.ERROR, description, null);
+		Assert.fail(description);
+	}
+	
+	public static void fail(String description, Screen screen) {
+		String inputFile = takeScreenShot(screen);
 		Reporter.log("<!--FAIL-->");
 		Reporter.log(FAIL_HTML_BEGIN + description + FAIL_HTML_END1 + getScreenShotHyperLink(inputFile) + FAIL_HTML_END2);
 		ExtentReporter.fail(description + " " + getScreenShotHyperLink(inputFile));

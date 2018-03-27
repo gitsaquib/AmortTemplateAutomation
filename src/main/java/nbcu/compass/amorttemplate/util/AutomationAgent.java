@@ -220,6 +220,12 @@ public class AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			clickYesOrNoOnPopup("Effective Date should be earlier or equal to the Amort Window Start Date", "Yes");
 			Map<Integer, String> amorts = readAmortAmtRows(totalLicenseFee, 0, statusMessage);
+			if(null == amorts && amorts.size() > 0) {
+				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+				Log.fail("Amort not generated", appSession);
+				killApp();
+				return null;	
+			}
 			Log.message("End generateAmort: generating amort for "+totalLicenseFee);
 			return amorts;
 		} catch(Exception e) {
@@ -474,9 +480,9 @@ public class AutomationAgent {
 	public void launchAppUsingNativeWindowHandle(String appPath, String url, String appName, String statusMessage) {
 		Log.message("Start launchAppUsingNativeWindowHandle: Launching app using window handle");
 		try {
-			killApp();
-			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-			startExeApp(appPath);
+			//killApp();
+			//Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			//startExeApp(appPath);
 			DesiredCapabilities appCapabilities = new DesiredCapabilities();
 			appCapabilities.setCapability("app", "Root");
 			WindowsDriver<WindowsElement> driver = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities);
@@ -667,31 +673,60 @@ public class AutomationAgent {
 		}
 	}
 	
-	public void addEpisode() {
+	public void addEpisode(String financeType, String statusMessage) {
 		Screen screen = new Screen();
 		File directory = new File(".");
 		String strBasepath;
 		try {
+			Actions vActions = new Actions(appSession);
+			List<WebElement> titleNames = appSession.findElementsByAccessibilityId("Cell_TitleName");
+			for(WebElement titleName:titleNames) {
+				try {
+					WebElement title = titleName.findElement(By.className("Cell"));
+					title.click();
+					break;
+				} catch (Exception e) {
+					;
+				}
+			}
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			vActions.moveByOffset(-50, 0);
+			vActions.doubleClick();
+			Action vClickAction = vActions.build();
+			vClickAction.perform();
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			
+			clearAndSetValueInDropdown("FinanceTypeCombobox", financeType);
+			if(isElementFoundByAccessibilityId("MasterSeriesCombobox")) {	
+				setValueInDropdown("MasterSeriesCombobox", "TEST 123");
+				appSession.findElementByName("TEST 123").click();
+			}
+			clickSaveButton(statusMessage);
+			Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
+			
 			strBasepath = directory.getCanonicalPath();
 			String iconPath = strBasepath + File.separator + "images" + File.separator;
 			Pattern episodeTab = new Pattern(iconPath + "episodetab.png");
 			Pattern addEpisodeBtn = new Pattern(iconPath + "addepisodebtn.png");
-			
-			screen.click(episodeTab);
+			screen.mouseMove(episodeTab);
+			screen.click();
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			screen.click(addEpisodeBtn);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			setEpisodeValue("Episode Name", "TestEpisode-1", statusMessage);
+			setValueInDropdown("Season", "Season1");
 		} catch (IOException | FindFailed | InterruptedException e) {
 			e.printStackTrace();
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
-	public void searchTitleWithEpisodes(String showId, String titleName, String titleType, String statusMessage) {
+	public void searchTitleWithEpisodes(String network, String showId, String titleName, String titleType, String statusMessage) {
 		try {
 			Actions vActions = new Actions(appSession);
 			appSession.findElementByName("Titles").click();
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			clearAndSetValueInDropdown2("NetworkComboBox", network);
 			appSession.findElementByAccessibilityId("ShowIdTextBox").clear();
 			appSession.findElementByAccessibilityId("ShowIdTextBox").sendKeys(showId);
 			appSession.findElementByAccessibilityId("SearchButton").click();
@@ -750,6 +785,19 @@ public class AutomationAgent {
 			Log.fail(e.getMessage(), appSession);
 			killApp();
 		}
+	}
+	
+	private void clearAndSetValueInDropdown2(String key, String value) {
+		Log.message("Start clearAndSetValueInDropdown: key:"+key+", value: "+value);
+		WebElement parent =  appSession.findElementByAccessibilityId(key);
+        parent.click();
+    	Actions vActions = new Actions(appSession);
+    	vActions.moveByOffset(40, 0);
+    	vActions.click();
+		Action vClickAction = vActions.build();
+		vClickAction.perform();
+		appSession.findElementByName(value).click();
+        Log.message("End clearAndSetValueInDropdown: key:"+key+", value: "+value);
 	}
 	
 	private void clearAndSetValueInDropdown(String key, String value) {

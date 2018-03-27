@@ -9,7 +9,6 @@ import org.testng.annotations.Test;
 
 import nbcu.compass.amorttemplate.util.AmortDataProvider;
 import nbcu.compass.amorttemplate.util.AmortExcelReader;
-import nbcu.compass.amorttemplate.util.AmortTemplateConstants;
 import nbcu.compass.amorttemplate.util.AmortTemplateGrid;
 import nbcu.compass.amorttemplate.util.AmortTemplateUtil;
 import nbcu.compass.amorttemplate.util.AutomationAgent;
@@ -61,29 +60,25 @@ public class AmortTest {
 			amortTemplateGrids = excelReader.readAmortTemplateGrid(testData.getNetwork());
 			amortTemplateGrid = amortTemplateGrids.get(uniqueKey);
 			
-			Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);
-			Set<Integer> keys = amortsFromCalculation.keySet();
-			for(Integer key:keys) {
-				System.out.println(key+") "+amortsFromCalculation.get(key));
-			}
-			User user = users.get("User1");
 			String statusMessage = amortTemplateGrid.getAmortTemplateNo() 
 					+ "\t" + amortTemplateGrid.getAmortTemplateName() 
 					+ "\t" + amortTemplateGrid.getTitleTypeName()
 					+ "\t" + amortTemplateGrid.getFinanceTypeName()
 					+ "\t" +"Fail";
 			
+			Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);
+			Set<Integer> keys = amortsFromCalculation.keySet();
+			for(Integer key:keys) {
+				System.out.println(key+") "+amortsFromCalculation.get(key));
+			}
+			User user = users.get("User1");
 			automationAgent.launchAppUsingNativeWindowHandle(configProperty.getProperty("appPath"), 
 															 configProperty.getProperty("url"), 
 															 configProperty.getProperty("appName"),
 															 statusMessage);
 			automationAgent.loginCompass(user.getUsername(), user.getPassword(), user.getDisplayName(), statusMessage);
 			if(null != amortTemplateGrid.getAddEpisode() && "Y".equalsIgnoreCase(amortTemplateGrid.getAddEpisode())) {
-				//automationAgent.searchTitleWithEpisodes(configProperty.getProperty("showId"), uniqueKey, amortTemplateGrid.getTitleTypeName(), statusMessage);
-				automationAgent.createContract(configProperty.getProperty("network"), testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), uniqueKey, amortTemplateGrid.getTitleTypeName(), statusMessage);
-				automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows(), statusMessage);
-				Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
-				automationAgent.addEpisode();
+				automationAgent.searchTitleWithEpisodes(configProperty.getProperty("network"), configProperty.getProperty("showId"), uniqueKey, amortTemplateGrid.getTitleTypeName(), statusMessage);
 			} else {
 				automationAgent.createContract(configProperty.getProperty("network"), testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), uniqueKey, amortTemplateGrid.getTitleTypeName(), statusMessage);
 				automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows(), statusMessage);
@@ -91,7 +86,7 @@ public class AmortTest {
 			Double amt = automationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName(), statusMessage);
 			if(null != amt) {
 				Map<Integer, String> amortsFromApplication = automationAgent.generateAmort(amt, statusMessage);
-				if(null != amortsFromApplication) {
+				if(null != amortsFromApplication && amortsFromApplication.size() > 0) {
 					Set<Integer> dataKeys = amortsFromApplication.keySet();
 					boolean overAllPassOrFail = true;
 					String reportStr = automationAgent.setTableStyleForExtentReport();
@@ -117,7 +112,11 @@ public class AmortTest {
 									+ "\t" + (overAllPassOrFail?"Pass":"Fail");
 					automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), status);
 					Log.endTestCase();
+				} else {
+					automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 				}
+			} else {
+				automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			}
 			/*
 			automationAgent.scheduleTitle(configProperty.getProperty("url"),

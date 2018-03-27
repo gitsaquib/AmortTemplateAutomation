@@ -4,6 +4,7 @@ public class AmortTemplateConstants {
 	public static final int FIVESECONDSWAITTIME = 5000;
 	public static final int TENSECONDSWAITTIME = 10000;
 	public static final int TWENTYSECONDSWAITTIME = 20000;
+	public static final int THIRTYSECONDSWAITTIME = 30000;
 	public static final int ONEMINUTEWAITTIME = 60000;
 	public static final String STRAIGHT_LINE = "Y";
 	public static final String MAX_STRAIGHT_LINE = "E";

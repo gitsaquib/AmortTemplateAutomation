@@ -1,17 +1,23 @@
 package nbcu.compass.amorttemplate.util;
 
+import java.awt.Rectangle;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import org.openqa.selenium.Keys;
+import org.sikuli.basics.Settings;
 import org.sikuli.script.FindFailed;
 import org.sikuli.script.Key;
+import org.sikuli.script.Location;
+import org.sikuli.script.Match;
 import org.sikuli.script.Pattern;
+import org.sikuli.script.Region;
 import org.sikuli.script.Screen;
 import org.testng.annotations.Test;
 
@@ -31,15 +37,16 @@ public class SikuliMain {
 			Pattern signin = new Pattern(iconPath + "signin.png");
 			Pattern network = new Pattern(iconPath + "network.png");
 			Pattern distributor = new Pattern(iconPath + "distributor.png");
-			Pattern distributorpackage = new Pattern(iconPath + "distributorpackage.png");
-			Pattern dealtype = new Pattern(iconPath + "dealtype.png");
-			Pattern negotiatedby = new Pattern(iconPath + "negotiatedby.png");
+			Pattern distributorPackage = new Pattern(iconPath + "distributorpackage.png");
+			Pattern dealType = new Pattern(iconPath + "dealtype.png");
+			Pattern negotiatedBy = new Pattern(iconPath + "negotiatedby.png");
+			Pattern dollar = new Pattern(iconPath + "dollar.png");
+			
 			/*
 			screen.wait(username, 10);	
 			screen.type(username, "206534643");
 			screen.type(password, "toddler@10");
 			screen.click(signin);
-			*/
 			screen.doubleClick(network);
 			for(int i=0;i<11; i++) {
 				screen.type(Key.BACKSPACE);	
@@ -54,10 +61,68 @@ public class SikuliMain {
 			Thread.sleep(2000);
 			screen.type(dealtype, "Cash");
 			screen.type(negotiatedby, "LEGAL");
+			*/
 			
-		} catch (IOException | FindFailed | InterruptedException e) {
+			
+			Settings.OcrTextRead = true;
+			Settings.OcrTextSearch = true;
+			int count = 0;
+			while(count < 9) {
+				for(int i = 0; i < 4; i++) {
+					if(count == 9) {
+						break;
+					}
+					Thread.sleep(3000);
+					Rectangle rectangle = new Rectangle(500, 550+(i*25), 75, 25);
+					screen.setRect(rectangle);
+					screen.click();
+					String amortAmt = screen.text();
+					System.out.println(amortAmt);
+					amortAmt = amortAmt.substring(1);
+					System.out.println("$"+amortAmt);
+					
+					rectangle = new Rectangle(563, 550+(i*25), 95, 20);
+					screen.setRect(rectangle);
+					screen.click();
+					String month = screen.text();
+					System.out.println(month);
+					
+					count++;
+				}
+				for(int i = 0; i < 4; i++) {
+					screen.type(Key.DOWN);
+					Thread.sleep(3000);
+				}
+			}
+			
+			
+			/*
+			Match found = screen.findText("Amort Date");
+			found.mouseMove();
+			Rectangle rectangle = found.getRect();
+			double x = rectangle.getX() + rectangle.getWidth() + 1;
+			
+			found = screen.findText("APR, 2018");
+			found.mouseMove();
+			Rectangle rectangle2 = found.getRect();
+			
+			Region region = new Region(442, 550);
+			region.click();
+			
+			found = screen.find(dollar);
+			System.out.println(": "+found.text());
+			*/
+			
+		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private Map<Integer, String> readAmorts() {
+		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
+		int scrollCount = 0;
+		int lastMonth = 0;
+		return amorts;
 	}
 	
 	private void startExeApp(String appPath) {

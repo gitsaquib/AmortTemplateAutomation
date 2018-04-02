@@ -229,7 +229,8 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		try {
 			Pattern expand = new Pattern(iconPath + "expand.png");
 			screen.doubleClick(expand);
-			Match found = waitForElementToAppearByText("Select an Action", 0);
+			Pattern selectAnAction = new Pattern(iconPath +"selectanaction.png");
+			Match found = waitForElementToAppearByPattern(selectAnAction, 0);
 			if(null == found) {
 				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 				Log.fail("Unable to open title in one minute", screen);
@@ -266,6 +267,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			if(isElementFoundByImage(masterSeries)) {	
 				screen.type(masterSeries, "TEST 123");
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				screen.type(Key.TAB);
 				screen.type(Key.TAB);
 			}
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
@@ -365,7 +367,8 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			screen.type(passwordImg, password);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			screen.click(signin);
-			Match found = waitForElementToAppearByText("Loading Contract Management", 0);
+			Pattern createContract = new Pattern(iconPath + "createcontract.png");
+			Match found = waitForElementToAppearByPattern(createContract, 0);
 			if(null != found) {
 				Log.message("End loginCompass: Logging in application for user: "+username+" passed");	
 			} else {
@@ -453,7 +456,8 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			screen.type(titleName);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			
-			Match found = waitForElementToAppearByText("Spanish Name of the Title", 0);
+			Pattern spanishTitleHeader = new Pattern(iconPath + "spanishtitleheader.png");
+			Match found = waitForElementToAppearByPattern(spanishTitleHeader, 0);
 			int tabCount = 0;
 			if(null != found) {
 				tabCount = 2;

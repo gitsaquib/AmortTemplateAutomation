@@ -1,16 +1,18 @@
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\ExtentReporter.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\User.java
+D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\WADAutomationAgent.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\HeaderEnum.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortExcelReader.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\SikuliImageRecognitionUtil.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\test\java\nbcu\compass\amorttemplate\test\AmortSikuliTest.java
+D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\factory\AutomationAgent.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\Window.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortTemplateConstants.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\EnvironmentPropertiesReader.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortTemplateUtil.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\Log.java
+D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\test\java\nbcu\compass\amorttemplate\test\AmortWADTest.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\FolderZiper.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AutomationAgent.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortDataProvider.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\SikuliMain.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\EmailReport.java
@@ -20,4 +22,3 @@ D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\comp
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\test\java\nbcu\compass\amorttemplate\test\MainClass.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\License.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\TestData.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\test\java\nbcu\compass\amorttemplate\test\AmortTest.java

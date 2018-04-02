@@ -28,28 +28,14 @@ import org.sikuli.script.Screen;
 
 import io.appium.java_client.windows.WindowsDriver;
 import io.appium.java_client.windows.WindowsElement;
+import nbcu.compass.amorttemplate.factory.AutomationAgent;
 
-public class AutomationAgent {
+public class WADAutomationAgent extends AutomationAgent {
 	
 	private static EnvironmentPropertiesReader configProperty = EnvironmentPropertiesReader.getInstance();
 	
 	@SuppressWarnings("rawtypes")
 	private static WindowsDriver appSession = null;
-	
-	public void writeResultInTxtFile(String network, String status) {
-		try {
-			Log.message("Start writeResultInTxtFile: writing results in txt file: "+ status);
-			File directory = new File(".");
-			File txtFile = new File(directory.getCanonicalPath() + File.separator + "TestData"+ File.separator + "AmortTemplate"+network+"-Results.txt");
-			FileWriter fw = new FileWriter(txtFile, true);
-			PrintWriter pw = new PrintWriter(fw);
-			pw.println(status);
-			pw.close();
-			Log.message("End writeResultInTxtFile: writing results in txt file: "+ status);
-		} catch (IOException e) {
-			Log.fail(e.getMessage());
-		}
-	}
 	
 	@SuppressWarnings("rawtypes")
 	public static WindowsDriver getAppSession() {
@@ -480,9 +466,9 @@ public class AutomationAgent {
 	public void launchAppUsingNativeWindowHandle(String appPath, String url, String appName, String statusMessage) {
 		Log.message("Start launchAppUsingNativeWindowHandle: Launching app using window handle");
 		try {
-			//killApp();
-			//Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-			//startExeApp(appPath);
+			killApp();
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			startExeApp(appPath);
 			DesiredCapabilities appCapabilities = new DesiredCapabilities();
 			appCapabilities.setCapability("app", "Root");
 			WindowsDriver<WindowsElement> driver = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities);
@@ -526,18 +512,6 @@ public class AutomationAgent {
 			}
 			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
 			Log.message("End startExeApp: appPath: "+appPath);
-		} catch(Exception e) {
-			return;
-		}
-	}
-	
-	public void killApp() {
-		Log.message("Start killApp: taskkill /F /IM NBCU.Compass.exe");
-		try {
-			Runtime rt = Runtime.getRuntime();
-			rt.exec("taskkill /F /IM NBCU.Compass.exe");
-			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
-			Log.message("End killApp: taskkill /F /IM NBCU.Compass.exe");
 		} catch(Exception e) {
 			return;
 		}
@@ -673,53 +647,6 @@ public class AutomationAgent {
 		}
 	}
 	
-	public void addEpisode(String financeType, String statusMessage) {
-		Screen screen = new Screen();
-		File directory = new File(".");
-		String strBasepath;
-		try {
-			Actions vActions = new Actions(appSession);
-			List<WebElement> titleNames = appSession.findElementsByAccessibilityId("Cell_TitleName");
-			for(WebElement titleName:titleNames) {
-				try {
-					WebElement title = titleName.findElement(By.className("Cell"));
-					title.click();
-					break;
-				} catch (Exception e) {
-					;
-				}
-			}
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			vActions.moveByOffset(-50, 0);
-			vActions.doubleClick();
-			Action vClickAction = vActions.build();
-			vClickAction.perform();
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			
-			clearAndSetValueInDropdown("FinanceTypeCombobox", financeType);
-			if(isElementFoundByAccessibilityId("MasterSeriesCombobox")) {	
-				setValueInDropdown("MasterSeriesCombobox", "TEST 123");
-				appSession.findElementByName("TEST 123").click();
-			}
-			clickSaveButton(statusMessage);
-			Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
-			
-			strBasepath = directory.getCanonicalPath();
-			String iconPath = strBasepath + File.separator + "images" + File.separator;
-			Pattern episodeTab = new Pattern(iconPath + "episodetab.png");
-			Pattern addEpisodeBtn = new Pattern(iconPath + "addepisodebtn.png");
-			screen.mouseMove(episodeTab);
-			screen.click();
-			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-			screen.click(addEpisodeBtn);
-			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-			setEpisodeValue("Episode Name", "TestEpisode-1", statusMessage);
-			setValueInDropdown("Season", "Season1");
-		} catch (IOException | FindFailed | InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
-	
 	@SuppressWarnings("unchecked")
 	public void searchTitleWithEpisodes(String network, String showId, String titleName, String titleType, String statusMessage) {
 		try {
@@ -847,30 +774,25 @@ public class AutomationAgent {
 		}
 	}
 	
-	public String setTableStyleForExtentReport() {
-		return
-				"<style type=\"text/css\">\r\n" + 
-                ".tg  {border-collapse:collapse;border-spacing:0;border-color:#999;}\r\n" + 
-                ".tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;}\r\n" + 
-                ".tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;}\r\n" + 
-                ".tg .tg-3fs7{font-size:11px;font-family:Tahoma, Geneva, sans-serif !important;;vertical-align:top}\r\n" + 
-                ".tg .tg-yw4l{vertical-align:top}\r\n" + 
-                "</style>";
-	}
-	
-	public String openTable() {
-		return "<table class=\"tg\">";
-	}
-	
-	public String addTableHeader() {
-		return "<tr><td class=\"tg-yw4l\">Month</td><td class=\"tg-yw4l\">Application</td><td class=\"tg-yw4l\">Amort Calulation</td></tr>";
-	}
-	
-	public String setTableBodyForExtentReport(String month, String valueFromApp, String valueFromCalculation) {
-		return "<tr><td class=\"tg-yw4l\">"+month+"</td><td class=\"tg-yw4l\">"+valueFromApp+"</td><td class=\"tg-yw4l\">"+valueFromCalculation+"</td></tr>";
-	}
-	
-	public String closeTable() {
-		return "</table>";
+	@Override
+	public void addEpisode(String statusMessage) {
+		Screen screen = new Screen();
+		File directory = new File(".");
+		String strBasepath;
+		try {
+			strBasepath = directory.getCanonicalPath();
+			String iconPath = strBasepath + File.separator + "images" + File.separator;
+			Pattern episodeTab = new Pattern(iconPath + "episodetab.png");
+			Pattern addEpisodeBtn = new Pattern(iconPath + "addepisodebtn.png");
+			screen.mouseMove(episodeTab);
+			screen.click();
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			screen.click(addEpisodeBtn);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			setEpisodeValue("Episode Name", "TestEpisode-1", statusMessage);
+			setValueInDropdown("Season", "Season1");
+		} catch (IOException | FindFailed | InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 }

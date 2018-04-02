@@ -3,6 +3,7 @@ D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\comp
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\HeaderEnum.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortExcelReader.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\SikuliImageRecognitionUtil.java
+D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\test\java\nbcu\compass\amorttemplate\test\AmortSikuliTest.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\Window.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortTemplateConstants.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\EnvironmentPropertiesReader.java
@@ -14,6 +15,7 @@ D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\comp
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\SikuliMain.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\EmailReport.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\ScreenshotManager.java
+D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\SikuliAutomationAgent.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortTemplateGrid.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\test\java\nbcu\compass\amorttemplate\test\MainClass.java
 D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\License.java

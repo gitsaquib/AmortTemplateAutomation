@@ -11,7 +11,7 @@ import nbcu.compass.amorttemplate.util.AmortDataProvider;
 import nbcu.compass.amorttemplate.util.AmortExcelReader;
 import nbcu.compass.amorttemplate.util.AmortTemplateGrid;
 import nbcu.compass.amorttemplate.util.AmortTemplateUtil;
-import nbcu.compass.amorttemplate.util.AutomationAgent;
+import nbcu.compass.amorttemplate.util.WADAutomationAgent;
 import nbcu.compass.amorttemplate.util.EmailReport;
 import nbcu.compass.amorttemplate.util.EnvironmentPropertiesReader;
 import nbcu.compass.amorttemplate.util.License;
@@ -20,11 +20,11 @@ import nbcu.compass.amorttemplate.util.TestData;
 import nbcu.compass.amorttemplate.util.User;
 
 @Listeners(EmailReport.class)
-public class AmortTest {
+public class AmortWADTest {
 
 	private static EnvironmentPropertiesReader configProperty = EnvironmentPropertiesReader.getInstance();
 	private static AmortExcelReader excelReader = null;
-	private AutomationAgent automationAgent = null;
+	private WADAutomationAgent automationAgent = null;
 	private Map<String, User> users = null;
 	private Map<String, License> licenses = null;
 	private Map<String, AmortTemplateGrid> amortTemplateGrids = null;
@@ -36,7 +36,7 @@ public class AmortTest {
 		testDatas = excelReader.readTestData();
 		licenses = excelReader.readLicense();
 		users = excelReader.readUser();
-		automationAgent = new AutomationAgent();
+		automationAgent = new WADAutomationAgent();
 	}
 	
 	@SuppressWarnings("static-access")

@@ -73,7 +73,6 @@ public class AmortSikuliTest {
 				System.out.println(key+") "+amortsFromCalculation.get(key));
 			}
 			User user = users.get("User1");
-			/*
 			automationAgent.launchAppUsingNativeWindowHandle(configProperty.getProperty("appPath"), 
 															 configProperty.getProperty("url"), 
 															 configProperty.getProperty("appName"),
@@ -84,9 +83,12 @@ public class AmortSikuliTest {
 										 statusMessage);
 			automationAgent.createContract(configProperty.getProperty("network"), testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), uniqueKey, amortTemplateGrid.getTitleTypeName(), statusMessage);
 			automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows(), statusMessage);
+			if(null != amortTemplateGrid.getAddEpisode() && "Y".equalsIgnoreCase(amortTemplateGrid.getAddEpisode())) {
+				automationAgent.addEpisode(statusMessage);
+			}
+
 			Double amt = automationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName(), statusMessage);
-			*/
-			Double amt = new Double("4000.00");
+
 			if(null != amt) {
 				Map<Integer, String> amortsFromApplication = automationAgent.generateAmort(amt, statusMessage);
 				if(null != amortsFromApplication && amortsFromApplication.size() > 0) {
@@ -117,9 +119,13 @@ public class AmortSikuliTest {
 					Log.endTestCase();
 				} else {
 					automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+					automationAgent.killApp();
+					Log.fail("Unable to read amorts");
 				}
 			} else {
 				automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+				automationAgent.killApp();
+				Log.fail("Unable to read amorts");
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

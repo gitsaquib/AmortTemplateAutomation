@@ -3,7 +3,7 @@
 <suite name="Suite">
   <test thread-count="5" name="Test">
     <classes>
-      <class name="nbcu.compass.amorttemplate.test.AmortTest"/>
+      <class name="nbcu.compass.amorttemplate.test.AmortSikuliTest"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->

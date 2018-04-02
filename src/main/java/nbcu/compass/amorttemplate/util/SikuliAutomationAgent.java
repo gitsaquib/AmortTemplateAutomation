@@ -3,11 +3,9 @@ package nbcu.compass.amorttemplate.util;
 import java.awt.Rectangle;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
@@ -21,7 +19,9 @@ import org.sikuli.script.Match;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Screen;
 
-public class SikuliAutomationAgent {
+import nbcu.compass.amorttemplate.factory.AutomationAgent;
+
+public class SikuliAutomationAgent extends AutomationAgent {
 	
 	private static EnvironmentPropertiesReader configProperty = EnvironmentPropertiesReader.getInstance();
 	private static String iconPath = "";
@@ -36,33 +36,7 @@ public class SikuliAutomationAgent {
 	}
 	private Screen screen = null;
 	
-	public void writeResultInTxtFile(String network, String status) {
-		try {
-			Log.message("Start writeResultInTxtFile: writing results in txt file: "+ status);
-			File directory = new File(".");
-			File txtFile = new File(directory.getCanonicalPath() + File.separator + "TestData"+ File.separator + "AmortTemplate"+network+"-Results.txt");
-			FileWriter fw = new FileWriter(txtFile, true);
-			PrintWriter pw = new PrintWriter(fw);
-			pw.println(status);
-			pw.close();
-			Log.message("End writeResultInTxtFile: writing results in txt file: "+ status);
-		} catch (IOException e) {
-			Log.fail(e.getMessage());
-		}
-	}
 	
-	private boolean closePopupIfAny() {
-		screen = new Screen();
-		Pattern element = new Pattern(iconPath + "yes.png");
-		try {
-			Match elementFound = screen.find(element);
-			elementFound.click();
-			return closePopupIfAny();
-		} catch (FindFailed e) {
-			;
-		}
-		return false;
-	}
 	
 	public void doubelClickAt(int x, int y) {
 		Log.message("Start clickAt: clicking on x: "+x+", y: "+y);
@@ -83,12 +57,14 @@ public class SikuliAutomationAgent {
 			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
 			Pattern generateAmort = new Pattern(iconPath + "generateamort.png");
 			screen.click(generateAmort);
-			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			clickYesOrNoOnPopup("All old amort data will be deleted. Do you want to continue?", "Yes");
-			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			clickYesOrNoOnPopup("Effective Date should be earlier or equal to the Amort Window Start Date", "Yes");
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+	
 			Map<Integer, String> amorts = readAmortAmtRows(totalLicenseFee, 0, statusMessage);
-			if(null == amorts || amorts.size() > 0) {
+			if(null == amorts || amorts.size() == 0) {
 				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 				Log.fail("Amort not generated", screen);
 				killApp();
@@ -109,31 +85,43 @@ public class SikuliAutomationAgent {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		Log.message("Start readAmortAmtRows: read amort amounts");
 		try {
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Match found = screen.findText("TOTAL COUNT");
+			System.out.println(found.getRect());
+			Rectangle rectangle = new Rectangle(found.getX(), found.getY()-5, 100, 30);
+			screen.setRect(rectangle);
+			screen.highlight(3);
+			String totalCntStr = screen.text();
+			totalCntStr = totalCntStr.substring(totalCntStr.indexOf(":")+1).trim();
+			int totalRowCnt = Integer.parseInt(totalCntStr);
+			
+			screen = new Screen();
+			int rowCntPerScreen = 0;
+			try {
+				Pattern spanishTitleField = new Pattern(iconPath +"spanishtitlefield.png");
+				found = screen.find(spanishTitleField);
+				found.highlight(3);
+				rowCntPerScreen = 3;
+			} catch (Exception e) {
+				rowCntPerScreen = 4;
+			}
+
 			int count = 0;
-			while(count < 9) {
-				for(int i = 0; i < 4; i++) {
-					if(count == 9) {
+			while(count < totalRowCnt) {
+				for(int i = 1; i <= rowCntPerScreen; i++) {
+					if(count == totalRowCnt) {
 						break;
 					}
 					Thread.sleep(3000);
-					Rectangle rectangle = new Rectangle(500, 550+(i*25), 75, 20);
+					rectangle = new Rectangle(500, 550+(i*25), 95, 20);
 					screen.setRect(rectangle);
 					screen.click();
 					String amortAmt = screen.text();
-					amortAmt = amortAmt.substring(1);
-					System.out.println("$"+amortAmt);
-					
-					rectangle = new Rectangle(563, 550+(i*25), 95, 20);
-					screen.setRect(rectangle);
-					screen.click();
-					String month = screen.text();
-					System.out.println(month);
-					
 					count++;
+					amorts.put(count, amortAmt);
 				}
-				for(int i = 0; i < 4; i++) {
+				for(int i = 0; i < rowCntPerScreen-1; i++) {
 					screen.type(Key.DOWN);
-					Thread.sleep(3000);
 				}
 			}
 			Log.message("readAmortAmtRows: read amort amounts");
@@ -149,17 +137,14 @@ public class SikuliAutomationAgent {
 	private boolean clickYesOrNoOnPopup(String message, String yesOrNo) {
 		screen = new Screen();
 		Log.message("Start clickYesOrNoOnPopup: "+message+", "+yesOrNo);
-		Pattern element = null;
+		Pattern elementFound = null;
 		try {
-			Match messageFound = screen.findText(message);
-			messageFound.highlight();
 			if(yesOrNo.equalsIgnoreCase("yes")) {
-				element = new Pattern(iconPath + "yes.png");
+				elementFound = new Pattern(iconPath + "yes.png");
 			} else {
-				element = new Pattern(iconPath + "no.png");
+				elementFound = new Pattern(iconPath + "no.png");
 			}
-			Match elementFound = screen.find(element);
-			elementFound.click();
+			screen.click(elementFound);
 			return true;
 		} catch (FindFailed e) {
 			;
@@ -191,7 +176,6 @@ public class SikuliAutomationAgent {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			
 			clickSaveButton(statusMessage);
-			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
 			
 			screen.click(dropIcon);
 			Pattern amortizedCheckBox = new Pattern(iconPath + "amortiedcheckbox.png");
@@ -201,11 +185,9 @@ public class SikuliAutomationAgent {
 			}
 			screen.type(amortTemplate);
 			clickSaveButton(statusMessage);
-			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
 			
 			Rectangle rectangle = new Rectangle(250, 525, 75, 30);
 			screen.setRect(rectangle);
-			screen.highlight();
 			String amount = screen.text().trim();
 			amount = amount.replace("$", "").replace(",", "");
 			screen = new Screen();
@@ -227,6 +209,13 @@ public class SikuliAutomationAgent {
 			screen = new Screen();
 			Pattern save = new Pattern(iconPath + "save.png");
 			screen.click(save);
+			Pattern saveDisabled = new Pattern(iconPath + "savedisabled");
+			Match found = waitForElementToAppearByPattern(saveDisabled, 0);
+			if(null == found) {
+				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+				Log.fail("Unable to save data in one minute", screen);
+				killApp();
+			}
 		} catch (InterruptedException | FindFailed e) {
 			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), screen);
@@ -240,8 +229,12 @@ public class SikuliAutomationAgent {
 		try {
 			Pattern expand = new Pattern(iconPath + "expand.png");
 			screen.doubleClick(expand);
-			Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
-			
+			Match found = waitForElementToAppearByText("Select an Action", 0);
+			if(null == found) {
+				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+				Log.fail("Unable to open title in one minute", screen);
+				killApp();
+			}
 			Pattern selectedWindowTab = new Pattern(iconPath + "selecedwindowtab.png");
 			if(!isElementFoundByImage(selectedWindowTab)) {
 				Pattern windowTab = new Pattern(iconPath + "windowtab.png");
@@ -272,12 +265,11 @@ public class SikuliAutomationAgent {
 			Pattern masterSeries = new Pattern(iconPath + "masterseries.png");
 			if(isElementFoundByImage(masterSeries)) {	
 				screen.type(masterSeries, "TEST 123");
-				Match masterSeriesFound = screen.findText("TEST 123");
-				masterSeriesFound.click();
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				screen.type(Key.TAB);
 			}
-			
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			clickSaveButton(statusMessage);
-			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
 			Log.message("End openTitleAndWindow: financeType: "+financeType+", windows: "+windows);
 		} catch(Exception e) {
 			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
@@ -303,7 +295,6 @@ public class SikuliAutomationAgent {
 		Log.message("Start launchAppUsingNativeWindowHandle: Launching app using window handle");
 		try {
 			killApp();
-			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			startExeApp(appPath);
 			screen = new Screen();
 			Log.message("End launchAppUsingNativeWindowHandle: Launching app using window handle");
@@ -325,30 +316,43 @@ public class SikuliAutomationAgent {
 			while ((line = br.readLine()) != null) {
 				System.out.println(line);
 			}
-			Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
-			screen = new Screen();
-			Match foundMaximize = screen.findText("COMPASS");
-			foundMaximize.doubleClick();
-			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+			Match foundMaximize = waitForElementToAppearByText("COMPASS", 0);
+			if(null != foundMaximize) {
+				foundMaximize.doubleClick();
+			}
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Log.message("End startExeApp: appPath: "+appPath);
-		} catch(InterruptedException | FindFailed | IOException e) {
+		} catch(InterruptedException | IOException e) {
 			return;
 		}
 	}
 	
-	public void killApp() {
-		Log.message("Start killApp: taskkill /F /IM NBCU.Compass.exe");
-		try {
-			Runtime rt = Runtime.getRuntime();
-			rt.exec("taskkill /F /IM NBCU.Compass.exe");
-			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
-			Log.message("End killApp: taskkill /F /IM NBCU.Compass.exe");
-		} catch(Exception e) {
-			return;
+	private Match waitForElementToAppearByText(String text, int retryCnt) {
+		while(retryCnt < 3) {
+			try {
+				Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+				screen = new Screen();
+				return screen.findText(text);
+			} catch (InterruptedException | FindFailed e) {
+				retryCnt++;
+			}
 		}
+		return null;
 	}
 	
-	@SuppressWarnings("unused")
+	private Match waitForElementToAppearByPattern(Pattern pattern, int retryCnt) {
+		while(retryCnt < 3) {
+			try {
+				Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+				screen = new Screen();
+				return screen.find(pattern);
+			} catch (InterruptedException | FindFailed e) {
+				retryCnt++;
+			}
+		}
+		return null;
+	}
+	
 	public void loginCompass(String username, String password, String displayName, String statusMessage) {
 		Log.message("Start loginCompass: Logging in application for user: "+username);
 		screen = new Screen();
@@ -356,62 +360,21 @@ public class SikuliAutomationAgent {
 			Pattern usernameImg = new Pattern(iconPath + "username.png");
 			Pattern passwordImg = new Pattern(iconPath + "password.png");
 			Pattern signin = new Pattern(iconPath + "signin.png");
-			Pattern contractManagementTab = new Pattern(iconPath + "contractManagementtab.png");
-			if(isElementFoundByImage(usernameImg)) {
-				Log.message("User ["+username+"] is not already logged in Compass application");
-				screen.wait(usernameImg, 10);	
-				screen.type(usernameImg, username);
-				screen.type(passwordImg, password);
-				screen.click(signin);
-				Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
-				int waitCount = 0;
-				while(waitForLoadingContract() && waitCount < 5) {
-					Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
-					waitCount++;
-				}
-				screen.click(contractManagementTab);
-				Log.pass("User ["+username+"] successfully logged in Compass application");
+			screen.wait(usernameImg, 10);	
+			screen.type(usernameImg, username);
+			screen.type(passwordImg, password);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			screen.click(signin);
+			Match found = waitForElementToAppearByText("Loading Contract Management", 0);
+			if(null != found) {
+				Log.message("End loginCompass: Logging in application for user: "+username+" passed");	
 			} else {
-				closePopupIfAny();
-				if(isElementFoundByImage(contractManagementTab)) {
-					Log.message("User ["+username+"] already logged in Compass application");
-					Pattern closeButton = new Pattern(iconPath + "closebutton.png");
-					while(isElementFoundByImage(closeButton)) {
-						screen.click(closeButton);
-						clickYesOrNoOnPopup("Do you want to save the changes?", "No");
-						Thread.sleep(AmortTemplateConstants.ONEMINUTEWAITTIME);
-					}
-					try {
-						Match userFound = screen.findText(displayName);
-						screen.click(contractManagementTab);
-					} catch(FindFailed e) {
-						killApp();
-						launchAppUsingNativeWindowHandle(configProperty.getProperty("appPath"), configProperty.getProperty("url"), configProperty.getProperty("appName"), statusMessage);
-						loginCompass(username, password, displayName, statusMessage);
-					}
-					
-				} else {
-					killApp();
-					launchAppUsingNativeWindowHandle(configProperty.getProperty("appPath"), configProperty.getProperty("url"), configProperty.getProperty("appName"), statusMessage);
-					loginCompass(username, password, displayName, statusMessage);				
-				}
-				screen = new Screen();
+				Log.message("End loginCompass: Logging in application for user: "+username+" failed");
 			}
-			Log.message("End loginCompass: Logging in application for user: "+username);
 		} catch(FindFailed | InterruptedException e) {
 			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 			Log.fail(e.getMessage(), screen);
 			killApp();
-		}
-	}
-	
-	@SuppressWarnings("unused")
-	private boolean waitForLoadingContract() {
-		try {
-			Match loadingContractFound = screen.findText("Loading Contract Management");
-			return true;			
-		} catch (FindFailed e) {
-			return false;
 		}
 	}
 	
@@ -425,6 +388,31 @@ public class SikuliAutomationAgent {
 			;
 		}
 		return false;
+	}
+	
+	public void addEpisode(String statusMessage) {
+		Screen screen = new Screen();
+		File directory = new File(".");
+		String strBasepath;
+		try {
+			strBasepath = directory.getCanonicalPath();
+			String iconPath = strBasepath + File.separator + "images" + File.separator;
+			Pattern episodeTab = new Pattern(iconPath + "episodetab.png");
+			Pattern addEpisodeBtn = new Pattern(iconPath + "addepisodebtn.png");
+			screen.mouseMove(episodeTab);
+			screen.click();
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			screen.click(addEpisodeBtn);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			Pattern episodeName = new Pattern(iconPath + "episodename.png");
+			screen.click(episodeName);
+			screen.type("TestEpisode-1");
+			screen.type(Key.TAB);
+			screen.type("Season1");
+			clickSaveButton(statusMessage);
+		} catch (IOException | FindFailed | InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void createContract(String network, String distributor, String dealType, String negotiatedBy, String titleName, String titleType, String statusMessage) {
@@ -464,7 +452,15 @@ public class SikuliAutomationAgent {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			screen.type(titleName);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			for(int i=0; i<2; i++) {
+			
+			Match found = waitForElementToAppearByText("Spanish Name of the Title", 0);
+			int tabCount = 0;
+			if(null != found) {
+				tabCount = 2;
+			} else {
+				tabCount = 1;
+			}
+			for(int i=0; i<tabCount; i++) {
 				screen.type(Key.TAB);
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			}
@@ -507,31 +503,14 @@ public class SikuliAutomationAgent {
 			e.printStackTrace();
 		}
 	}
-	
-	public String setTableStyleForExtentReport() {
-		return
-				"<style type=\"text/css\">\r\n" + 
-                ".tg  {border-collapse:collapse;border-spacing:0;border-color:#999;}\r\n" + 
-                ".tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;}\r\n" + 
-                ".tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;}\r\n" + 
-                ".tg .tg-3fs7{font-size:11px;font-family:Tahoma, Geneva, sans-serif !important;;vertical-align:top}\r\n" + 
-                ".tg .tg-yw4l{vertical-align:top}\r\n" + 
-                "</style>";
+
+	@Override
+	public void launchApplicationFromBrowser(String url, String appWebUrl, String statusMessage) {
+		
 	}
-	
-	public String openTable() {
-		return "<table class=\"tg\">";
-	}
-	
-	public String addTableHeader() {
-		return "<tr><td class=\"tg-yw4l\">Month</td><td class=\"tg-yw4l\">Application</td><td class=\"tg-yw4l\">Amort Calulation</td></tr>";
-	}
-	
-	public String setTableBodyForExtentReport(String month, String valueFromApp, String valueFromCalculation) {
-		return "<tr><td class=\"tg-yw4l\">"+month+"</td><td class=\"tg-yw4l\">"+valueFromApp+"</td><td class=\"tg-yw4l\">"+valueFromCalculation+"</td></tr>";
-	}
-	
-	public String closeTable() {
-		return "</table>";
+
+	@Override
+	public void searchTitleWithEpisodes(String network, String showId, String titleName, String titleType, String statusMessage) {
+		
 	}
 }

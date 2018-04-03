@@ -1,6 +1,7 @@
 package nbcu.compass.amorttemplate.util;
 
 public class AmortTemplateConstants {
+	public static final int TWOECONDSWAITTIME = 2000;
 	public static final int FIVESECONDSWAITTIME = 5000;
 	public static final int TENSECONDSWAITTIME = 10000;
 	public static final int TWENTYSECONDSWAITTIME = 20000;

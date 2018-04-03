@@ -176,6 +176,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			
 			clickSaveButton(statusMessage);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			
 			screen.click(dropIcon);
 			Pattern amortizedCheckBox = new Pattern(iconPath + "amortiedcheckbox.png");
@@ -185,8 +186,19 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			}
 			screen.type(amortTemplate);
 			clickSaveButton(statusMessage);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			
-			Rectangle rectangle = new Rectangle(250, 525, 75, 30);
+			screen = new Screen();
+			Rectangle rectangle = null;
+			try {
+				Pattern spanishTitleField = new Pattern(iconPath +"spanishtitlefield.png");
+				Match found = screen.find(spanishTitleField);
+				found.highlight(3);
+				rectangle = new Rectangle(250, 525, 75, 30);
+			} catch (Exception e) {
+				rectangle = new Rectangle(250, 550, 75, 30);
+			}
+			
 			screen.setRect(rectangle);
 			String amount = screen.text().trim();
 			amount = amount.replace("$", "").replace(",", "");
@@ -202,7 +214,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		}
 	}
 
-	private void clickSaveButton(String statusMessage) {
+	private void clickSaveButton(String statusMessage, int...retry) {
 		screen = new Screen();
 		try {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
@@ -212,9 +224,13 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Pattern saveDisabled = new Pattern(iconPath + "savedisabled");
 			Match found = waitForElementToAppearByPattern(saveDisabled, 0);
 			if(null == found) {
-				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
-				Log.fail("Unable to save data in one minute", screen);
-				killApp();
+				if(null != retry && retry.length == 1) {
+					writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+					Log.fail("Unable to save data in one minute", screen);
+					killApp();
+				} else {
+					clickSaveButton(statusMessage, 1);
+				}
 			}
 		} catch (InterruptedException | FindFailed e) {
 			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
@@ -243,8 +259,9 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			}
 			
 			for(Window window:windows) {
-				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 				Pattern addWindowBtn = new Pattern(iconPath + "addwindowbutton.png");
+				found = waitForElementToAppearByPattern(addWindowBtn, 0);
 				screen.click(addWindowBtn);
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 				Pattern addWindowIcon = new Pattern(iconPath + "addwindowicon.png");
@@ -429,11 +446,16 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			String packageName = "TestPackage_" + df.format(new Date());
 			Pattern distributorPackage = new Pattern(iconPath + "distributorpackage.png");
 			screen.type(distributorPackage, packageName);
+			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
 			clearAndSetValueInDropdown("network", network);
+			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
 			setValueInDropdown("distributor", distributor);
+			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
 			screen.click();
 			setValueInDropdown("dealtype", dealType);
+			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
 			setValueInDropdown("negotiatedby", negotiatedBy);
+			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
 			addTitle(titleName, titleType, statusMessage);
 			clickSaveButton(statusMessage);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);

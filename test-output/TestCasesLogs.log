@@ -1,7 +1,12 @@
-02-Apr-2018 14:35:24:491 INFO  [main] Validating amort template for Universo: 355.0_Acquired Series - 2 Yr_Series_Acquired Series 
-02-Apr-2018 14:35:24:720 INFO  [main] Start generateAmort: generating amort for 4000.0 
-02-Apr-2018 14:36:02:815 INFO  [main] Start clickYesOrNoOnPopup: All old amort data will be deleted. Do you want to continue?, Yes 
-02-Apr-2018 14:36:08:660 INFO  [main] Start clickYesOrNoOnPopup: Effective Date should be earlier or equal to the Amort Window Start Date, Yes 
-02-Apr-2018 14:36:19:530 INFO  [main] Start readAmortAmtRows: read amort amounts 
-02-Apr-2018 14:38:05:807 INFO  [main] readAmortAmtRows: read amort amounts 
-02-Apr-2018 14:38:05:807 INFO  [main] End generateAmort: generating amort for 4000.0 
+04-Apr-2018 12:04:39:974 INFO  [main] Validating amort template for Universo: 355.0_Acquired Series - 2 Yr_Series_Acquired Series 
+04-Apr-2018 12:04:40:350 INFO  [main] Start generateAmort: generating amort for 4000.0 
+04-Apr-2018 12:04:41:855 INFO  [main] Start readAmortAmtRows: read amort amounts 
+04-Apr-2018 12:05:00:126 INFO  [main] readAmortAmtRows: read amort amounts 
+04-Apr-2018 12:05:00:127 INFO  [main] End generateAmort: generating amort for 4000.0 
+04-Apr-2018 12:05:00:480 ERROR [main] <style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;border-color:#999;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;}
+.tg .tg-3fs7{font-size:11px;font-family:Tahoma, Geneva, sans-serif !important;;vertical-align:top}
+.tg .tg-yw4l{vertical-align:top}
+</style><table class="tg"><tr><td class="tg-yw4l">Month</td><td class="tg-yw4l">Application</td><td class="tg-yw4l">Amort Calulation</td></tr><tr><td class="tg-yw4l">1</td><td class="tg-yw4l">lnvE</td><td class="tg-yw4l">$2,000</td></tr><tr><td class="tg-yw4l">2</td><td class="tg-yw4l">$1333.33</td><td class="tg-yw4l">$2,000</td></tr></table> 

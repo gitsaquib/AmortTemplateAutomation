@@ -62,7 +62,6 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			clickYesOrNoOnPopup("Effective Date should be earlier or equal to the Amort Window Start Date", "Yes");
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-	
 			Map<Integer, String> amorts = readAmortAmtRows(totalLicenseFee, 0, statusMessage);
 			if(null == amorts || amorts.size() == 0) {
 				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
@@ -93,15 +92,25 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			screen.highlight(3);
 			String totalCntStr = screen.text();
 			totalCntStr = totalCntStr.substring(totalCntStr.indexOf(":")+1).trim();
-			int totalRowCnt = Integer.parseInt(totalCntStr);
-			
+			int totalRowCnt = 0;
+			try {
+				totalRowCnt = Integer.parseInt(totalCntStr);
+			} catch (Exception e) {
+				totalRowCnt = 2;
+			}
+				
 			screen = new Screen();
 			int rowCntPerScreen = 0;
 			try {
 				Pattern spanishTitleField = new Pattern(iconPath +"spanishtitlefield.png");
 				found = screen.find(spanishTitleField);
-				found.highlight(3);
-				rowCntPerScreen = 3;
+				Pattern titleSubType = new Pattern(iconPath +"titlesubtype.png");
+				try {
+					found = screen.find(titleSubType);
+					rowCntPerScreen = 2;
+				} catch (Exception e) {
+					rowCntPerScreen = 3;
+				}
 			} catch (Exception e) {
 				rowCntPerScreen = 4;
 			}
@@ -157,7 +166,6 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		Log.message("Start setAllocationData: licenseType"+licenseType+", licenseAmount: "+licenseAmount+", amortTemplate: "+amortTemplate);
 		try {
 			double totalLicenseFee = 0.0;
-			
 			Pattern allocationTab = new Pattern(iconPath + "allocationtab.png");
 			screen.click(allocationTab);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
@@ -187,23 +195,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			screen.type(amortTemplate);
 			clickSaveButton(statusMessage);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			
-			screen = new Screen();
-			Rectangle rectangle = null;
-			try {
-				Pattern spanishTitleField = new Pattern(iconPath +"spanishtitlefield.png");
-				Match found = screen.find(spanishTitleField);
-				found.highlight(3);
-				rectangle = new Rectangle(250, 525, 75, 30);
-			} catch (Exception e) {
-				rectangle = new Rectangle(250, 550, 75, 30);
-			}
-			
-			screen.setRect(rectangle);
-			String amount = screen.text().trim();
-			amount = amount.replace("$", "").replace(",", "");
-			screen = new Screen();
-			totalLicenseFee = Double.parseDouble(amount);
+			totalLicenseFee = Double.parseDouble(licenseAmount);
 			Log.message("End setAllocationData: licenseType"+licenseType+", licenseAmount: "+licenseAmount+", amortTemplate: "+amortTemplate);
 			return totalLicenseFee;
 		} catch(Exception e) {

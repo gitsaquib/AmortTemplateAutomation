@@ -76,29 +76,6 @@ public class AmortTemplateUtil {
 			}
 			index++;
 		}
-		
-		/*
-		for(Double sectionPer:sectionPercentage) {
-			lineItemAmtSecs[index] = Double.valueOf(df.format((licenseFee*sectionPer)/100));
-			index++;
-		}
-		index = 1; double grandSec = 0; int monthIndex = 1;
-		for(Double lineItemAmtSec:lineItemAmtSecs) {
-			double lineItemAmt;
-			lineItemAmt = lineItemAmtSec*lineItemAmtSecs.length/maxMonths;
-			lineItemAmt = Double.valueOf(df.format(lineItemAmt));
-			for(int month = 1; month <= maxMonths/lineItemAmtSecs.length; month++) {
-				if(index==lineItemAmtSecs.length && month == maxMonths/lineItemAmtSecs.length) {
-					amorts.put(monthIndex, df2.format(licenseFee-grandSec));
-				} else {
-					grandSec += lineItemAmt;
-					amorts.put(monthIndex, df2.format(lineItemAmt));
-				}
-				monthIndex++;
-			}
-			index++;
-		}
-		*/
 		return amorts;
 	}
 	

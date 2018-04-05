@@ -3,12 +3,11 @@
 <suite guice-stage="DEVELOPMENT" name="Failed suite [Default suite]">
   <test name="Default test(failed)">
     <classes>
-      <class name="nbcu.compass.amorttemplate.test.AmortSikuliTest">
+      <class name="nbcu.compass.amorttemplate.util.SikuliMain">
         <methods>
-          <include name="init"/>
-          <include name="testAmortTemplate" invocation-numbers="0"/>
+          <include name="testM"/>
         </methods>
-      </class> <!-- nbcu.compass.amorttemplate.test.AmortSikuliTest -->
+      </class> <!-- nbcu.compass.amorttemplate.util.SikuliMain -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

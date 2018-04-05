@@ -1,12 +1,26 @@
-04-Apr-2018 12:04:39:974 INFO  [main] Validating amort template for Universo: 355.0_Acquired Series - 2 Yr_Series_Acquired Series 
-04-Apr-2018 12:04:40:350 INFO  [main] Start generateAmort: generating amort for 4000.0 
-04-Apr-2018 12:04:41:855 INFO  [main] Start readAmortAmtRows: read amort amounts 
-04-Apr-2018 12:05:00:126 INFO  [main] readAmortAmtRows: read amort amounts 
-04-Apr-2018 12:05:00:127 INFO  [main] End generateAmort: generating amort for 4000.0 
-04-Apr-2018 12:05:00:480 ERROR [main] <style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;border-color:#999;}
-.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;}
-.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;}
-.tg .tg-3fs7{font-size:11px;font-family:Tahoma, Geneva, sans-serif !important;;vertical-align:top}
-.tg .tg-yw4l{vertical-align:top}
-</style><table class="tg"><tr><td class="tg-yw4l">Month</td><td class="tg-yw4l">Application</td><td class="tg-yw4l">Amort Calulation</td></tr><tr><td class="tg-yw4l">1</td><td class="tg-yw4l">lnvE</td><td class="tg-yw4l">$2,000</td></tr><tr><td class="tg-yw4l">2</td><td class="tg-yw4l">$1333.33</td><td class="tg-yw4l">$2,000</td></tr></table> 
+04-Apr-2018 05:28:14:953 INFO  [main] Validating amort template for Universo: 355.0_Acquired Series - 2 Yr_Series_Acquired Series 
+04-Apr-2018 05:28:15:162 INFO  [main] Start launchAppUsingNativeWindowHandle: Launching app using window handle 
+04-Apr-2018 05:28:15:162 INFO  [main] Start killApp: taskkill /F /IM NBCU.Compass.exe 
+04-Apr-2018 05:28:35:179 INFO  [main] End killApp: taskkill /F /IM NBCU.Compass.exe 
+04-Apr-2018 05:28:35:179 INFO  [main] Start startExeApp: appPath: C:\Compass\RedGate\Compass_4.177.3.4_STGUAT5_Node_A_artifacts\Publish\app\setup.exe 
+04-Apr-2018 05:29:02:894 INFO  [main] End startExeApp: appPath: C:\Compass\RedGate\Compass_4.177.3.4_STGUAT5_Node_A_artifacts\Publish\app\setup.exe 
+04-Apr-2018 05:29:02:894 INFO  [main] End launchAppUsingNativeWindowHandle: Launching app using window handle 
+04-Apr-2018 05:29:02:896 INFO  [main] Start loginCompass: Logging in application for user: 206534643 
+04-Apr-2018 05:29:36:742 INFO  [main] End loginCompass: Logging in application for user: 206534643 passed 
+04-Apr-2018 05:29:36:742 INFO  [main] Start createContract: distributor: 10X10 Entertainment, dealType: Cash, negotiatedBy: LEGAL 
+04-Apr-2018 05:29:50:374 INFO  [main] Start writeResultInTxtFile: writing results in txt file: 355	Acquired Series - 2 Yr	Series	Acquired Series	Fail 
+04-Apr-2018 05:29:50:377 INFO  [main] End writeResultInTxtFile: writing results in txt file: 355	Acquired Series - 2 Yr	Series	Acquired Series	Fail 
+04-Apr-2018 05:29:50:565 ERROR [main] C:/amort test/AmortTemplateAutomation/images/distributorpackage.png: (464x39) in S(0)[0,0 1366x768] E:Y, T:3.0 
+04-Apr-2018 05:29:50:643 INFO  [main] Validating amort template for Universo: 355.0_Acquired Series - 2 Yr_Series_Acquired Series 
+04-Apr-2018 05:29:50:690 INFO  [main] Start launchAppUsingNativeWindowHandle: Launching app using window handle 
+04-Apr-2018 05:29:50:690 INFO  [main] Start killApp: taskkill /F /IM NBCU.Compass.exe 
+04-Apr-2018 05:30:10:707 INFO  [main] End killApp: taskkill /F /IM NBCU.Compass.exe 
+04-Apr-2018 05:30:20:711 INFO  [main] Start startExeApp: appPath: C:\Compass\RedGate\Compass_4.177.3.4_STGUAT5_Node_A_artifacts\Publish\app\setup.exe 
+04-Apr-2018 05:30:40:855 INFO  [main] End startExeApp: appPath: C:\Compass\RedGate\Compass_4.177.3.4_STGUAT5_Node_A_artifacts\Publish\app\setup.exe 
+04-Apr-2018 05:30:42:297 INFO  [main] Start writeResultInTxtFile: writing results in txt file: 355	Acquired Series - 2 Yr	Series	Acquired Series	Fail 
+04-Apr-2018 05:30:42:304 INFO  [main] End writeResultInTxtFile: writing results in txt file: 355	Acquired Series - 2 Yr	Series	Acquired Series	Fail 
+04-Apr-2018 05:30:42:322 INFO  [main] Start writeResultInTxtFile: writing results in txt file: 355	Acquired Series - 2 Yr	Series	Acquired Series	Fail 
+04-Apr-2018 05:30:42:323 INFO  [main] End writeResultInTxtFile: writing results in txt file: 355	Acquired Series - 2 Yr	Series	Acquired Series	Fail 
+04-Apr-2018 05:30:42:323 INFO  [main] Start killApp: taskkill /F /IM NBCU.Compass.exe 
+04-Apr-2018 05:31:02:338 INFO  [main] End killApp: taskkill /F /IM NBCU.Compass.exe 
+04-Apr-2018 05:31:02:338 ERROR [main]  

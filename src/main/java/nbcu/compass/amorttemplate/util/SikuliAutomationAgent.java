@@ -213,7 +213,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			screen = new Screen();
 			Pattern save = new Pattern(iconPath + "save.png");
 			screen.click(save);
-			Pattern saveDisabled = new Pattern(iconPath + "savedisabled");
+			Pattern saveDisabled = new Pattern(iconPath + "savedisabled.png");
 			Match found = waitForElementToAppearByPattern(saveDisabled, 0);
 			if(null == found) {
 				if(null != retry && retry.length == 1) {

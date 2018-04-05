@@ -1,24 +1,24 @@
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\ExtentReporter.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\User.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\WADAutomationAgent.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\HeaderEnum.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortExcelReader.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\SikuliImageRecognitionUtil.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\test\java\nbcu\compass\amorttemplate\test\AmortSikuliTest.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\factory\AutomationAgent.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\Window.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortTemplateConstants.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\EnvironmentPropertiesReader.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortTemplateUtil.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\Log.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\test\java\nbcu\compass\amorttemplate\test\AmortWADTest.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\FolderZiper.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortDataProvider.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\SikuliMain.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\EmailReport.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\ScreenshotManager.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\SikuliAutomationAgent.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\AmortTemplateGrid.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\test\java\nbcu\compass\amorttemplate\test\MainClass.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\License.java
-D:\Users\mohammed.saquib\eclipse-workspace\amorttemplate\src\main\java\nbcu\compass\amorttemplate\util\TestData.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\AmortExcelReader.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\FolderZiper.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\EmailReport.java
+C:\amort test\AmortTemplateAutomation\src\test\java\nbcu\compass\amorttemplate\test\MainClass.java
+C:\amort test\AmortTemplateAutomation\src\test\java\nbcu\compass\amorttemplate\test\AmortWADTest.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\Log.java
+C:\amort test\AmortTemplateAutomation\src\test\java\nbcu\compass\amorttemplate\test\AmortSikuliTest.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\HeaderEnum.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\AmortTemplateConstants.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\SikuliImageRecognitionUtil.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\AmortTemplateUtil.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\Window.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\AmortTemplateGrid.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\SikuliAutomationAgent.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\User.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\ScreenshotManager.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\EnvironmentPropertiesReader.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\ExtentReporter.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\factory\AutomationAgent.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\WADAutomationAgent.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\TestData.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\License.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\AmortDataProvider.java
+C:\amort test\AmortTemplateAutomation\src\main\java\nbcu\compass\amorttemplate\util\SikuliMain.java

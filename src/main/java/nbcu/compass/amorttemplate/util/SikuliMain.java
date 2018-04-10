@@ -1,26 +1,16 @@
 package nbcu.compass.amorttemplate.util;
 
-import java.awt.Rectangle;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.sql.Savepoint;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
-import org.openqa.selenium.Keys;
 import org.sikuli.basics.Settings;
 import org.sikuli.script.FindFailed;
 import org.sikuli.script.Key;
 import org.sikuli.script.Location;
 import org.sikuli.script.Match;
 import org.sikuli.script.Pattern;
-import org.sikuli.script.Region;
 import org.sikuli.script.Screen;
 import org.testng.annotations.Test;
 
@@ -74,8 +64,7 @@ public class SikuliMain {
 			Match openSchedule = screen.findText("Open Schedule");
 			openSchedule.click();
 			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
-			*/
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			
 			Pattern nextWeek = new Pattern(iconPath+"nextweek.png");
 			screen.click(nextWeek);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
@@ -86,17 +75,54 @@ public class SikuliMain {
 			screen.click(newIcon);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			screen.rightClick();
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern applyEpisodes = new Pattern(iconPath+"applyepisodes.png");
+			screen.click(applyEpisodes);
+			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+			Pattern programType = new Pattern(iconPath + "programtype.png");
+			screen.type(programType, "Series");
+			Pattern episodeTitle = new Pattern(iconPath + "episodetitle.png");
+			screen.type(episodeTitle, "EPS-1");
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern searchBtn = new Pattern(iconPath+"search.png");
+			screen.click(searchBtn);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			Pattern checkbox = new Pattern(iconPath+"checkbox.png");
+			screen.click(checkbox);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			screen.type(Key.TAB);
+			screen.type(Key.TAB);
+			screen.type(Key.TAB);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			screen.type(Key.SPACE);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			screen.type(Key.SPACE);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern save = new Pattern(iconPath + "saveschedule.png");
+			screen.click(save);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern closeSchedule = new Pattern(iconPath + "closeschedule.png");
+			screen.click(closeSchedule);
+			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
+			*/
 			
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern monthly = new Pattern(iconPath + "monthly.png");
+			screen.rightClick(monthly);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern approve = new Pattern(iconPath + "approve.png");
+			screen.click(approve);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern approvePopup = new Pattern(iconPath + "approvepopup.png");
+			screen.click(approvePopup);
 		} catch (InterruptedException | FindFailed e) {
 			e.printStackTrace();
 		}
 	}
 	
 	private void clickSaveButton(String statusMessage, int...retry) {
-		screen = new Screen();
 		try {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			screen = new Screen();
 			Pattern save = new Pattern(iconPath + "save.png");
 			screen.click(save);
 			Pattern saveDisabled = new Pattern(iconPath + "savedisabled.png");

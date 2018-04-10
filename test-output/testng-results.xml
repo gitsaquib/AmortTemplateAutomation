@@ -2,12 +2,12 @@
 <testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
   <reporter-output>
   </reporter-output>
-  <suite name="Default suite" duration-ms="22593" started-at="2018-04-04T16:40:17Z" finished-at="2018-04-04T16:40:40Z">
+  <suite name="Default suite" duration-ms="17139" started-at="2018-04-07T10:52:25Z" finished-at="2018-04-07T10:52:42Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="22593" started-at="2018-04-04T16:40:17Z" finished-at="2018-04-04T16:40:40Z">
+    <test name="Default test" duration-ms="17139" started-at="2018-04-07T10:52:25Z" finished-at="2018-04-07T10:52:42Z">
       <class name="nbcu.compass.amorttemplate.util.SikuliMain">
-        <test-method status="PASS" signature="testM()[pri:0, instance:nbcu.compass.amorttemplate.util.SikuliMain@76329302]" name="testM" duration-ms="22559" started-at="2018-04-04T12:40:17Z" finished-at="2018-04-04T12:40:40Z">
+        <test-method status="PASS" signature="testM()[pri:0, instance:nbcu.compass.amorttemplate.util.SikuliMain@76329302]" name="testM" duration-ms="17118" started-at="2018-04-07T06:52:25Z" finished-at="2018-04-07T06:52:42Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- testM -->

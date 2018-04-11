@@ -49,7 +49,7 @@
               <ul>
                 <li>
                   <a href="#" class="navigator-link " panel-name="test-xml-Default_suite">
-                    <span>C:\TEMP\testng-eclipse--1471234588\testng-customsuite.xml</span>
+                    <span>C:\TEMP\testng-eclipse--2012795265\testng-customsuite.xml</span>
                   </a> <!-- navigator-link  -->
                 </li>
                 <li>
@@ -102,7 +102,7 @@
                     <div class="method-list-content passed suite-Default_suite">
                       <span>
                         <img width="3%" src="passed.png"/>
-                        <a href="#" class="method navigator-link" panel-name="suite-Default_suite" title="nbcu.compass.amorttemplate.util.SikuliMain" hash-for-method="testM">testM</a> <!-- method navigator-link -->
+                        <a href="#" class="method navigator-link" panel-name="suite-Default_suite" title="nbcu.compass.amorttemplate.test.AmortWADTest" hash-for-method="testAmortTemplate(19.0_Pilots_Original Series_Pilot)">testAmortTemplate(19.0_Pilots_Original Series_Pilot)</a> <!-- method navigator-link -->
                       </span>
                       <br/>
                     </div> <!-- method-list-content passed suite-Default_suite -->
@@ -120,14 +120,17 @@
           <div class="suite-Default_suite-class-passed">
             <div class="main-panel-header rounded-window-top">
               <img src="passed.png"/>
-              <span class="class-name">nbcu.compass.amorttemplate.util.SikuliMain</span>
+              <span class="class-name">nbcu.compass.amorttemplate.test.AmortWADTest</span>
             </div> <!-- main-panel-header rounded-window-top -->
             <div class="main-panel-content rounded-window-bottom">
               <div class="method">
                 <div class="method-content">
-                  <a name="testM">
-                  </a> <!-- testM -->
-                  <span class="method-name">testM</span>
+                  <a name="testAmortTemplate(19.0_Pilots_Original Series_Pilot)">
+                  </a> <!-- testAmortTemplate(19.0_Pilots_Original Series_Pilot) -->
+                  <span class="method-name">testAmortTemplate</span>
+                  <span class="parameters">(19.0_Pilots_Original Series_Pilot)</span>
+                  <em>
+(Validating amort template)                  </em>
                 </div> <!-- method-content -->
               </div> <!-- method -->
             </div> <!-- main-panel-content rounded-window-bottom -->
@@ -135,7 +138,7 @@
         </div> <!-- panel Default_suite -->
         <div panel-name="test-xml-Default_suite" class="panel">
           <div class="main-panel-header rounded-window-top">
-            <span class="header-content">C:\TEMP\testng-eclipse--1471234588\testng-customsuite.xml</span>
+            <span class="header-content">C:\TEMP\testng-eclipse--2012795265\testng-customsuite.xml</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <pre>
@@ -144,7 +147,7 @@
 &lt;suite guice-stage=&quot;DEVELOPMENT&quot; name=&quot;Default suite&quot;&gt;
   &lt;test verbose=&quot;2&quot; name=&quot;Default test&quot;&gt;
     &lt;classes&gt;
-      &lt;class name=&quot;nbcu.compass.amorttemplate.util.SikuliMain&quot;/&gt;
+      &lt;class name=&quot;nbcu.compass.amorttemplate.test.AmortWADTest&quot;/&gt;
     &lt;/classes&gt;
   &lt;/test&gt; &lt;!-- Default test --&gt;
 &lt;/suite&gt; &lt;!-- Default suite --&gt;
@@ -186,14 +189,14 @@ data.addColumn('string', 'Class');
 data.addColumn('number', 'Time (ms)');
 data.addRows(1);
 data.setCell(0, 0, 0)
-data.setCell(0, 1, 'testM')
-data.setCell(0, 2, 'nbcu.compass.amorttemplate.util.SikuliMain')
-data.setCell(0, 3, 17118);
+data.setCell(0, 1, 'testAmortTemplate')
+data.setCell(0, 2, 'nbcu.compass.amorttemplate.test.AmortWADTest')
+data.setCell(0, 3, 46140);
 window.suiteTableData['Default_suite']= { tableData: data, tableDiv: 'times-div-Default_suite'}
 return data;
 }
               </script>
-              <span class="suite-total-time">Total running time: 17 seconds</span>
+              <span class="suite-total-time">Total running time: 46 seconds</span>
               <div id="times-div-Default_suite">
               </div> <!-- times-div-Default_suite -->
             </div> <!-- times-div -->
@@ -204,6 +207,40 @@ return data;
             <span class="header-content">Reporter output for Default suite</span>
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
+            <div class="reporter-method-div">
+              <span class="reporter-method-name">testAmortTemplate(19.0_Pilots_Original Series_Pilot)</span>
+              <div class="reporter-method-output-div">
+                <span class="reporter-method-output"><div class="test-message">&emsp;Validating amort template for BRAVO: 19.0_Pilots_Original Series_Pilot</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start launchAppUsingNativeWindowHandle: Launching app using window handle</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start getElement: By: By.name: [PROJECTSTG] - COMPASS</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End getElement: By: By.name: [PROJECTSTG] - COMPASS</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End launchAppUsingNativeWindowHandle: Launching app using window handle</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start generateAmort: generating amort for 4000.0</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start clickYesOrNoOnPopup: All old amort data will be deleted. Do you want to continue?, Yes</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Popup found with message: All old amort data will be deleted. Do you want to continue?</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End clickYesOrNoOnPopup: All old amort data will be deleted. Do you want to continue?, Yes</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start clickYesOrNoOnPopup: Effective Date should be earlier or equal to the Amort Window Start Date, Yes</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start readAmortAmtRows: read amort amounts</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;readAmortAmtRows: read amort amounts</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End generateAmort: generating amort for 4000.0</div></span>
+                <span class="reporter-method-output"><div class="test-result"><br><font color="green"><strong> <style type="text/css">
+.tg  {border-collapse:collapse;border-spacing:0;border-color:#999;}
+.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;}
+.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;}
+.tg .tg-3fs7{font-size:11px;font-family:Tahoma, Geneva, sans-serif !important;;vertical-align:top}
+.tg .tg-yw4l{vertical-align:top}
+</style><table class="tg"><tr><td class="tg-yw4l">Month</td><td class="tg-yw4l">Application</td><td class="tg-yw4l">Amort Calulation</td></tr><tr><td class="tg-yw4l">1</td><td class="tg-yw4l">$4,000.00</td><td class="tg-yw4l">$4,000</td></tr></table> </strong></font> </div>&emsp;</span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start closeApplication: Closing app session</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start isElementFoundByName: COMPASS</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start clickYesOrNoOnPopup: Do you want to save the changes?, No</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start clickYesOrNoOnPopup: Are you sure you want to exit the application?, Yes</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Popup found with message: Are you sure you want to exit the application?</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End clickYesOrNoOnPopup: Are you sure you want to exit the application?, Yes</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End closeApplication: Closing app session</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;Start writeResultInTxtFile: writing results in txt file: 19	Pilots	Original Series	Pilot	Pass</div></span>
+                <span class="reporter-method-output"><div class="test-message">&emsp;End writeResultInTxtFile: writing results in txt file: 19	Pilots	Original Series	Pilot	Pass</div></span>
+              </div> <!-- reporter-method-output-div -->
+            </div> <!-- reporter-method-div -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->
         <div panel-name="ignored-methods-Default_suite" class="panel">
@@ -219,10 +256,14 @@ return data;
           </div> <!-- main-panel-header rounded-window-top -->
           <div class="main-panel-content rounded-window-bottom">
             <div class="chronological-class">
-              <div class="chronological-class-name">nbcu.compass.amorttemplate.util.SikuliMain</div> <!-- chronological-class-name -->
-              <div class="test-method">
-                <span class="method-name">testM</span>
+              <div class="chronological-class-name">nbcu.compass.amorttemplate.test.AmortWADTest</div> <!-- chronological-class-name -->
+              <div class="configuration-suite before">
+                <span class="method-name">init</span>
                 <span class="method-start">0 ms</span>
+              </div> <!-- configuration-suite before -->
+              <div class="test-method">
+                <span class="method-name">testAmortTemplate(19.0_Pilots_Original Series_Pilot)</span>
+                <span class="method-start">707 ms</span>
               </div> <!-- test-method -->
           </div> <!-- main-panel-content rounded-window-bottom -->
         </div> <!-- panel -->

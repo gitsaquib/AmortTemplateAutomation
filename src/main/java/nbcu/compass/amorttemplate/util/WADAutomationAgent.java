@@ -2,11 +2,9 @@ package nbcu.compass.amorttemplate.util;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.PrintWriter;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +20,10 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.sikuli.basics.Settings;
 import org.sikuli.script.FindFailed;
+import org.sikuli.script.Key;
+import org.sikuli.script.Match;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Screen;
 
@@ -33,6 +34,18 @@ import nbcu.compass.amorttemplate.factory.AutomationAgent;
 public class WADAutomationAgent extends AutomationAgent {
 	
 	private static EnvironmentPropertiesReader configProperty = EnvironmentPropertiesReader.getInstance();
+	
+	private static String iconPath = "";
+	static {
+		try {
+			iconPath = new File(".").getCanonicalPath() + File.separator + "images" + File.separator;
+			Settings.OcrTextRead = true;
+			Settings.OcrTextSearch = true;
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	private Screen screen = null;
 	
 	@SuppressWarnings("rawtypes")
 	private static WindowsDriver appSession = null;
@@ -206,7 +219,7 @@ public class WADAutomationAgent extends AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			clickYesOrNoOnPopup("Effective Date should be earlier or equal to the Amort Window Start Date", "Yes");
 			Map<Integer, String> amorts = readAmortAmtRows(totalLicenseFee, 0, statusMessage);
-			if(null == amorts && amorts.size() > 0) {
+			if(null == amorts || amorts.size() <= 0) {
 				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 				Log.fail("Amort not generated", appSession);
 				killApp();
@@ -421,24 +434,21 @@ public class WADAutomationAgent extends AutomationAgent {
 	public void openTitleAndWindow(String financeType, List<Window> windows, String statusMessage) {
 		Log.message("Start openTitleAndWindow: financeType: "+financeType+", windows: "+windows);
 		try {
-			Actions vActions = new Actions(appSession);
-			List<WebElement> titleNames = appSession.findElementsByAccessibilityId("Cell_TitleName");
-			for(WebElement titleName:titleNames) {
-				try {
-					WebElement title = titleName.findElement(By.className("Cell"));
-					title.click();
-					break;
-				} catch (Exception e) {
-					;
-				}
+			screen = new Screen();
+			Pattern expand = new Pattern(iconPath + "expand.png");
+			screen.doubleClick(expand);
+			Pattern selectAnAction = new Pattern(iconPath +"selectanaction.png");
+			Match found = waitForElementToAppearByPattern(selectAnAction, 0);
+			if(null == found) {
+				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+				Log.fail("Unable to open title in one minute", screen);
+				killApp();
 			}
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			vActions.moveByOffset(-50, 0);
-			vActions.doubleClick();
-			Action vClickAction = vActions.build();
-			vClickAction.perform();
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			appSession.findElementByName("Window").click();
+			Pattern selectedWindowTab = new Pattern(iconPath + "selecedwindowtab.png");
+			if(!isElementFoundByImage(selectedWindowTab)) {
+				Pattern windowTab = new Pattern(iconPath + "windowtab.png");
+				screen.click(windowTab);
+			}
 			for(Window window:windows) {
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 				appSession.findElementByName("AddWindow").click();
@@ -789,10 +799,39 @@ public class WADAutomationAgent extends AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			screen.click(addEpisodeBtn);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-			setEpisodeValue("Episode Name", "TestEpisode-1", statusMessage);
-			setValueInDropdown("Season", "Season1");
+			Pattern episodeName = new Pattern(iconPath + "episodename.png");
+			screen.click(episodeName);
+			screen.type("TestEpisode-1");
+			screen.type(Key.TAB);
+			screen.type("Season1");
+			clickSaveButton(statusMessage);
 		} catch (IOException | FindFailed | InterruptedException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private Match waitForElementToAppearByPattern(Pattern pattern, int retryCnt) {
+		while(retryCnt < 3) {
+			try {
+				Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+				screen = new Screen();
+				return screen.find(pattern);
+			} catch (InterruptedException | FindFailed e) {
+				retryCnt++;
+			}
+		}
+		return null;
+	}
+	
+	private boolean isElementFoundByImage(Pattern image) {
+		screen = new Screen();
+		try {
+			@SuppressWarnings("unused")
+			Match imageFound = screen.find(image);
+			return true;
+		} catch (FindFailed e) {
+			;
+		}
+		return false;
 	}
 }

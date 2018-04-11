@@ -77,11 +77,18 @@ public class AmortWADTest {
 															 configProperty.getProperty("appName"),
 															 statusMessage);
 			automationAgent.loginCompass(user.getUsername(), user.getPassword(), user.getDisplayName(), statusMessage);
+			/*
 			if(null != amortTemplateGrid.getAddEpisode() && "Y".equalsIgnoreCase(amortTemplateGrid.getAddEpisode())) {
 				automationAgent.searchTitleWithEpisodes(configProperty.getProperty("network"), configProperty.getProperty("showId"), uniqueKey, amortTemplateGrid.getTitleTypeName(), statusMessage);
 			} else {
 				automationAgent.createContract(configProperty.getProperty("network"), testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), uniqueKey, amortTemplateGrid.getTitleTypeName(), statusMessage);
 				automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows(), statusMessage);
+			}
+			*/
+			automationAgent.createContract(configProperty.getProperty("network"), testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), uniqueKey, amortTemplateGrid.getTitleTypeName(), statusMessage);
+			automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows(), statusMessage);
+			if(null != amortTemplateGrid.getAddEpisode() && "Y".equalsIgnoreCase(amortTemplateGrid.getAddEpisode())) {
+				automationAgent.addEpisode(statusMessage);
 			}
 			Double amt = automationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName(), statusMessage);
 			if(null != amt) {

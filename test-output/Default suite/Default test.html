@@ -55,11 +55,11 @@ function toggleAllBoxes() {
 <body>
 <h2 align='center'>Default test</h2><table border='1' align="center">
 <tr>
-<td>Tests passed/Failed/Skipped:</td><td>1/0/0</td>
+<td>Tests passed/Failed/Skipped:</td><td>0/0/2</td>
 </tr><tr>
-<td>Started on:</td><td>Wed Apr 11 07:00:11 EDT 2018</td>
+<td>Started on:</td><td>Sat Apr 14 09:17:25 EDT 2018</td>
 </tr>
-<tr><td>Total time:</td><td>46 seconds (46318 ms)</td>
+<tr><td>Total time:</td><td>0 seconds (150 ms)</td>
 </tr><tr>
 <td>Included groups:</td><td></td>
 </tr><tr>
@@ -67,53 +67,165 @@ function toggleAllBoxes() {
 </tr>
 </table><p/>
 <small><i>(Hover the method name to see the test class name)</i></small><p/>
-<table width='100%' border='1' class='invocation-passed'>
-<tr><td colspan='4' align='center'><b>PASSED TESTS</b></td></tr>
+<table width='100%' border='1' class='invocation-skipped'>
+<tr><td colspan='4' align='center'><b>SKIPPED TESTS</b></td></tr>
 <tr><td><b>Test method</b></td>
 <td width="30%"><b>Exception</b></td>
 <td width="10%"><b>Time (seconds)</b></td>
 <td><b>Instance</b></td>
 </tr>
 <tr>
-<td title='nbcu.compass.amorttemplate.test.AmortWADTest.testAmortTemplate()'><b>testAmortTemplate</b><br>Test class: nbcu.compass.amorttemplate.test.AmortWADTest<br>Test method: Validating amort template<br>Parameters: 19.0_Pilots_Original Series_Pilot<br/>
-<a href="#Output-897848096" onClick='toggleBox("Output-897848096", this, "Show output", "Hide output");'>Show output</a>
-
-<a href="#Output-897848096" onClick="toggleAllBoxes();">Show all outputs</a>
-<div class='log' id="Output-897848096">
-<div class="test-message">&emsp;Validating amort template for BRAVO: 19.0_Pilots_Original Series_Pilot</div><br/>
-<div class="test-message">&emsp;Start launchAppUsingNativeWindowHandle: Launching app using window handle</div><br/>
-<div class="test-message">&emsp;Start getElement: By: By.name: [PROJECTSTG] - COMPASS</div><br/>
-<div class="test-message">&emsp;End getElement: By: By.name: [PROJECTSTG] - COMPASS</div><br/>
-<div class="test-message">&emsp;End launchAppUsingNativeWindowHandle: Launching app using window handle</div><br/>
-<div class="test-message">&emsp;Start generateAmort: generating amort for 4000.0</div><br/>
-<div class="test-message">&emsp;Start clickYesOrNoOnPopup: All old amort data will be deleted. Do you want to continue?, Yes</div><br/>
-<div class="test-message">&emsp;Popup found with message: All old amort data will be deleted. Do you want to continue?</div><br/>
-<div class="test-message">&emsp;End clickYesOrNoOnPopup: All old amort data will be deleted. Do you want to continue?, Yes</div><br/>
-<div class="test-message">&emsp;Start clickYesOrNoOnPopup: Effective Date should be earlier or equal to the Amort Window Start Date, Yes</div><br/>
-<div class="test-message">&emsp;Start readAmortAmtRows: read amort amounts</div><br/>
-<div class="test-message">&emsp;readAmortAmtRows: read amort amounts</div><br/>
-<div class="test-message">&emsp;End generateAmort: generating amort for 4000.0</div><br/>
-<div class="test-result"><br><font color="green"><strong> <style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;border-color:#999;}
-.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;}
-.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;}
-.tg .tg-3fs7{font-size:11px;font-family:Tahoma, Geneva, sans-serif !important;;vertical-align:top}
-.tg .tg-yw4l{vertical-align:top}
-</style><table class="tg"><tr><td class="tg-yw4l">Month</td><td class="tg-yw4l">Application</td><td class="tg-yw4l">Amort Calulation</td></tr><tr><td class="tg-yw4l">1</td><td class="tg-yw4l">$4,000.00</td><td class="tg-yw4l">$4,000</td></tr></table> </strong></font> </div>&emsp;<br/>
-<div class="test-message">&emsp;Start closeApplication: Closing app session</div><br/>
-<div class="test-message">&emsp;Start isElementFoundByName: COMPASS</div><br/>
-<div class="test-message">&emsp;Start clickYesOrNoOnPopup: Do you want to save the changes?, No</div><br/>
-<div class="test-message">&emsp;Start clickYesOrNoOnPopup: Are you sure you want to exit the application?, Yes</div><br/>
-<div class="test-message">&emsp;Popup found with message: Are you sure you want to exit the application?</div><br/>
-<div class="test-message">&emsp;End clickYesOrNoOnPopup: Are you sure you want to exit the application?, Yes</div><br/>
-<div class="test-message">&emsp;End closeApplication: Closing app session</div><br/>
-<div class="test-message">&emsp;Start writeResultInTxtFile: writing results in txt file: 19	Pilots	Original Series	Pilot	Pass</div><br/>
-<div class="test-message">&emsp;End writeResultInTxtFile: writing results in txt file: 19	Pilots	Original Series	Pilot	Pass</div><br/>
-</div>
-</td>
-<td></td>
-<td>46</td>
-<td>nbcu.compass.amorttemplate.test.AmortWADTest@cb644e</td></tr>
+<td title='nbcu.compass.amorttemplate.test.AmortWADTest.testAmortTemplate()'><b>testAmortTemplate</b><br>Test class: nbcu.compass.amorttemplate.test.AmortWADTest<br>Test method: Validating amort template</td>
+<td><div><pre>java.lang.RuntimeException: java.lang.NullPointerException
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:49)
+	at org.testng.internal.MethodInvocationHelper.invokeDataProvider(MethodInvocationHelper.java:115)
+	at org.testng.internal.Parameters.handleParameters(Parameters.java:509)
+	at org.testng.internal.Invoker.handleParameters(Invoker.java:1308)
+	at org.testng.internal.Invoker.createParameters(Invoker.java:1036)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1126)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:744)
+	at org.testng.TestRunner.run(TestRunner.java:602)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:380)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:375)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:340)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:289)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1301)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1226)
+	at org.testng.TestNG.runSuites(TestNG.java:1144)
+	at org.testng.TestNG.run(TestNG.java:1115)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:114)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+Caused by: java.lang.NullPointerException
+	at nbcu.compass.amorttemplate.util.AmortExcelReader.readAmortTemplateGrid(AmortExcelReader.java:54)
+	at nbcu.compass.amorttemplate.util.AmortDataProvider.amortDataProvider(AmortDataProvider.java:16)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:108)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:55)
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:45)
+	... 22 more
+</pre></div><a href='#' onClick='toggleBox("stack-trace1432569632", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace1432569632'><pre>java.lang.RuntimeException: java.lang.NullPointerException
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:49)
+	at org.testng.internal.MethodInvocationHelper.invokeDataProvider(MethodInvocationHelper.java:115)
+	at org.testng.internal.Parameters.handleParameters(Parameters.java:509)
+	at org.testng.internal.Invoker.handleParameters(Invoker.java:1308)
+	at org.testng.internal.Invoker.createParameters(Invoker.java:1036)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1126)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:744)
+	at org.testng.TestRunner.run(TestRunner.java:602)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:380)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:375)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:340)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:289)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1301)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1226)
+	at org.testng.TestNG.runSuites(TestNG.java:1144)
+	at org.testng.TestNG.run(TestNG.java:1115)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:114)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+Caused by: java.lang.NullPointerException
+	at nbcu.compass.amorttemplate.util.AmortExcelReader.readAmortTemplateGrid(AmortExcelReader.java:54)
+	at nbcu.compass.amorttemplate.util.AmortDataProvider.amortDataProvider(AmortDataProvider.java:16)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:108)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:55)
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:45)
+	... 22 more
+</pre></div></td>
+<td>0</td>
+<td>nbcu.compass.amorttemplate.test.AmortWADTest@4b952a2d</td></tr>
+<tr>
+<td title='nbcu.compass.amorttemplate.test.AmortWADTest.testAmortTemplate2()'><b>testAmortTemplate2</b><br>Test class: nbcu.compass.amorttemplate.test.AmortWADTest<br>Test method: Validating amort template</td>
+<td><div><pre>java.lang.RuntimeException: java.lang.NullPointerException
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:49)
+	at org.testng.internal.MethodInvocationHelper.invokeDataProvider(MethodInvocationHelper.java:115)
+	at org.testng.internal.Parameters.handleParameters(Parameters.java:509)
+	at org.testng.internal.Invoker.handleParameters(Invoker.java:1308)
+	at org.testng.internal.Invoker.createParameters(Invoker.java:1036)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1126)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:744)
+	at org.testng.TestRunner.run(TestRunner.java:602)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:380)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:375)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:340)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:289)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1301)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1226)
+	at org.testng.TestNG.runSuites(TestNG.java:1144)
+	at org.testng.TestNG.run(TestNG.java:1115)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:114)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+Caused by: java.lang.NullPointerException
+	at nbcu.compass.amorttemplate.util.AmortExcelReader.readAmortTemplateGrid(AmortExcelReader.java:54)
+	at nbcu.compass.amorttemplate.util.AmortDataProvider.amortDataProvider(AmortDataProvider.java:16)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:108)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:55)
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:45)
+	... 22 more
+</pre></div><a href='#' onClick='toggleBox("stack-trace778731861", this, "Click to show all stack frames", "Click to hide stack frames")'>Click to show all stack frames</a>
+<div class='stack-trace' id='stack-trace778731861'><pre>java.lang.RuntimeException: java.lang.NullPointerException
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:49)
+	at org.testng.internal.MethodInvocationHelper.invokeDataProvider(MethodInvocationHelper.java:115)
+	at org.testng.internal.Parameters.handleParameters(Parameters.java:509)
+	at org.testng.internal.Invoker.handleParameters(Invoker.java:1308)
+	at org.testng.internal.Invoker.createParameters(Invoker.java:1036)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1126)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:744)
+	at org.testng.TestRunner.run(TestRunner.java:602)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:380)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:375)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:340)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:289)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1301)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1226)
+	at org.testng.TestNG.runSuites(TestNG.java:1144)
+	at org.testng.TestNG.run(TestNG.java:1115)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:114)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+Caused by: java.lang.NullPointerException
+	at nbcu.compass.amorttemplate.util.AmortExcelReader.readAmortTemplateGrid(AmortExcelReader.java:54)
+	at nbcu.compass.amorttemplate.util.AmortDataProvider.amortDataProvider(AmortDataProvider.java:16)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:108)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:55)
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:45)
+	... 22 more
+</pre></div></td>
+<td>0</td>
+<td>nbcu.compass.amorttemplate.test.AmortWADTest@4b952a2d</td></tr>
 </table><p>
 </body>
 </html>

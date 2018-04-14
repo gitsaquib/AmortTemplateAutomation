@@ -1,177 +1,110 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
+<testng-results skipped="2" failed="0" ignored="0" total="2" passed="0">
   <reporter-output>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Validating amort template for BRAVO: 19.0_Pilots_Original Series_Pilot</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start launchAppUsingNativeWindowHandle: Launching app using window handle</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start getElement: By: By.name: [PROJECTSTG] - COMPASS</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;End getElement: By: By.name: [PROJECTSTG] - COMPASS</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;End launchAppUsingNativeWindowHandle: Launching app using window handle</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start generateAmort: generating amort for 4000.0</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start clickYesOrNoOnPopup: All old amort data will be deleted. Do you want to continue?, Yes</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Popup found with message: All old amort data will be deleted. Do you want to continue?</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;End clickYesOrNoOnPopup: All old amort data will be deleted. Do you want to continue?, Yes</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start clickYesOrNoOnPopup: Effective Date should be earlier or equal to the Amort Window Start Date, Yes</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start readAmortAmtRows: read amort amounts</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;readAmortAmtRows: read amort amounts</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;End generateAmort: generating amort for 4000.0</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-result"><br><font color="green"><strong> <style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;border-color:#999;}
-.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;}
-.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;}
-.tg .tg-3fs7{font-size:11px;font-family:Tahoma, Geneva, sans-serif !important;;vertical-align:top}
-.tg .tg-yw4l{vertical-align:top}
-</style><table class="tg"><tr><td class="tg-yw4l">Month</td><td class="tg-yw4l">Application</td><td class="tg-yw4l">Amort Calulation</td></tr><tr><td class="tg-yw4l">1</td><td class="tg-yw4l">$4,000.00</td><td class="tg-yw4l">$4,000</td></tr></table> </strong></font> </div>&emsp;]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start closeApplication: Closing app session</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start isElementFoundByName: COMPASS</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start clickYesOrNoOnPopup: Do you want to save the changes?, No</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start clickYesOrNoOnPopup: Are you sure you want to exit the application?, Yes</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Popup found with message: Are you sure you want to exit the application?</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;End clickYesOrNoOnPopup: Are you sure you want to exit the application?, Yes</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;End closeApplication: Closing app session</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;Start writeResultInTxtFile: writing results in txt file: 19	Pilots	Original Series	Pilot	Pass</div>]]>
-    </line>
-    <line>
-      <![CDATA[<div class="test-message">&emsp;End writeResultInTxtFile: writing results in txt file: 19	Pilots	Original Series	Pilot	Pass</div>]]>
-    </line>
   </reporter-output>
-  <suite name="Default suite" duration-ms="46318" started-at="2018-04-11T11:00:11Z" finished-at="2018-04-11T11:00:57Z">
+  <suite name="Default suite" duration-ms="150" started-at="2018-04-14T13:17:25Z" finished-at="2018-04-14T13:17:25Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="46318" started-at="2018-04-11T11:00:11Z" finished-at="2018-04-11T11:00:57Z">
+    <test name="Default test" duration-ms="150" started-at="2018-04-14T13:17:25Z" finished-at="2018-04-14T13:17:25Z">
       <class name="nbcu.compass.amorttemplate.test.AmortWADTest">
-        <test-method status="PASS" signature="init()[pri:0, instance:nbcu.compass.amorttemplate.test.AmortWADTest@cb644e]" name="init" is-config="true" duration-ms="532" started-at="2018-04-11T07:00:10Z" finished-at="2018-04-11T07:00:11Z">
+        <test-method status="PASS" signature="init()[pri:0, instance:nbcu.compass.amorttemplate.test.AmortWADTest@4b952a2d]" name="init" is-config="true" duration-ms="562" started-at="2018-04-14T09:17:24Z" finished-at="2018-04-14T09:17:25Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- init -->
-        <test-method status="PASS" signature="testAmortTemplate(java.lang.String)[pri:1, instance:nbcu.compass.amorttemplate.test.AmortWADTest@cb644e]" name="testAmortTemplate" duration-ms="46140" started-at="2018-04-11T07:00:11Z" description="Validating amort template" data-provider="amortDataProvider" finished-at="2018-04-11T07:00:57Z">
-          <params>
-            <param index="0">
-              <value>
-                <![CDATA[19.0_Pilots_Original Series_Pilot]]>
-              </value>
-            </param>
-          </params>
+        <test-method status="SKIP" signature="testAmortTemplate(java.lang.String)[pri:1, instance:nbcu.compass.amorttemplate.test.AmortWADTest@4b952a2d]" name="testAmortTemplate" duration-ms="0" started-at="2018-04-14T09:17:25Z" description="Validating amort template" data-provider="amortDataProvider" finished-at="2018-04-14T09:17:25Z">
+          <exception class="java.lang.RuntimeException">
+            <message>
+              <![CDATA[java.lang.NullPointerException]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.lang.RuntimeException: java.lang.NullPointerException
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:49)
+	at org.testng.internal.MethodInvocationHelper.invokeDataProvider(MethodInvocationHelper.java:115)
+	at org.testng.internal.Parameters.handleParameters(Parameters.java:509)
+	at org.testng.internal.Invoker.handleParameters(Invoker.java:1308)
+	at org.testng.internal.Invoker.createParameters(Invoker.java:1036)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1126)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:744)
+	at org.testng.TestRunner.run(TestRunner.java:602)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:380)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:375)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:340)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:289)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1301)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1226)
+	at org.testng.TestNG.runSuites(TestNG.java:1144)
+	at org.testng.TestNG.run(TestNG.java:1115)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:114)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+Caused by: java.lang.NullPointerException
+	at nbcu.compass.amorttemplate.util.AmortExcelReader.readAmortTemplateGrid(AmortExcelReader.java:54)
+	at nbcu.compass.amorttemplate.util.AmortDataProvider.amortDataProvider(AmortDataProvider.java:16)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:108)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:55)
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:45)
+	... 22 more
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.lang.RuntimeException -->
           <reporter-output>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Validating amort template for BRAVO: 19.0_Pilots_Original Series_Pilot</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start launchAppUsingNativeWindowHandle: Launching app using window handle</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start getElement: By: By.name: [PROJECTSTG] - COMPASS</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;End getElement: By: By.name: [PROJECTSTG] - COMPASS</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;End launchAppUsingNativeWindowHandle: Launching app using window handle</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start generateAmort: generating amort for 4000.0</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start clickYesOrNoOnPopup: All old amort data will be deleted. Do you want to continue?, Yes</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Popup found with message: All old amort data will be deleted. Do you want to continue?</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;End clickYesOrNoOnPopup: All old amort data will be deleted. Do you want to continue?, Yes</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start clickYesOrNoOnPopup: Effective Date should be earlier or equal to the Amort Window Start Date, Yes</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start readAmortAmtRows: read amort amounts</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;readAmortAmtRows: read amort amounts</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;End generateAmort: generating amort for 4000.0</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-result"><br><font color="green"><strong> <style type="text/css">
-.tg  {border-collapse:collapse;border-spacing:0;border-color:#999;}
-.tg td{font-family:Arial, sans-serif;font-size:14px;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#444;background-color:#F7FDFA;}
-.tg th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px 5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;border-color:#999;color:#fff;background-color:#26ADE4;}
-.tg .tg-3fs7{font-size:11px;font-family:Tahoma, Geneva, sans-serif !important;;vertical-align:top}
-.tg .tg-yw4l{vertical-align:top}
-</style><table class="tg"><tr><td class="tg-yw4l">Month</td><td class="tg-yw4l">Application</td><td class="tg-yw4l">Amort Calulation</td></tr><tr><td class="tg-yw4l">1</td><td class="tg-yw4l">$4,000.00</td><td class="tg-yw4l">$4,000</td></tr></table> </strong></font> </div>&emsp;]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start closeApplication: Closing app session</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start isElementFoundByName: COMPASS</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start clickYesOrNoOnPopup: Do you want to save the changes?, No</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start clickYesOrNoOnPopup: Are you sure you want to exit the application?, Yes</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Popup found with message: Are you sure you want to exit the application?</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;End clickYesOrNoOnPopup: Are you sure you want to exit the application?, Yes</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;End closeApplication: Closing app session</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;Start writeResultInTxtFile: writing results in txt file: 19	Pilots	Original Series	Pilot	Pass</div>]]>
-            </line>
-            <line>
-              <![CDATA[<div class="test-message">&emsp;End writeResultInTxtFile: writing results in txt file: 19	Pilots	Original Series	Pilot	Pass</div>]]>
-            </line>
           </reporter-output>
         </test-method> <!-- testAmortTemplate -->
+        <test-method status="SKIP" signature="testAmortTemplate2(java.lang.String)[pri:1, instance:nbcu.compass.amorttemplate.test.AmortWADTest@4b952a2d]" name="testAmortTemplate2" duration-ms="0" started-at="2018-04-14T09:17:25Z" description="Validating amort template" data-provider="amortDataProvider" finished-at="2018-04-14T09:17:25Z">
+          <exception class="java.lang.RuntimeException">
+            <message>
+              <![CDATA[java.lang.NullPointerException]]>
+            </message>
+            <full-stacktrace>
+              <![CDATA[java.lang.RuntimeException: java.lang.NullPointerException
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:49)
+	at org.testng.internal.MethodInvocationHelper.invokeDataProvider(MethodInvocationHelper.java:115)
+	at org.testng.internal.Parameters.handleParameters(Parameters.java:509)
+	at org.testng.internal.Invoker.handleParameters(Invoker.java:1308)
+	at org.testng.internal.Invoker.createParameters(Invoker.java:1036)
+	at org.testng.internal.Invoker.invokeTestMethods(Invoker.java:1126)
+	at org.testng.internal.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:126)
+	at org.testng.internal.TestMethodWorker.run(TestMethodWorker.java:109)
+	at org.testng.TestRunner.privateRun(TestRunner.java:744)
+	at org.testng.TestRunner.run(TestRunner.java:602)
+	at org.testng.SuiteRunner.runTest(SuiteRunner.java:380)
+	at org.testng.SuiteRunner.runSequentially(SuiteRunner.java:375)
+	at org.testng.SuiteRunner.privateRun(SuiteRunner.java:340)
+	at org.testng.SuiteRunner.run(SuiteRunner.java:289)
+	at org.testng.SuiteRunnerWorker.runSuite(SuiteRunnerWorker.java:52)
+	at org.testng.SuiteRunnerWorker.run(SuiteRunnerWorker.java:86)
+	at org.testng.TestNG.runSuitesSequentially(TestNG.java:1301)
+	at org.testng.TestNG.runSuitesLocally(TestNG.java:1226)
+	at org.testng.TestNG.runSuites(TestNG.java:1144)
+	at org.testng.TestNG.run(TestNG.java:1115)
+	at org.testng.remote.AbstractRemoteTestNG.run(AbstractRemoteTestNG.java:114)
+	at org.testng.remote.RemoteTestNG.initAndRun(RemoteTestNG.java:251)
+	at org.testng.remote.RemoteTestNG.main(RemoteTestNG.java:77)
+Caused by: java.lang.NullPointerException
+	at nbcu.compass.amorttemplate.util.AmortExcelReader.readAmortTemplateGrid(AmortExcelReader.java:54)
+	at nbcu.compass.amorttemplate.util.AmortDataProvider.amortDataProvider(AmortDataProvider.java:16)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:108)
+	at org.testng.internal.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:55)
+	at org.testng.internal.MethodInvocationHelper.invokeMethodNoCheckedException(MethodInvocationHelper.java:45)
+	... 22 more
+]]>
+            </full-stacktrace>
+          </exception> <!-- java.lang.RuntimeException -->
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testAmortTemplate2 -->
       </class> <!-- nbcu.compass.amorttemplate.test.AmortWADTest -->
     </test> <!-- Default test -->
   </suite> <!-- Default suite -->

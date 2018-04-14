@@ -14,9 +14,16 @@ public class AmortTemplateGrid {
 	private double maxMonths;
 	private double firstMonthAmortPercent;
 	private String isMultipleWindowFlag;
+	private String projSchedFlag;
 	private String addEpisode;
 	private Map<Integer, Double> amortSectionGrids; 
 	
+	public String getProjSchedFlag() {
+		return projSchedFlag;
+	}
+	public void setProjSchedFlag(String projSchedFlag) {
+		this.projSchedFlag = projSchedFlag;
+	}
 	public Map<Integer, Double> getAmortSectionGrids() {
 		return amortSectionGrids;
 	}

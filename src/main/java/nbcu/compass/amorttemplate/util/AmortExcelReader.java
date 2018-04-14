@@ -51,6 +51,7 @@ public class AmortExcelReader {
 			amortTemplateGrid.setStraightLineName(sheetRow.getCell(headerMap.get(HeaderEnum.StraightLineName.toString())).getStringCellValue());
 			amortTemplateGrid.setTimePlayName(sheetRow.getCell(headerMap.get(HeaderEnum.TimePlayName.toString())).getStringCellValue());
 			amortTemplateGrid.setTitleTypeName(sheetRow.getCell(headerMap.get(HeaderEnum.TitleTypeName.toString())).getStringCellValue());
+			amortTemplateGrid.setProjSchedFlag(sheetRow.getCell(headerMap.get(HeaderEnum.ProjSchedFlag.toString())).getStringCellValue());
 			amortTemplateGrid.setAddEpisode(sheetRow.getCell(headerMap.get(HeaderEnum.AddEpisode.toString())).getStringCellValue());
 			amortTemplateGrid.setAmortSectionGrids(populateSectionGrid(network, 
 					(int)sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue(),

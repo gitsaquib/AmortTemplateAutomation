@@ -13,6 +13,7 @@ public enum HeaderEnum {
 	ProjectionScheduleName,
 	IsLinkSeries,
 	IsMultipleWindowFlag,
+	ProjSchedFlag,
 	AddEpisode,
 	TestUser,
 	Username,

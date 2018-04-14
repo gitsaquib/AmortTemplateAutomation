@@ -42,7 +42,7 @@ public class AmortTemplateUtil {
 			return amortMaxStraightLine(amortTemplateGrid.getMaxMonths(), licenseFee);
 		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.QUARTILE)) {
 			return amortQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
-					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods);
+					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods, amortTemplateGrid.getProjSchedFlag());
 		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.MAX_QUARTILE)) {
 			return amortMaxQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
 					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods, amortTemplateGrid.getMaxMonths());
@@ -81,7 +81,7 @@ public class AmortTemplateUtil {
 	
 	private static Map<Integer, String> amortQuartile(double firstMonthPercent, Integer straightLineMonths, Double licenseFee,
 			String multipleWindow, Double[] sectionPercentage, String windowsBasedOrTimeBased, int totalAmortPeriod,
-			Integer[] amortPeriods) {
+			Integer[] amortPeriods, String projSchedFlag) {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.WINDOWS_BASED)) {
 			if(multipleWindow.equalsIgnoreCase("Y")) {
@@ -128,28 +128,45 @@ public class AmortTemplateUtil {
 				}
 			}
 		} else if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.HALLMARK)) {
-			if(multipleWindow.equalsIgnoreCase("Y")) {
-				int grandMonths = 0;
-				for(Integer amortPeriod:amortPeriods ) {
-					grandMonths += amortPeriod;
-				}
-				double lineItemAmt = licenseFee/grandMonths;
-				for(int month=1; month<=grandMonths; month++) {
-					if(month == grandMonths) {
-						amorts.put(month, df2.format(licenseFee-(lineItemAmt*(grandMonths-1))));
+			if(projSchedFlag.equalsIgnoreCase("N")) {
+				Double lineItemAmt[] = new Double[sectionPercentage.length];
+				int index  = 1;
+				Double totalLicenseFee = 0.0;
+				for(int in = 0; in < sectionPercentage.length; in++) {
+					lineItemAmt[in] = ((licenseFee*sectionPercentage[in])/100);
+					lineItemAmt[in] = Double.valueOf(df.format(lineItemAmt[in]));
+					if(in == (sectionPercentage.length-1)) {
+						amorts.put(index, df2.format(licenseFee - totalLicenseFee));
 					} else {
-						amorts.put(month, df2.format(lineItemAmt));
+						amorts.put(index, df2.format(lineItemAmt[in]));
 					}
+					totalLicenseFee += lineItemAmt[in];
+					index++;
 				}
 			} else {
-				double lineItemAmt;
-				lineItemAmt = licenseFee/totalAmortPeriod;
-				lineItemAmt = Double.valueOf(df.format(lineItemAmt));
-				for(int month = 1; month <= totalAmortPeriod; month++) {
-					if(month == totalAmortPeriod) {
-						amorts.put(month, df2.format(licenseFee - lineItemAmt*(totalAmortPeriod-1)));
-					} else {
-						amorts.put(month, df2.format(lineItemAmt));
+				if(multipleWindow.equalsIgnoreCase("Y")) {
+					int grandMonths = 0;
+					for(Integer amortPeriod:amortPeriods ) {
+						grandMonths += amortPeriod;
+					}
+					double lineItemAmt = licenseFee/grandMonths;
+					for(int month=1; month<=grandMonths; month++) {
+						if(month == grandMonths) {
+							amorts.put(month, df2.format(licenseFee-(lineItemAmt*(grandMonths-1))));
+						} else {
+							amorts.put(month, df2.format(lineItemAmt));
+						}
+					}
+				} else {
+					double lineItemAmt;
+					lineItemAmt = licenseFee/totalAmortPeriod;
+					lineItemAmt = Double.valueOf(df.format(lineItemAmt));
+					for(int month = 1; month <= totalAmortPeriod; month++) {
+						if(month == totalAmortPeriod) {
+							amorts.put(month, df2.format(licenseFee - lineItemAmt*(totalAmortPeriod-1)));
+						} else {
+							amorts.put(month, df2.format(lineItemAmt));
+						}
 					}
 				}
 			}

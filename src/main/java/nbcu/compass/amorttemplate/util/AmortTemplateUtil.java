@@ -85,20 +85,18 @@ public class AmortTemplateUtil {
 			Integer[] amortPeriods, String projSchedFlag) {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.WINDOWS_BASED)) {
-			if(multipleWindow.equalsIgnoreCase("Y")) {
-				Double lineItemAmt[] = new Double[sectionPercentage.length];
-				int index  = 1;
-				for(int in = 0; in < sectionPercentage.length; in++) {
-					lineItemAmt[in] = ((licenseFee*sectionPercentage[in])/100)/amortPeriods[in];
-					lineItemAmt[in] = Double.valueOf(df.format(lineItemAmt[in]));
-					for(int month = 1; month <= amortPeriods[in]; month++) {
-						if(month == amortPeriods[in]) {
-							amorts.put(index, df2.format((licenseFee*sectionPercentage[in])/100 - lineItemAmt[in]*(amortPeriods[in]-1)));
-						} else {
-							amorts.put(index, df2.format(lineItemAmt[in]));
-						}
-						index++;
+			Double lineItemAmt[] = new Double[sectionPercentage.length];
+			int index  = 1;
+			for(int in = 0; in < sectionPercentage.length; in++) {
+				lineItemAmt[in] = ((licenseFee*sectionPercentage[in])/100)/amortPeriods[in];
+				lineItemAmt[in] = Double.valueOf(df.format(lineItemAmt[in]));
+				for(int month = 1; month <= amortPeriods[in]; month++) {
+					if(month == amortPeriods[in]) {
+						amorts.put(index, df2.format((licenseFee*sectionPercentage[in])/100 - lineItemAmt[in]*(amortPeriods[in]-1)));
+					} else {
+						amorts.put(index, df2.format(lineItemAmt[in]));
 					}
+					index++;
 				}
 			}
 		} else if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.TIME_BASED)) {

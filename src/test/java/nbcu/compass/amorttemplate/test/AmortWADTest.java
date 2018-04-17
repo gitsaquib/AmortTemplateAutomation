@@ -68,6 +68,16 @@ public class AmortWADTest {
 					+ "\t" +"Fail";
 			
 			Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);
+			if(null == amortsFromCalculation || amortsFromCalculation.isEmpty()) {
+				status = amortTemplateGrid.getAmortTemplateNo() 
+						+ "\t" + amortTemplateGrid.getAmortTemplateName() 
+						+ "\t" + amortTemplateGrid.getTitleTypeName()
+						+ "\t" + amortTemplateGrid.getFinanceTypeName()
+						+ "\t" + "Fail";
+				automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), status);
+				automationAgent.killApp();
+				Log.fail("Calculation failed!!!");
+			}
 			Set<Integer> keys = amortsFromCalculation.keySet();
 			for(Integer key:keys) {
 				System.out.println(key+") "+amortsFromCalculation.get(key));

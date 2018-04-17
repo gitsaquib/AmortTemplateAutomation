@@ -1,1 +1,3 @@
-17-Apr-2018 03:44:56:402 INFO  [main] Validating amort template for Universal HD: 125.0_Original Movies_Pilot_Original Movies 
+17-Apr-2018 07:14:42:976 INFO  [main] Validating amort template for Universal HD: 133.0_Syndicated Series - (SCI FI)_Bio/Clip (E)_Original Series 
+17-Apr-2018 07:14:43:231 INFO  [main] Start launchAppUsingNativeWindowHandle: Launching app using window handle 
+17-Apr-2018 07:14:43:232 INFO  [main] Start killApp: taskkill /F /IM NBCU.Compass.exe 

@@ -350,6 +350,7 @@ public class WADAutomationAgent extends AutomationAgent {
 			while(retry<3) {
 				if(saveButtonEle.isEnabled()) {
 					saveButtonEle.click();	
+					Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 					return;
 				}
 				retry++;

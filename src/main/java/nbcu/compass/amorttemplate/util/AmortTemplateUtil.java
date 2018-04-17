@@ -1,5 +1,6 @@
 package nbcu.compass.amorttemplate.util;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -118,7 +119,9 @@ public class AmortTemplateUtil {
 				amorts.put(1, df2.format(firstMonthAmount));
 				totalAmortPeriod = totalAmortPeriod - 1;
 				lineItemAmt = (licenseFee-firstMonthAmount)/totalAmortPeriod;
-				lineItemAmt = Double.valueOf(df.format(lineItemAmt));
+				BigDecimal a = new BigDecimal(lineItemAmt);
+				BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_CEILING);
+				lineItemAmt = Double.valueOf(df.format(roundOff));
 				for(int month = 1; month <= totalAmortPeriod; month++) {
 					if(month == totalAmortPeriod) {
 						amorts.put(month+1, df2.format(licenseFee - firstMonthAmount - lineItemAmt*(totalAmortPeriod-1)));
@@ -212,7 +215,9 @@ public class AmortTemplateUtil {
 				toBeUsedPeriod = toBeUsedPeriod - 1;
 				if(toBeUsedPeriod > 0) {
 					lineItemAmt = (licenseFee-firstMonthAmount)/toBeUsedPeriod;
-					lineItemAmt = Double.valueOf(df.format(lineItemAmt));
+					BigDecimal a = new BigDecimal(lineItemAmt);
+					BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_CEILING);
+					lineItemAmt = Double.valueOf(df.format(roundOff));
 					for(int month = 1; month <= toBeUsedPeriod; month++) {
 						if(month == toBeUsedPeriod) {
 							amorts.put(month+1, df2.format(licenseFee - firstMonthAmount - lineItemAmt*(toBeUsedPeriod-1)));

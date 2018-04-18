@@ -43,7 +43,7 @@ public class AmortTemplateUtil {
 			return amortMaxStraightLine(amortTemplateGrid.getMaxMonths(), licenseFee);
 		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.QUARTILE)) {
 			return amortQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
-					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods, amortTemplateGrid.getProjSchedFlag());
+					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods, amortTemplateGrid.getProjSchedFlag(), testData.getNetwork());
 		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.MAX_QUARTILE)) {
 			return amortMaxQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
 					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods, amortTemplateGrid.getMaxMonths());
@@ -82,7 +82,7 @@ public class AmortTemplateUtil {
 	
 	private static Map<Integer, String> amortQuartile(double firstMonthPercent, Integer straightLineMonths, Double licenseFee,
 			String multipleWindow, Double[] sectionPercentage, String windowsBasedOrTimeBased, int totalAmortPeriod,
-			Integer[] amortPeriods, String projSchedFlag) {
+			Integer[] amortPeriods, String projSchedFlag, String network) {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.WINDOWS_BASED)) {
 			Double lineItemAmt[] = new Double[sectionPercentage.length];
@@ -129,7 +129,7 @@ public class AmortTemplateUtil {
 				}
 			}
 		} else if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.HALLMARK)) {
-			if(projSchedFlag.equalsIgnoreCase("N")) {
+			if(projSchedFlag.equalsIgnoreCase("N") && network.equalsIgnoreCase("BRAVO")) {
 				Double lineItemAmt[] = new Double[sectionPercentage.length];
 				int index  = 1;
 				Double totalLicenseFee = 0.0;

@@ -1,3 +1,3 @@
-18-Apr-2018 02:28:32:585 INFO  [main] Validating amort template for USA Network: 1.0_Acquired Movies_Acquired MiniSeries_Acquired Movies 
-18-Apr-2018 02:28:32:756 INFO  [main] Start launchAppUsingNativeWindowHandle: Launching app using window handle 
-18-Apr-2018 02:28:32:757 INFO  [main] Start killApp: taskkill /F /IM NBCU.Compass.exe 
+19-Apr-2018 02:15:39:993 INFO  [main] Validating amort template for USA Network: 73.0_Syndicated Series - (SCI FI)_Bio/Clip (E)_Original Series 
+19-Apr-2018 02:15:40:239 INFO  [main] Validating amort template for USA Network: 41.0_Original Series (Season 4)_Bio/Clip (E)_Original Series 
+19-Apr-2018 02:15:40:349 INFO  [main] Validating amort template for USA Network: 70.0_Original Movies_Documentary_Original Movies 

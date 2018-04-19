@@ -32,7 +32,8 @@ public class AmortTemplateUtil {
 		for(Window window:windows) {
 			LocalDate localStartDate = LocalDate.parse(window.getStartDate(), formatter);
 			LocalDate localEndDate = LocalDate.parse(window.getEndDate(), formatter);
-			amortPeriods[index] = localEndDate.getMonth().getValue() - localStartDate.getMonth().getValue() + 1;
+			int year = localEndDate.getYear() - localStartDate.getYear();
+			amortPeriods[index] = localEndDate.getMonth().getValue() - localStartDate.getMonth().getValue() + 1 + (year*12);
 			totalAmortMonths += amortPeriods[index];
 			index++;
 		}
@@ -65,6 +66,7 @@ public class AmortTemplateUtil {
 		for(Double lineItemAmtSec:lineItemAmtSecs) {
 			double lineItemAmt;
 			lineItemAmt = (lineItemAmtSec)/(maxMonths/sectionPercentages.length);
+			lineItemAmt = convertToBigDecimal(lineItemAmt);
 			lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 			for(int month = 1; month <= maxMonths/lineItemAmtSecs.length; month++) {
 				if(index==lineItemAmtSecs.length && month == maxMonths/lineItemAmtSecs.length) {
@@ -87,13 +89,16 @@ public class AmortTemplateUtil {
 		if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.WINDOWS_BASED)) {
 			Double lineItemAmt[] = new Double[sectionPercentage.length];
 			int index  = 1;
+			double sumOfAmorts = 0.0;
 			for(int in = 0; in < sectionPercentage.length; in++) {
 				lineItemAmt[in] = ((licenseFee*sectionPercentage[in])/100)/amortPeriods[in];
+				lineItemAmt[in] = convertToBigDecimal(lineItemAmt[in]);
 				lineItemAmt[in] = Double.valueOf(df.format(lineItemAmt[in]));
 				for(int month = 1; month <= amortPeriods[in]; month++) {
-					if(month == amortPeriods[in]) {
-						amorts.put(index, df2.format((licenseFee*sectionPercentage[in])/100 - lineItemAmt[in]*(amortPeriods[in]-1)));
+					if(in == (sectionPercentage.length -1) && month == amortPeriods[in]) {
+						amorts.put(index, df2.format(licenseFee-sumOfAmorts));
 					} else {
+						sumOfAmorts += lineItemAmt[in];
 						amorts.put(index, df2.format(lineItemAmt[in]));
 					}
 					index++;
@@ -103,6 +108,7 @@ public class AmortTemplateUtil {
 			if(straightLineMonths > 0) {
 				double lineItemAmt;
 				lineItemAmt = licenseFee/totalAmortPeriod;
+				lineItemAmt = convertToBigDecimal(lineItemAmt);
 				lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 				for(int month = 1; month <= totalAmortPeriod; month++) {
 					if(month == totalAmortPeriod) {
@@ -113,12 +119,11 @@ public class AmortTemplateUtil {
 				}
 			} else {
 				double lineItemAmt;
-				double firstMonthAmount = Double.valueOf(df.format((licenseFee*firstMonthPercent)/100));
+				double firstMonthAmount = Double.valueOf(df.format(convertToBigDecimal((licenseFee*firstMonthPercent)/100)));
 				amorts.put(1, df2.format(firstMonthAmount));
 				totalAmortPeriod = totalAmortPeriod - 1;
 				lineItemAmt = (licenseFee-firstMonthAmount)/totalAmortPeriod;
-				BigDecimal a = new BigDecimal(lineItemAmt);
-				BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_CEILING);
+				Double roundOff = convertToBigDecimal(lineItemAmt);
 				lineItemAmt = Double.valueOf(df.format(roundOff));
 				for(int month = 1; month <= totalAmortPeriod; month++) {
 					if(month == totalAmortPeriod) {
@@ -151,6 +156,7 @@ public class AmortTemplateUtil {
 						grandMonths += amortPeriod;
 					}
 					double lineItemAmt = licenseFee/grandMonths;
+					lineItemAmt = convertToBigDecimal(lineItemAmt);
 					for(int month=1; month<=grandMonths; month++) {
 						if(month == grandMonths) {
 							amorts.put(month, df2.format(licenseFee-(lineItemAmt*(grandMonths-1))));
@@ -161,6 +167,7 @@ public class AmortTemplateUtil {
 				} else {
 					double lineItemAmt;
 					lineItemAmt = licenseFee/totalAmortPeriod;
+					lineItemAmt = convertToBigDecimal(lineItemAmt);
 					lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 					for(int month = 1; month <= totalAmortPeriod; month++) {
 						if(month == totalAmortPeriod) {
@@ -178,6 +185,7 @@ public class AmortTemplateUtil {
 	private static Map<Integer, String> amortMaxStraightLine(Integer maxMonths, Double licenseFee) {
 		double lineItemAmt;
 		lineItemAmt = licenseFee/maxMonths;
+		lineItemAmt = convertToBigDecimal(lineItemAmt);
 		lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		for(int month = 1; month <= maxMonths; month++) {
@@ -208,24 +216,26 @@ public class AmortTemplateUtil {
 				toBeUsedPeriod = totalAmortPeriod;
 			}
 			if(firstMonthPercent>0) {
-				double firstMonthAmount = Double.valueOf(df.format((licenseFee*firstMonthPercent)/100));
+				double firstMonthAmount = Double.valueOf(df.format(convertToBigDecimal((licenseFee*firstMonthPercent)/100)));
+				double sumOfAmorts = firstMonthAmount;
 				amorts.put(1, df2.format(firstMonthAmount));
 				toBeUsedPeriod = toBeUsedPeriod - 1;
 				if(toBeUsedPeriod > 0) {
 					lineItemAmt = (licenseFee-firstMonthAmount)/toBeUsedPeriod;
-					BigDecimal a = new BigDecimal(lineItemAmt);
-					BigDecimal roundOff = a.setScale(2, BigDecimal.ROUND_CEILING);
+					Double roundOff = convertToBigDecimal(lineItemAmt);
 					lineItemAmt = Double.valueOf(df.format(roundOff));
 					for(int month = 1; month <= toBeUsedPeriod; month++) {
 						if(month == toBeUsedPeriod) {
-							amorts.put(month+1, df2.format(licenseFee - firstMonthAmount - lineItemAmt*(toBeUsedPeriod-1)));
+							amorts.put(month+1, df2.format(licenseFee - sumOfAmorts));
 						} else {
+							sumOfAmorts += lineItemAmt;
 							amorts.put(month+1, df2.format(lineItemAmt));
 						}
 					}
 				}
 			} else {
 				lineItemAmt = licenseFee/toBeUsedPeriod;
+				lineItemAmt = convertToBigDecimal(lineItemAmt);
 				lineItemAmt = Double.valueOf(df.format(lineItemAmt));
 				for(int month = 1; month <= toBeUsedPeriod; month++) {
 					if(month == toBeUsedPeriod) {
@@ -237,5 +247,12 @@ public class AmortTemplateUtil {
 			}
 		}
 		return amorts;
+	}
+	
+	private static Double convertToBigDecimal(Double lineItemAmt) {
+		lineItemAmt= Double.valueOf(df.format(lineItemAmt));
+		BigDecimal bigDecLineItem = new BigDecimal(lineItemAmt);
+		BigDecimal roundOff = bigDecLineItem.setScale(2, BigDecimal.ROUND_HALF_DOWN);
+		return roundOff.doubleValue();
 	}
 }

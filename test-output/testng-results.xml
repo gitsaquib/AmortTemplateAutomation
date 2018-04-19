@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results skipped="0" failed="0" ignored="0" total="3" passed="3">
+  <reporter-output>
+    <line>
+      <![CDATA[<div class="test-message">&emsp;Validating amort template for USA Network: 73.0_Syndicated Series - (SCI FI)_Bio/Clip (E)_Original Series</div>]]>
+    </line>
+    <line>
+      <![CDATA[<div class="test-message">&emsp;Validating amort template for USA Network: 41.0_Original Series (Season 4)_Bio/Clip (E)_Original Series</div>]]>
+    </line>
+    <line>
+      <![CDATA[<div class="test-message">&emsp;Validating amort template for USA Network: 70.0_Original Movies_Documentary_Original Movies</div>]]>
+    </line>
+  </reporter-output>
+  <suite name="Default suite" duration-ms="669" started-at="2018-04-19T06:15:39Z" finished-at="2018-04-19T06:15:40Z">
+    <groups>
+    </groups>
+    <test name="Default test" duration-ms="669" started-at="2018-04-19T06:15:39Z" finished-at="2018-04-19T06:15:40Z">
+      <class name="nbcu.compass.amorttemplate.test.SampleTest">
+        <test-method status="PASS" signature="init()[pri:0, instance:nbcu.compass.amorttemplate.test.SampleTest@5f2108b5]" name="init" is-config="true" duration-ms="563" started-at="2018-04-19T02:15:39Z" finished-at="2018-04-19T02:15:39Z">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- init -->
+        <test-method status="PASS" signature="testAmortTemplate2(java.lang.String)[pri:1, instance:nbcu.compass.amorttemplate.test.SampleTest@5f2108b5]" name="testAmortTemplate2" duration-ms="309" started-at="2018-04-19T02:15:39Z" description="Validating amort template" data-provider="amortDataProvider" finished-at="2018-04-19T02:15:40Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[73.0_Syndicated Series - (SCI FI)_Bio/Clip (E)_Original Series]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+            <line>
+              <![CDATA[<div class="test-message">&emsp;Validating amort template for USA Network: 73.0_Syndicated Series - (SCI FI)_Bio/Clip (E)_Original Series</div>]]>
+            </line>
+          </reporter-output>
+        </test-method> <!-- testAmortTemplate2 -->
+        <test-method status="PASS" signature="testAmortTemplate2(java.lang.String)[pri:1, instance:nbcu.compass.amorttemplate.test.SampleTest@5f2108b5]" name="testAmortTemplate2" duration-ms="110" started-at="2018-04-19T02:15:40Z" description="Validating amort template" data-provider="amortDataProvider" finished-at="2018-04-19T02:15:40Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[41.0_Original Series (Season 4)_Bio/Clip (E)_Original Series]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+            <line>
+              <![CDATA[<div class="test-message">&emsp;Validating amort template for USA Network: 41.0_Original Series (Season 4)_Bio/Clip (E)_Original Series</div>]]>
+            </line>
+          </reporter-output>
+        </test-method> <!-- testAmortTemplate2 -->
+        <test-method status="PASS" signature="testAmortTemplate2(java.lang.String)[pri:1, instance:nbcu.compass.amorttemplate.test.SampleTest@5f2108b5]" name="testAmortTemplate2" duration-ms="94" started-at="2018-04-19T02:15:40Z" description="Validating amort template" data-provider="amortDataProvider" finished-at="2018-04-19T02:15:40Z">
+          <params>
+            <param index="0">
+              <value>
+                <![CDATA[70.0_Original Movies_Documentary_Original Movies]]>
+              </value>
+            </param>
+          </params>
+          <reporter-output>
+            <line>
+              <![CDATA[<div class="test-message">&emsp;Validating amort template for USA Network: 70.0_Original Movies_Documentary_Original Movies</div>]]>
+            </line>
+          </reporter-output>
+        </test-method> <!-- testAmortTemplate2 -->
+      </class> <!-- nbcu.compass.amorttemplate.test.SampleTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>

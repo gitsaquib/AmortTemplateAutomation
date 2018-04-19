@@ -3,7 +3,6 @@ package nbcu.compass.amorttemplate.test;
 import java.util.Map;
 import java.util.Set;
 
-import org.junit.Ignore;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;

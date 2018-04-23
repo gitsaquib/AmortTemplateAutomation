@@ -69,7 +69,6 @@ public class SampleTest {
 					+ "\t" + amortTemplateGrid.getFinanceTypeName()
 					+ "\t" + "Fail";
 			automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), status);
-			automationAgent.killApp();
 			Log.fail(e.getMessage());
 		}
 	}

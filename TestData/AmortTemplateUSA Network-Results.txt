@@ -1,4 +1,0 @@
-1	Acquired Movies	Acquired MiniSeries	Acquired Movies	Fail
-73	Syndicated Series - (SCI FI)	Bio/Clip (E)	Original Series	Fail
-73	Syndicated Series - (SCI FI)	Bio/Clip (E)	Original Series	Fail
-73	Syndicated Series - (SCI FI)	Bio/Clip (E)	Original Series	Fail

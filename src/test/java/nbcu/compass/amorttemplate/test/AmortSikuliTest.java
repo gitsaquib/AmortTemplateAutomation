@@ -53,7 +53,7 @@ public class AmortSikuliTest {
 			for(String tcId:tcIds) {
 				testData = testDatas.get(tcId);
 				if(testData.getNetwork().equalsIgnoreCase(configProperty.getProperty("network"))) {
-					license = licenses.get("TC1");
+					license = licenses.get(testData.getTcNo());
 					break;
 				}
 			}

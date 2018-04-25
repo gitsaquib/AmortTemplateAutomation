@@ -2,29 +2,29 @@
 <testng-results skipped="0" failed="0" ignored="0" total="1" passed="1">
   <reporter-output>
     <line>
-      <![CDATA[<div class="test-message">&emsp;Validating amort template for Universo: 355.0_Acquired Series - 2 Yr_Series_Acquired Series</div>]]>
+      <![CDATA[<div class="test-message">&emsp;Validating amort template for BRAVO: 29.0_Orig. Series (Accel 2 Yrs.)_Special_Original Series</div>]]>
     </line>
   </reporter-output>
-  <suite name="Default suite" duration-ms="253" started-at="2018-04-23T09:58:35Z" finished-at="2018-04-23T09:58:36Z">
+  <suite name="Default suite" duration-ms="415" started-at="2018-04-25T11:09:32Z" finished-at="2018-04-25T11:09:32Z">
     <groups>
     </groups>
-    <test name="Default test" duration-ms="253" started-at="2018-04-23T09:58:35Z" finished-at="2018-04-23T09:58:36Z">
+    <test name="Default test" duration-ms="415" started-at="2018-04-25T11:09:32Z" finished-at="2018-04-25T11:09:32Z">
       <class name="nbcu.compass.amorttemplate.test.SampleTest">
-        <test-method status="PASS" signature="init()[pri:0, instance:nbcu.compass.amorttemplate.test.SampleTest@5f2108b5]" name="init" is-config="true" duration-ms="563" started-at="2018-04-23T05:58:35Z" finished-at="2018-04-23T05:58:35Z">
+        <test-method status="PASS" signature="init()[pri:0, instance:nbcu.compass.amorttemplate.test.SampleTest@e45f292]" name="init" is-config="true" duration-ms="558" started-at="2018-04-25T07:09:31Z" finished-at="2018-04-25T07:09:32Z">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- init -->
-        <test-method status="PASS" signature="testAmortTemplate2(java.lang.String)[pri:1, instance:nbcu.compass.amorttemplate.test.SampleTest@5f2108b5]" name="testAmortTemplate2" duration-ms="206" started-at="2018-04-23T05:58:35Z" description="Validating amort template" data-provider="amortDataProvider" finished-at="2018-04-23T05:58:36Z">
+        <test-method status="PASS" signature="testAmortTemplate2(java.lang.String)[pri:1, instance:nbcu.compass.amorttemplate.test.SampleTest@e45f292]" name="testAmortTemplate2" duration-ms="272" started-at="2018-04-25T07:09:32Z" description="Validating amort template" data-provider="amortDataProvider" finished-at="2018-04-25T07:09:32Z">
           <params>
             <param index="0">
               <value>
-                <![CDATA[355.0_Acquired Series - 2 Yr_Series_Acquired Series]]>
+                <![CDATA[29.0_Orig. Series (Accel 2 Yrs.)_Special_Original Series]]>
               </value>
             </param>
           </params>
           <reporter-output>
             <line>
-              <![CDATA[<div class="test-message">&emsp;Validating amort template for Universo: 355.0_Acquired Series - 2 Yr_Series_Acquired Series</div>]]>
+              <![CDATA[<div class="test-message">&emsp;Validating amort template for BRAVO: 29.0_Orig. Series (Accel 2 Yrs.)_Special_Original Series</div>]]>
             </line>
           </reporter-output>
         </test-method> <!-- testAmortTemplate2 -->

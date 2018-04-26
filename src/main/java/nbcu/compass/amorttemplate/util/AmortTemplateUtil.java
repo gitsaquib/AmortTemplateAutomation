@@ -190,27 +190,10 @@ public class AmortTemplateUtil {
 							}
 						}
 					}
-				} else {
-					double lineItemAmt;
-					double firstMonthAmount = Double.valueOf(df.format(convertToBigDecimal((licenseFee*firstMonthPercent)/100)));
-					amorts.put(1, df2.format(firstMonthAmount));
-					totalAmortPeriod = totalAmortPeriod - 1;
-					lineItemAmt = (licenseFee-firstMonthAmount)/totalAmortPeriod;
-					Double roundOff = convertToBigDecimal(lineItemAmt);
-					lineItemAmt = Double.valueOf(df.format(roundOff));
-					for(int month = 1; month <= totalAmortPeriod; month++) {
-						if(month == totalAmortPeriod) {
-							amorts.put(month+1, df2.format(licenseFee - firstMonthAmount - lineItemAmt*(totalAmortPeriod-1)));
-						} else {
-							amorts.put(month+1, df2.format(lineItemAmt));
-						}
-					}
 				}
 			}
 		} else if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.HALLMARK)) {
-			if(multipleWindow.equalsIgnoreCase("N")) {
-				totalAmortPeriod = amortPeriods[0];
-			}
+			totalAmortPeriod = amortPeriods[0];
 			if(straightLineMonths <= totalAmortPeriod && (days == 0 || days > daysToBeUsed)) {
 				int quartCnt = totalAmortPeriod / sectionPercentage.length;
 				Double lineItemAmt[] = new Double[sectionPercentage.length*quartCnt];
@@ -249,34 +232,6 @@ public class AmortTemplateUtil {
 					}
 				}
 			}
-			/*
-			if(multipleWindow.equalsIgnoreCase("Y")) {
-				int grandMonths = 0;
-				for(Integer amortPeriod:amortPeriods ) {
-					grandMonths += amortPeriod;
-				}
-				double lineItemAmt = licenseFee/grandMonths;
-				lineItemAmt = convertToBigDecimal(lineItemAmt);
-				for(int month=1; month<=grandMonths; month++) {
-					if(month == grandMonths) {
-						amorts.put(month, df2.format(licenseFee-(lineItemAmt*(grandMonths-1))));
-					} else {
-						amorts.put(month, df2.format(lineItemAmt));
-					}
-				}
-			} else {
-				double lineItemAmt;
-				lineItemAmt = licenseFee/totalAmortPeriod;
-				lineItemAmt = convertToBigDecimal(lineItemAmt);
-				lineItemAmt = Double.valueOf(df.format(lineItemAmt));
-				for(int month = 1; month <= totalAmortPeriod; month++) {
-					if(month == totalAmortPeriod) {
-						amorts.put(month, df2.format(licenseFee - lineItemAmt*(totalAmortPeriod-1)));
-					} else {
-						amorts.put(month, df2.format(lineItemAmt));
-					}
-				}
-			}*/
 		}
 		return amorts;
 	}

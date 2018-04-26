@@ -431,7 +431,6 @@ public class WADAutomationAgent extends AutomationAgent {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	public void openTitleAndWindow(String financeType, List<Window> windows, String statusMessage) {
 		Log.message("Start openTitleAndWindow: financeType: "+financeType+", windows: "+windows);
 		try {
@@ -478,7 +477,6 @@ public class WADAutomationAgent extends AutomationAgent {
 		Log.message("Start launchAppUsingNativeWindowHandle: Launching app using window handle");
 		try {
 			killApp();
-			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			startExeApp(appPath);
 			DesiredCapabilities appCapabilities = new DesiredCapabilities();
 			appCapabilities.setCapability("app", "Root");
@@ -521,7 +519,7 @@ public class WADAutomationAgent extends AutomationAgent {
 			while ((line = br.readLine()) != null) {
 				System.out.println(line);
 			}
-			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			Log.message("End startExeApp: appPath: "+appPath);
 		} catch(Exception e) {
 			return;

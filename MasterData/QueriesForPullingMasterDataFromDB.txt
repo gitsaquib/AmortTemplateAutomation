@@ -1,0 +1,34 @@
+select * from NetWorks where DelFlag='N' order by NetworkName
+
+select distinct atemplate.AmortTemplateNo, atemplate.AmortTemplateName, ttype.TitleType, acat.AmortCategoryName, adet.SectionNo, SectionPercent
+from NetworkTitleType nwtype, TitleType ttype, AmortMapping amapping, AmortTemplate atemplate, AmortCategory acat, AmortTemplateDetail adet
+where nwtype.NetworkNo = 1 
+and nwtype.TitleTypeNo = ttype.TitleTypeNo 
+and amapping.TitleTypeNo = ttype.TitleTypeNo 
+and nwtype.NetworkNo = amapping.NetworkNo
+and atemplate.AmortTemplateNo = amapping.AmortTemplateNo
+and atemplate.AmortCategoryNo = acat.AmortCategoryNo
+and adet.AmortTemplateNo = atemplate.AmortTemplateNo
+and atemplate.DelFlag = 'N'
+and nwtype.DelFlag = 'N'
+and amapping.DelFlag = 'N'
+and ttype.DelFlag = 'N'
+and acat.DelFlag = 'N'
+and adet.DelFlag = 'N'
+and atemplate.StLineFlag<> 'NULL';
+
+select distinct atemplate.AmortTemplateNo, atemplate.AmortTemplateName, ttype.TitleType,
+acat.AmortCategoryName, atemplate.StLineFlag, atemplate.StraightLineMonths, atemplate.TimeOrPlay, atemplate.OriginalMaxMonths, atemplate.FirstMthAmortPct, atemplate.MultipleWindowFlag, atemplate.ProjSchedFlag
+from NetworkTitleType nwtype, TitleType ttype, AmortMapping amapping, AmortTemplate atemplate, AmortCategory acat
+where nwtype.NetworkNo = 1 
+and nwtype.TitleTypeNo = ttype.TitleTypeNo 
+and amapping.TitleTypeNo = ttype.TitleTypeNo 
+and nwtype.NetworkNo = amapping.NetworkNo
+and atemplate.AmortTemplateNo = amapping.AmortTemplateNo
+and atemplate.AmortCategoryNo = acat.AmortCategoryNo
+and atemplate.DelFlag = 'N'
+and nwtype.DelFlag = 'N'
+and amapping.DelFlag = 'N'
+and ttype.DelFlag = 'N'
+and acat.DelFlag='N'
+and atemplate.StLineFlag<> 'NULL';

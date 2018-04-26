@@ -2,9 +2,10 @@
 <classpath>
 	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry excluding="**/*.java" kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="var" path="M2_REPO/io/appium/java-client/5.0.0-BETA6/java-client-5.0.0-BETA6.jar"/>
+	<classpathentry kind="var" path="M2_REPO/io/appium/java-client/5.0.0-BETA6/java-client-5.0.0-BETA6.jar" sourcepath="M2_REPO/io/appium/java-client/5.0.0-BETA6/java-client-5.0.0-BETA6-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/seleniumhq/selenium/selenium-java/3.3.1/selenium-java-3.3.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/seleniumhq/selenium/selenium-chrome-driver/3.3.1/selenium-chrome-driver-3.3.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/seleniumhq/selenium/selenium-remote-driver/3.3.1/selenium-remote-driver-3.3.1.jar"/>
@@ -30,7 +31,7 @@
 	<classpathentry kind="var" path="M2_REPO/net/bytebuddy/byte-buddy/1.7.9/byte-buddy-1.7.9.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/squareup/okhttp3/okhttp/3.9.1/okhttp-3.9.1.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/squareup/okio/okio/1.13.0/okio-1.13.0.jar"/>
-	<classpathentry kind="var" path="M2_REPO/net/sourceforge/htmlunit/htmlunit/2.24/htmlunit-2.24.jar"/>
+	<classpathentry kind="var" path="M2_REPO/net/sourceforge/htmlunit/htmlunit/2.24/htmlunit-2.24.jar" sourcepath="M2_REPO/net/sourceforge/htmlunit/htmlunit/2.24/htmlunit-2.24-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xalan/xalan/2.7.2/xalan-2.7.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/xalan/serializer/2.7.2/serializer-2.7.2.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar"/>
@@ -80,7 +81,7 @@
 	<classpathentry kind="var" path="M2_REPO/com/google/android/tools/dx/1.7/dx-1.7.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/github/vidstige/jadb/-v1.0-g94ebf38-23/jadb--v1.0-g94ebf38-23.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/sikulix/sikulix1tigervnc/1.1.1/sikulix1tigervnc-1.1.1.jar"/>
-	<classpathentry kind="var" path="M2_REPO/org/testng/testng/6.11/testng-6.11.jar"/>
+	<classpathentry kind="var" path="M2_REPO/org/testng/testng/6.11/testng-6.11.jar" sourcepath="M2_REPO/org/testng/testng/6.11/testng-6.11-sources.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/beust/jcommander/1.64/jcommander-1.64.jar"/>
 	<classpathentry kind="var" path="M2_REPO/org/yaml/snakeyaml/1.17/snakeyaml-1.17.jar"/>
 	<classpathentry kind="var" path="M2_REPO/com/relevantcodes/extentreports/2.41.2/extentreports-2.41.2.jar"/>

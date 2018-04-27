@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry including="**/*.java" kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry excluding="**/*.java" kind="src" output="target/test-classes" path="src/test/resources"/>
 	<classpathentry excluding="**/*.java" kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="M2_REPO/io/appium/java-client/5.0.0-BETA6/java-client-5.0.0-BETA6.jar" sourcepath="M2_REPO/io/appium/java-client/5.0.0-BETA6/java-client-5.0.0-BETA6-sources.jar"/>

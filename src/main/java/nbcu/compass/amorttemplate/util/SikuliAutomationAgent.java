@@ -6,12 +6,18 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
 import org.sikuli.basics.Settings;
 import org.sikuli.script.FindFailed;
 import org.sikuli.script.Key;
@@ -19,6 +25,8 @@ import org.sikuli.script.Match;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Screen;
 
+import io.appium.java_client.windows.WindowsDriver;
+import io.appium.java_client.windows.WindowsElement;
 import nbcu.compass.amorttemplate.factory.AutomationAgent;
 
 public class SikuliAutomationAgent extends AutomationAgent {
@@ -36,7 +44,8 @@ public class SikuliAutomationAgent extends AutomationAgent {
 	}
 	private Screen screen = null;
 	
-	
+	@SuppressWarnings("rawtypes")
+	private static WindowsDriver appSession = null;
 	
 	public void doubelClickAt(int x, int y) {
 		Log.message("Start clickAt: clicking on x: "+x+", y: "+y);
@@ -62,6 +71,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			clickYesOrNoOnPopup("Effective Date should be earlier or equal to the Amort Window Start Date", "Yes");
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			launchAppUsingWAD(configProperty.getProperty("url"), configProperty.getProperty("appName"));
 			Map<Integer, String> amorts = readAmortAmtRows(totalLicenseFee, 0, statusMessage);
 			if(null == amorts || amorts.size() == 0) {
 				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
@@ -78,7 +88,84 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			return null;
 		}
 	}
-
+	
+	private void launchAppUsingWAD( String url, String appName) {
+		try {
+			Log.message("Start launchAppUsingWAD: Launching app using window handle");
+			DesiredCapabilities appCapabilities = new DesiredCapabilities();
+			appCapabilities.setCapability("app", "Root");
+			WindowsDriver<WindowsElement> driver = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities);
+			WebElement element = getElement(driver, By.name(appName));
+			String handleStr = element.getAttribute("NativeWindowHandle");
+			int handleInt = Integer.parseInt(handleStr);
+			String handleHex = Integer.toHexString(handleInt);
+			DesiredCapabilities appCapabilities2 = new DesiredCapabilities();
+			appCapabilities2.setCapability("appTopLevelWindow", handleHex);
+			appSession = new WindowsDriver<WindowsElement>(new URL(url), appCapabilities2);
+			Log.message("End launchAppUsingWAD: Launching app using window handle");
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private WebElement getElement(WindowsDriver<WindowsElement> driver, By by) {
+		Log.message("Start getElement: By: "+by);
+		try {
+			WebElement element = driver.findElement(by);
+			Log.message("End getElement: By: "+by);
+			return element;
+		} catch(Exception e) {
+			return null;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private Map<Integer, String> readAmortAmtRows(double totalLicenseFee, int previousLastMonth, String statusMessage) {
+		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
+		Log.message("Start readAmortAmtRows: read amort amounts");
+		try {
+			int scrollCount = 0;
+			List<WebElement> dataRows = appSession.findElements(By.className("DataRow"));
+			int lastMonth = 0;
+			for(WebElement dataRow:dataRows) {
+				if(dataRow.getLocation().getY() < 0) {
+					continue;
+				}
+				dataRow.click();
+				WebElement amortAmt = dataRow.findElement(By.name("Amort Amt"));
+				WebElement month = dataRow.findElement(By.name("Months in Contract"));
+				String amtStr = amortAmt.getText();
+				amorts.put(Integer.parseInt(month.getText()), amtStr);
+				amtStr = amtStr.replace("$", "");
+				amtStr = amtStr.replace(",", "");
+				double amtDouble = Double.parseDouble(amtStr);
+				totalLicenseFee = totalLicenseFee - amtDouble;
+				lastMonth = Integer.parseInt(month.getText());
+				scrollCount++;
+			}
+			if(lastMonth==previousLastMonth) {
+				return amorts;
+			} else {
+				if(totalLicenseFee > 0) {
+					for(int i=0; i<scrollCount-1; i++) {
+						appSession.getKeyboard().sendKeys(Keys.ARROW_DOWN);
+					}
+					readAmortAmtRows(totalLicenseFee, lastMonth, statusMessage);
+				} else {
+					System.out.println("TotalLicenseFee left:"+totalLicenseFee);
+				}
+			}
+			Log.message("readAmortAmtRows: read amort amounts");
+		} catch (Exception e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+			Log.fail(e.getMessage(), appSession);
+			killApp();
+			return amorts;
+		}
+		return amorts;
+	}
+	
+	/*
 	private Map<Integer, String> readAmortAmtRows(double totalLicenseFee, int previousLastMonth, String statusMessage) {
 		screen = new Screen();
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
@@ -142,6 +229,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		}
 		return amorts;
 	}
+	*/
 	
 	private boolean clickYesOrNoOnPopup(String message, String yesOrNo) {
 		screen = new Screen();

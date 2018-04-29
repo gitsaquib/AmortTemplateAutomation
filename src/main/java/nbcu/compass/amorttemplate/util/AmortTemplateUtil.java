@@ -56,7 +56,7 @@ public class AmortTemplateUtil {
 			return amortMaxStraightLine(amortTemplateGrid.getMaxMonths(), licenseFee);
 		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.QUARTILE)) {
 			return amortQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
-					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods, amortTemplateGrid.getProjSchedFlag(), testData.getNetwork(), days, daysToBeUsed);
+					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods, amortTemplateGrid.getProjSchedFlag(), testData.getNetwork(), days, daysToBeUsed, 2);
 		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.MAX_QUARTILE)) {
 			return amortMaxQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
 					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods, amortTemplateGrid.getMaxMonths());
@@ -96,7 +96,7 @@ public class AmortTemplateUtil {
 	
 	private static Map<Integer, String> amortQuartile(double firstMonthPercent, Integer straightLineMonths, Double licenseFee,
 			String multipleWindow, Double[] sectionPercentage, String windowsBasedOrTimeBased, int totalAmortPeriod,
-			Integer[] amortPeriods, String projSchedFlag, String network, int days, int daysToBeUsed) {
+			Integer[] amortPeriods, String projSchedFlag, String network, int days, int daysToBeUsed, int runsScheduled) {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
 		if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.WINDOWS_BASED)) {
 			Double lineItemAmt[] = new Double[sectionPercentage.length];
@@ -232,6 +232,19 @@ public class AmortTemplateUtil {
 					}
 				}
 			}
+		} else if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.RUNBASEDNONEPISODIC)
+				|| windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.RUNBASEDEPISODIC)) {
+			Double lineItemAmt[] = new Double[runsScheduled];
+			double sumOfAmorts = 0.0;
+			for(int in = 0; in < runsScheduled; in++) {
+				if(in < sectionPercentage.length) {
+					lineItemAmt[in] = ((licenseFee*sectionPercentage[in])/100);
+					lineItemAmt[in] = convertToBigDecimal(lineItemAmt[in]);
+					lineItemAmt[in] = Double.valueOf(df.format(lineItemAmt[in]));
+					sumOfAmorts += lineItemAmt[in];
+				}
+			}
+			amorts.put(1, df2.format(sumOfAmorts));
 		}
 		return amorts;
 	}

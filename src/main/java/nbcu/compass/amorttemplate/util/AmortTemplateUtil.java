@@ -194,7 +194,7 @@ public class AmortTemplateUtil {
 			}
 		} else if(windowsBasedOrTimeBased.equalsIgnoreCase(AmortTemplateConstants.HALLMARK)) {
 			totalAmortPeriod = amortPeriods[0];
-			if(straightLineMonths <= totalAmortPeriod && (days == 0 || days > daysToBeUsed)) {
+			if(straightLineMonths <= totalAmortPeriod && (days == 0 || days > daysToBeUsed) && sectionPercentage.length > 0) {
 				int quartCnt = totalAmortPeriod / sectionPercentage.length;
 				Double lineItemAmt[] = new Double[sectionPercentage.length*quartCnt];
 				int index  = 1;

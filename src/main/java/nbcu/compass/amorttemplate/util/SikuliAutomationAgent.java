@@ -21,6 +21,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.sikuli.basics.Settings;
 import org.sikuli.script.FindFailed;
 import org.sikuli.script.Key;
+import org.sikuli.script.Location;
 import org.sikuli.script.Match;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Screen;
@@ -490,7 +491,22 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		return false;
 	}
 	
-	public void addEpisode(String statusMessage) {
+	public boolean isEpisodicTitle() {
+		Screen screen = new Screen();
+		File directory = new File(".");
+		String strBasepath;
+		try {
+			strBasepath = directory.getCanonicalPath();
+			String iconPath = strBasepath + File.separator + "images" + File.separator;
+			Pattern episodeTab = new Pattern(iconPath + "episodetab.png");
+			screen.find(episodeTab);
+			return true;
+		} catch (FindFailed | IOException e) {
+			return false;
+		}
+	}
+	
+	public void addEpisode(String statusMessage, String episodeName) {
 		Screen screen = new Screen();
 		File directory = new File(".");
 		String strBasepath;
@@ -504,9 +520,9 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			screen.click(addEpisodeBtn);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-			Pattern episodeName = new Pattern(iconPath + "episodename.png");
-			screen.click(episodeName);
-			screen.type("TestEpisode-1");
+			Pattern episodeNamePattern = new Pattern(iconPath + "episodename.png");
+			screen.click(episodeNamePattern);
+			screen.type(episodeName);
 			screen.type(Key.TAB);
 			screen.type("Season1");
 			clickSaveButton(statusMessage);
@@ -609,7 +625,119 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			e.printStackTrace();
 		}
 	}
-
+	
+	public String scheduleTitle(String scheduleName, String network, String titleType, String episodeOrTitleName, String statusMessage, int run) {
+		try {
+			Pattern schedulingTab = new Pattern(iconPath+"schedulingtab.png");
+			screen.click(schedulingTab);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Match networkFound = screen.findText(network);
+			networkFound.click();
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			if(null == scheduleName) {
+				Pattern createSchedule = new Pattern(iconPath+"createschedule.png");
+				screen.click(createSchedule);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				Match nameFieldFound = screen.findText("Name");
+				nameFieldFound.click();
+				screen.type(Key.TAB);
+				SimpleDateFormat df = new SimpleDateFormat("MMMM YYYY");
+				String defaultScheduleName = df.format(new Date());
+				for(int i=0; i<defaultScheduleName.length(); i++) {
+					screen.type(Key.DELETE);		
+				}
+				df = new SimpleDateFormat("YYYYMMDDHHmmss");
+				scheduleName = "ScheduleName_" + df.format(new Date());
+				screen.type(scheduleName);
+				Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
+				clickSaveButton("");
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			} else {
+				Match foundSchedule = screen.findText(scheduleName);
+				foundSchedule.click();
+			}
+			Match openSchedule = screen.findText("Open Schedule");
+			openSchedule.click();
+			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
+			
+			Pattern nextWeek = new Pattern(iconPath+"nextweek.png");
+			screen.click(nextWeek);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Location location = new Location (200, (100+(run*100)));
+			screen.rightClick(location);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern newIcon = new Pattern(iconPath+"newicon.png");
+			screen.click(newIcon);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			screen.rightClick();
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern applyEpisodes = new Pattern(iconPath+"applyepisodes.png");
+			screen.click(applyEpisodes);
+			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+			Pattern programType = new Pattern(iconPath + "programtype.png");
+			screen.type(programType, titleType);
+			Pattern episodeTitle = new Pattern(iconPath + "episodetitle.png");
+			screen.type(episodeTitle, episodeOrTitleName);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern searchBtn = new Pattern(iconPath+"search.png");
+			screen.click(searchBtn);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			Pattern checkbox = new Pattern(iconPath+"checkbox.png");
+			screen.click(checkbox);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			screen.type(Key.TAB);
+			screen.type(Key.TAB);
+			screen.type(Key.TAB);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			screen.type(Key.SPACE);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			screen.type(Key.SPACE);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern save = new Pattern(iconPath + "saveschedule.png");
+			screen.click(save);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern closeSchedule = new Pattern(iconPath + "closeschedule.png");
+			screen.click(closeSchedule);
+			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
+			Pattern monthly = new Pattern(iconPath + "monthly.png");
+			screen.rightClick(monthly);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern approve = new Pattern(iconPath + "approve.png");
+			screen.click(approve);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern approvePopup = new Pattern(iconPath + "approvepopup.png");
+			screen.click(approvePopup);
+			return scheduleName;
+		} catch (InterruptedException | FindFailed e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+			Log.fail(e.getMessage(), screen);
+			killApp();
+		}
+		return null;
+	}
+	
+	public void openTitle(String statusMessage) {
+		Log.message("Start openTitleAndGenerateAmort: ");
+		screen = new Screen();
+		try {
+			Pattern contractManagementNotSelected = new Pattern(iconPath + "contractmanagementnotselected.png");
+			Match contractManagementFound = screen.find(contractManagementNotSelected);
+			contractManagementFound.click();
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern expand = new Pattern(iconPath + "expand.png");
+			screen.doubleClick(expand);
+			Pattern selectAnAction = new Pattern(iconPath +"selectanaction.png");
+			Match found = waitForElementToAppearByPattern(selectAnAction, 0);
+			if(null == found) {
+				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+				Log.fail("Unable to open title in one minute", screen);
+				killApp();
+			}
+		} catch (FindFailed | InterruptedException e1) {
+			e1.printStackTrace();
+		}
+	}
+	
 	@Override
 	public void launchApplicationFromBrowser(String url, String appWebUrl, String statusMessage) {
 		

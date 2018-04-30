@@ -4,15 +4,23 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import org.sikuli.script.FindFailed;
+import org.sikuli.script.Key;
+import org.sikuli.script.Location;
+import org.sikuli.script.Match;
+import org.sikuli.script.Pattern;
 
 import nbcu.compass.amorttemplate.util.AmortTemplateConstants;
 import nbcu.compass.amorttemplate.util.Log;
 import nbcu.compass.amorttemplate.util.Window;
 
 public abstract class AutomationAgent {
-
+	
 	public void writeResultInTxtFile(String network, String status) {
 		try {
 			Log.message("Start writeResultInTxtFile: writing results in txt file: "+ status);
@@ -72,8 +80,9 @@ public abstract class AutomationAgent {
 	public abstract void loginCompass(String username, String password, String displayName, String statusMessage);
 	public abstract void createContract(String network, String distributor, String dealType, String negotiatedBy, String titleName, String titleType, String statusMessage);
 	public abstract void openTitleAndWindow(String financeType, List<Window> windows, String statusMessage);
-	public abstract void addEpisode(String statusMessage);
+	public abstract void addEpisode(String statusMessage, String episodeName);
 	public abstract void searchTitleWithEpisodes(String network, String showId, String titleName, String titleType, String statusMessage);
 	public abstract Double setAllocationData(String licenseType, String licenseAmount, String amortTemplate, String statusMessage);
 	public abstract Map<Integer, String> generateAmort(double totalLicenseFee, String statusMessage);
+	public abstract String scheduleTitle(String scheduleName, String network, String titleType, String episodeOrTitleName, String statusMessage, int run);
 }

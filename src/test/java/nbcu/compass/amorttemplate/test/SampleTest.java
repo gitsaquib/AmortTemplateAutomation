@@ -13,6 +13,7 @@ import nbcu.compass.amorttemplate.util.AmortTemplateUtil;
 import nbcu.compass.amorttemplate.util.EnvironmentPropertiesReader;
 import nbcu.compass.amorttemplate.util.License;
 import nbcu.compass.amorttemplate.util.Log;
+import nbcu.compass.amorttemplate.util.SikuliAutomationAgent;
 import nbcu.compass.amorttemplate.util.TestData;
 import nbcu.compass.amorttemplate.util.User;
 import nbcu.compass.amorttemplate.util.WADAutomationAgent;
@@ -21,7 +22,7 @@ public class SampleTest {
 
 	private static EnvironmentPropertiesReader configProperty = EnvironmentPropertiesReader.getInstance();
 	private static AmortExcelReader excelReader = null;
-	private WADAutomationAgent automationAgent = null;
+	private SikuliAutomationAgent automationAgent = null;
 	private Map<String, User> users = null;
 	private Map<String, License> licenses = null;
 	private Map<String, AmortTemplateGrid> amortTemplateGrids = null;
@@ -33,7 +34,7 @@ public class SampleTest {
 		testDatas = excelReader.readTestData();
 		licenses = excelReader.readLicense();
 		users = excelReader.readUser();
-		automationAgent = new WADAutomationAgent();
+		automationAgent = new SikuliAutomationAgent();
 	}
 	
 	@Test(priority=1, description="Validating amort template", dataProviderClass=AmortDataProvider.class, dataProvider="amortDataProvider")
@@ -55,12 +56,15 @@ public class SampleTest {
 			
 			amortTemplateGrids = excelReader.readAmortTemplateGrid(testData.getNetwork());
 			amortTemplateGrid = amortTemplateGrids.get(uniqueKey);
-			
-			Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);
-			Set<Integer> keys = amortsFromCalculation.keySet();
-			for(Integer key:keys) {
-				System.out.println(key+") "+amortsFromCalculation.get(key));
+			for(int run = 1; run <= amortTemplateGrid.getAmortSectionGrids().size(); run++) {
+				testData.setRun(run);
+				Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);
+				Set<Integer> keys = amortsFromCalculation.keySet();
+				for(Integer key:keys) {
+					System.out.println(key+") "+amortsFromCalculation.get(key));
+				}
 			}
+			automationAgent.openTitle("");
 		} catch(Exception e) {
 			e.printStackTrace();
 			status = amortTemplateGrid.getAmortTemplateNo() 

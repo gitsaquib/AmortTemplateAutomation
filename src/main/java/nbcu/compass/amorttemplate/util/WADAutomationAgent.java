@@ -784,7 +784,7 @@ public class WADAutomationAgent extends AutomationAgent {
 	}
 	
 	@Override
-	public void addEpisode(String statusMessage) {
+	public void addEpisode(String statusMessage, String episodeName) {
 		Screen screen = new Screen();
 		File directory = new File(".");
 		String strBasepath;
@@ -798,9 +798,9 @@ public class WADAutomationAgent extends AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			screen.click(addEpisodeBtn);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-			Pattern episodeName = new Pattern(iconPath + "episodename.png");
-			screen.click(episodeName);
-			screen.type("TestEpisode-1");
+			Pattern episodeNamePattern = new Pattern(iconPath + "episodename.png");
+			screen.click(episodeNamePattern);
+			screen.type(episodeName);
 			screen.type(Key.TAB);
 			screen.type("Season1");
 			clickSaveButton(statusMessage);
@@ -832,5 +832,10 @@ public class WADAutomationAgent extends AutomationAgent {
 			;
 		}
 		return false;
+	}
+
+	@Override
+	public String scheduleTitle(String scheduleName, String network, String titleType, String episodeOrTitleName, String statusMessage, int run) {
+		return null;
 	}
 }

@@ -9,6 +9,7 @@ public class TestData {
 	private String dealType;
 	private String negotiatedBy;
 	private String network;
+	private int run;
 	
 	private List<Window> windows;
 
@@ -48,4 +49,11 @@ public class TestData {
 	public void setNetwork(String network) {
 		this.network = network;
 	}
+	public int getRun() {
+		return run;
+	}
+	public void setRun(int run) {
+		this.run = run;
+	}
+	
 }

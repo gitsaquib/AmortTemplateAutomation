@@ -37,7 +37,6 @@ public class SikuliMain {
 	public void testM() {
 		
 		try {
-			/*
 			Pattern schedulingTab = new Pattern(iconPath+"schedulingtab.png");
 			screen.click(schedulingTab);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
@@ -104,9 +103,6 @@ public class SikuliMain {
 			Pattern closeSchedule = new Pattern(iconPath + "closeschedule.png");
 			screen.click(closeSchedule);
 			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
-			*/
-			
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern monthly = new Pattern(iconPath + "monthly.png");
 			screen.rightClick(monthly);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);

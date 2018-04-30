@@ -23,7 +23,7 @@ import nbcu.compass.amorttemplate.util.TestData;
 import nbcu.compass.amorttemplate.util.User;
 
 @Listeners(EmailReport.class)
-public class AmortSikuliTest {
+public class AmortSikuliTestSchedule {
 
 	private static EnvironmentPropertiesReader configProperty = EnvironmentPropertiesReader.getInstance();
 	private static AmortExcelReader excelReader = null;
@@ -69,11 +69,6 @@ public class AmortSikuliTest {
 					+ "\t" + amortTemplateGrid.getFinanceTypeName()
 					+ "\t" +"Fail";
 			
-			Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);
-			Set<Integer> keys = amortsFromCalculation.keySet();
-			for(Integer key:keys) {
-				System.out.println(key+") "+amortsFromCalculation.get(key));
-			}
 			User user = users.get("User1");
 			automationAgent.launchAppUsingNativeWindowHandle(configProperty.getProperty("appPath"), 
 															 configProperty.getProperty("url"), 
@@ -85,51 +80,67 @@ public class AmortSikuliTest {
 										 statusMessage);
 			automationAgent.createContract(configProperty.getProperty("network"), testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), uniqueKey, amortTemplateGrid.getTitleTypeName(), statusMessage);
 			automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows(), statusMessage);
-			if(null != amortTemplateGrid.getAddEpisode() && "Y".equalsIgnoreCase(amortTemplateGrid.getAddEpisode())) {
+			String episodeName = "";
+			if(automationAgent.isEpisodicTitle()) {
 				SimpleDateFormat df = new SimpleDateFormat("YYYYMMDDHHmmss");
-				String episodeName = "E-" + df.format(new Date());
+				episodeName = "E-" + df.format(new Date());
 				automationAgent.addEpisode(statusMessage, episodeName);
 			}
-
+			
 			Double amt = automationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName(), statusMessage);
 
-			if(null != amt) {
-				Map<Integer, String> amortsFromApplication = automationAgent.generateAmort(amt, statusMessage);
-				if(null != amortsFromApplication && amortsFromApplication.size() > 0) {
-					Set<Integer> dataKeys = amortsFromApplication.keySet();
-					boolean overAllPassOrFail = true;
-					String reportStr = automationAgent.setTableStyleForExtentReport();
-					reportStr += automationAgent.openTable();
-					reportStr += automationAgent.addTableHeader();
-					for(Integer key:dataKeys) {
-						reportStr += automationAgent.setTableBodyForExtentReport(key+"", amortsFromApplication.get(key), amortsFromCalculation.get(key));
-						if(!amortsFromApplication.get(key).replace(".00", "").equalsIgnoreCase(amortsFromCalculation.get(key))) {
-							overAllPassOrFail = false;
+			String scheduleName = null;
+			for(int run = 1; run <= amortTemplateGrid.getAmortSectionGrids().size(); run++) {
+				testData.setRun(run);
+				Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);
+				Set<Integer> keys = amortsFromCalculation.keySet();
+				for(Integer key:keys) {
+					System.out.println(key+") "+amortsFromCalculation.get(key));
+				}
+				if(automationAgent.isEpisodicTitle()) {
+					scheduleName = automationAgent.scheduleTitle(scheduleName, configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), episodeName, statusMessage, run);
+				} else {
+					scheduleName = automationAgent.scheduleTitle(scheduleName, configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), uniqueKey, statusMessage, run);
+				}
+				automationAgent.openTitle(statusMessage);
+				if(null != amt) {
+					Map<Integer, String> amortsFromApplication = automationAgent.generateAmort(amt, statusMessage);
+					if(null != amortsFromApplication && amortsFromApplication.size() > 0) {
+						Set<Integer> dataKeys = amortsFromApplication.keySet();
+						boolean overAllPassOrFail = true;
+						String reportStr = automationAgent.setTableStyleForExtentReport();
+						reportStr += automationAgent.openTable();
+						reportStr += automationAgent.addTableHeader();
+						for(Integer key:dataKeys) {
+							reportStr += automationAgent.setTableBodyForExtentReport(key+"", amortsFromApplication.get(key), amortsFromCalculation.get(key));
+							if(!amortsFromApplication.get(key).replace(".00", "").equalsIgnoreCase(amortsFromCalculation.get(key))) {
+								overAllPassOrFail = false;
+							}
 						}
-					}
-					reportStr += automationAgent.closeTable();
-					if(overAllPassOrFail) {
-						Log.pass(reportStr);
+						reportStr += automationAgent.closeTable();
+						if(overAllPassOrFail) {
+							Log.pass(reportStr);
+						} else {
+							Log.fail(reportStr, new Screen());
+						}
+						automationAgent.killApp();
+						status = amortTemplateGrid.getAmortTemplateNo() 
+										+ "\t" + amortTemplateGrid.getAmortTemplateName() 
+										+ "\t" + amortTemplateGrid.getTitleTypeName()
+										+ "\t" + amortTemplateGrid.getFinanceTypeName()
+										+ "\t" + (overAllPassOrFail?"Pass":"Fail");
+						automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), status);
+						Log.endTestCase();
 					} else {
-						Log.fail(reportStr, new Screen());
+						automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+						automationAgent.killApp();
+						Log.fail("Unable to read amorts");
 					}
-					automationAgent.killApp();
-					status = amortTemplateGrid.getAmortTemplateNo() 
-									+ "\t" + amortTemplateGrid.getAmortTemplateName() 
-									+ "\t" + amortTemplateGrid.getTitleTypeName()
-									+ "\t" + amortTemplateGrid.getFinanceTypeName()
-									+ "\t" + (overAllPassOrFail?"Pass":"Fail");
-					automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), status);
-					Log.endTestCase();
 				} else {
 					automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
 					automationAgent.killApp();
 					Log.fail("Unable to read amorts");
 				}
-			} else {
-				automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
-				automationAgent.killApp();
-				Log.fail("Unable to read amorts");
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

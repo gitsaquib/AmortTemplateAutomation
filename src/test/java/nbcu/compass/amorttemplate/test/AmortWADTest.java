@@ -1,5 +1,7 @@
 package nbcu.compass.amorttemplate.test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
@@ -98,7 +100,9 @@ public class AmortWADTest {
 			automationAgent.createContract(configProperty.getProperty("network"), testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), uniqueKey, amortTemplateGrid.getTitleTypeName(), statusMessage);
 			automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows(), statusMessage);
 			if(null != amortTemplateGrid.getAddEpisode() && "Y".equalsIgnoreCase(amortTemplateGrid.getAddEpisode())) {
-				automationAgent.addEpisode(statusMessage);
+				SimpleDateFormat df = new SimpleDateFormat("YYYYMMDDHHmmss");
+				String episodeName = "E-" + df.format(new Date());
+				automationAgent.addEpisode(statusMessage, episodeName);
 			}
 			Double amt = automationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName(), statusMessage);
 			if(null != amt) {

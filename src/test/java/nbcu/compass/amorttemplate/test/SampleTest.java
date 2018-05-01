@@ -64,7 +64,6 @@ public class SampleTest {
 					System.out.println(key+") "+amortsFromCalculation.get(key));
 				}
 			}
-			automationAgent.openTitle("");
 		} catch(Exception e) {
 			e.printStackTrace();
 			status = amortTemplateGrid.getAmortTemplateNo() 

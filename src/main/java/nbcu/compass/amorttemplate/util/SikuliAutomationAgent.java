@@ -166,72 +166,6 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		return amorts;
 	}
 	
-	/*
-	private Map<Integer, String> readAmortAmtRows(double totalLicenseFee, int previousLastMonth, String statusMessage) {
-		screen = new Screen();
-		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
-		Log.message("Start readAmortAmtRows: read amort amounts");
-		try {
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			Match found = screen.findText("TOTAL COUNT");
-			System.out.println(found.getRect());
-			Rectangle rectangle = new Rectangle(found.getX(), found.getY()-5, 100, 30);
-			screen.setRect(rectangle);
-			screen.highlight(3);
-			String totalCntStr = screen.text();
-			totalCntStr = totalCntStr.substring(totalCntStr.indexOf(":")+1).trim();
-			int totalRowCnt = 0;
-			try {
-				totalRowCnt = Integer.parseInt(totalCntStr);
-			} catch (Exception e) {
-				totalRowCnt = 2;
-			}
-				
-			screen = new Screen();
-			int rowCntPerScreen = 0;
-			try {
-				Pattern spanishTitleField = new Pattern(iconPath +"spanishtitlefield.png");
-				found = screen.find(spanishTitleField);
-				Pattern titleSubType = new Pattern(iconPath +"titlesubtype.png");
-				try {
-					found = screen.find(titleSubType);
-					rowCntPerScreen = 2;
-				} catch (Exception e) {
-					rowCntPerScreen = 3;
-				}
-			} catch (Exception e) {
-				rowCntPerScreen = 4;
-			}
-
-			int count = 0;
-			while(count < totalRowCnt) {
-				for(int i = 1; i <= rowCntPerScreen; i++) {
-					if(count == totalRowCnt) {
-						break;
-					}
-					Thread.sleep(3000);
-					rectangle = new Rectangle(500, 550+(i*25), 95, 20);
-					screen.setRect(rectangle);
-					screen.click();
-					String amortAmt = screen.text();
-					count++;
-					amorts.put(count, amortAmt);
-				}
-				for(int i = 0; i < rowCntPerScreen-1; i++) {
-					screen.type(Key.DOWN);
-				}
-			}
-			Log.message("readAmortAmtRows: read amort amounts");
-		} catch (Exception e) {
-			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
-			Log.fail(e.getMessage(), screen);
-			killApp();
-			return amorts;
-		}
-		return amorts;
-	}
-	*/
-	
 	private boolean clickYesOrNoOnPopup(String message, String yesOrNo) {
 		screen = new Screen();
 		Log.message("Start clickYesOrNoOnPopup: "+message+", "+yesOrNo);
@@ -243,8 +177,12 @@ public class SikuliAutomationAgent extends AutomationAgent {
 				elementFound = new Pattern(iconPath + "no.png");
 			}
 			screen.click(elementFound);
+			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
+			if(isElementFoundByImage(elementFound)) {
+				return clickYesOrNoOnPopup(message, yesOrNo);
+			}
 			return true;
-		} catch (FindFailed e) {
+		} catch (FindFailed | InterruptedException e) {
 			;
 		}
 		return false;
@@ -627,35 +565,27 @@ public class SikuliAutomationAgent extends AutomationAgent {
 	}
 	
 	public String scheduleTitle(String scheduleName, String network, String titleType, String episodeOrTitleName, String statusMessage, int run) {
+		screen = new Screen();
 		try {
 			Pattern schedulingTab = new Pattern(iconPath+"schedulingtab.png");
 			screen.click(schedulingTab);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Match networkFound = screen.findText(network);
 			networkFound.click();
-			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-			if(null == scheduleName) {
-				Pattern createSchedule = new Pattern(iconPath+"createschedule.png");
-				screen.click(createSchedule);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			
+			Pattern approvedSchedule = new Pattern(iconPath + "approvedschedule.png");
+			if(isElementFoundByImage(approvedSchedule)) {
+				screen.click(approvedSchedule);
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-				Match nameFieldFound = screen.findText("Name");
-				nameFieldFound.click();
-				screen.type(Key.TAB);
-				SimpleDateFormat df = new SimpleDateFormat("MMMM YYYY");
-				String defaultScheduleName = df.format(new Date());
-				for(int i=0; i<defaultScheduleName.length(); i++) {
-					screen.type(Key.DELETE);		
-				}
-				df = new SimpleDateFormat("YYYYMMDDHHmmss");
-				scheduleName = "ScheduleName_" + df.format(new Date());
-				screen.type(scheduleName);
-				Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
-				clickSaveButton("");
+				screen.rightClick(approvedSchedule);
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			} else {
-				Match foundSchedule = screen.findText(scheduleName);
-				foundSchedule.click();
+				Pattern unapprove = new Pattern(iconPath + "unapprove.png");
+				screen.click(unapprove);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			}
+			
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Match openSchedule = screen.findText("Open Schedule");
 			openSchedule.click();
 			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
@@ -663,12 +593,15 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Pattern nextWeek = new Pattern(iconPath+"nextweek.png");
 			screen.click(nextWeek);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			Location location = new Location (200, (100+(run*100)));
-			screen.rightClick(location);
+			
+			Pattern emptyslot = new Pattern(iconPath+"emptyslot.png");
+			screen.rightClick(emptyslot);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern newIcon = new Pattern(iconPath+"newicon.png");
 			screen.click(newIcon);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern whiteslot = new Pattern(iconPath+"whiteslot.png");
+			screen.rightClick(whiteslot);
 			screen.rightClick();
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern applyEpisodes = new Pattern(iconPath+"applyepisodes.png");
@@ -682,6 +615,8 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Pattern searchBtn = new Pattern(iconPath+"search.png");
 			screen.click(searchBtn);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			Pattern selectSearchedItem = new Pattern(iconPath+"selectsearcheditem.png");
+			screen.click(selectSearchedItem);
 			Pattern checkbox = new Pattern(iconPath+"checkbox.png");
 			screen.click(checkbox);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
@@ -699,7 +634,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Pattern closeSchedule = new Pattern(iconPath + "closeschedule.png");
 			screen.click(closeSchedule);
 			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
-			Pattern monthly = new Pattern(iconPath + "monthly.png");
+			Pattern monthly = new Pattern(iconPath + "monthly2.png");
 			screen.rightClick(monthly);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern approve = new Pattern(iconPath + "approve.png");
@@ -714,6 +649,38 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			killApp();
 		}
 		return null;
+	}
+	
+	public void deleteSchedules(String statusMessage) {
+		screen = new Screen();
+		try {
+			Pattern approvedSchedule = new Pattern(iconPath + "approvedschedule.png");
+			if(isElementFoundByImage(approvedSchedule)) {
+				screen.click(approvedSchedule);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				screen.rightClick(approvedSchedule);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				Pattern unapprove = new Pattern(iconPath + "unapprove.png");
+				screen.click(unapprove);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			}
+			Pattern monthly = new Pattern(iconPath + "monthly.png");
+			while(isElementFoundByImage(monthly)) {
+				screen.click(monthly);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				screen.rightClick(monthly);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				Pattern deleteSchedule = new Pattern(iconPath + "deleteschedule.png");
+				screen.click(deleteSchedule);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				clickYesOrNoOnPopup("Are you sure you want to delete selected schedule", "Yes");
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			}
+		} catch (InterruptedException | FindFailed e) {
+			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+			Log.fail(e.getMessage(), screen);
+			killApp();
+		}
 	}
 	
 	public void openTitle(String statusMessage) {

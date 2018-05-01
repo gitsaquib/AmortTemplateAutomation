@@ -41,7 +41,7 @@ public abstract class AutomationAgent {
 		try {
 			Runtime rt = Runtime.getRuntime();
 			rt.exec("taskkill /F /IM NBCU.Compass.exe");
-			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Log.message("End killApp: taskkill /F /IM NBCU.Compass.exe");
 		} catch(Exception e) {
 			return;

@@ -90,7 +90,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		}
 	}
 	
-	private void launchAppUsingWAD( String url, String appName) {
+	public void launchAppUsingWAD( String url, String appName) {
 		try {
 			Log.message("Start launchAppUsingWAD: Launching app using window handle");
 			DesiredCapabilities appCapabilities = new DesiredCapabilities();
@@ -266,10 +266,8 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			screen.doubleClick(expand);
 			Pattern selectAnAction = new Pattern(iconPath +"selectanaction.png");
 			Match found = waitForElementToAppearByPattern(selectAnAction, 0);
-			if(null == found) {
-				writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
-				Log.fail("Unable to open title in one minute", screen);
-				killApp();
+			if(null == found && isElementFoundByImage(expand)) {
+				screen.doubleClick(expand);
 			}
 			Pattern selectedWindowTab = new Pattern(iconPath + "selecedwindowtab.png");
 			if(!isElementFoundByImage(selectedWindowTab)) {
@@ -400,6 +398,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Pattern signin = new Pattern(iconPath + "signin.png");
 			screen.wait(usernameImg, 10);	
 			screen.type(usernameImg, username);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			screen.type(passwordImg, password);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			screen.click(signin);
@@ -429,17 +428,35 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		return false;
 	}
 	
+	private boolean isElementFoundByText(String text) {
+		screen = new Screen();
+		Settings.OcrTextRead = true;
+		Settings.OcrTextSearch = true;
+		try {
+			@SuppressWarnings("unused")
+			Match imageFound = screen.findText(text);
+			imageFound.highlight(2);
+			return true;
+		} catch (FindFailed e) {
+			;
+		}
+		return false;
+	}
+	
 	public boolean isEpisodicTitle() {
-		Screen screen = new Screen();
+		screen = new Screen();
 		File directory = new File(".");
 		String strBasepath;
 		try {
 			strBasepath = directory.getCanonicalPath();
 			String iconPath = strBasepath + File.separator + "images" + File.separator;
 			Pattern episodeTab = new Pattern(iconPath + "episodetab.png");
-			screen.find(episodeTab);
+			Pattern episodeSelectedTab = new Pattern(iconPath + "episodetabselected.png");
+			if(!isElementFoundByImage(episodeTab)) {
+				return isElementFoundByImage(episodeSelectedTab);
+			}
 			return true;
-		} catch (FindFailed | IOException e) {
+		} catch (IOException e) {
 			return false;
 		}
 	}
@@ -452,9 +469,15 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			strBasepath = directory.getCanonicalPath();
 			String iconPath = strBasepath + File.separator + "images" + File.separator;
 			Pattern episodeTab = new Pattern(iconPath + "episodetab.png");
+			Pattern episodeSelectedTab = new Pattern(iconPath + "episodetabselected.png");
+			if(isElementFoundByImage(episodeTab)) {
+				screen.mouseMove(episodeTab);
+				screen.click();
+			} else if(isElementFoundByImage(episodeSelectedTab)) {
+				;
+			}
 			Pattern addEpisodeBtn = new Pattern(iconPath + "addepisodebtn.png");
-			screen.mouseMove(episodeTab);
-			screen.click();
+			
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			screen.click(addEpisodeBtn);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
@@ -486,10 +509,11 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			setValueInDropdown("distributor", distributor);
 			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
 			screen.click();
+			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
 			setValueInDropdown("dealtype", dealType);
 			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
 			setValueInDropdown("negotiatedby", negotiatedBy);
-			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			addTitle(titleName, titleType, statusMessage);
 			clickSaveButton(statusMessage);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
@@ -509,6 +533,10 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Pattern asterisk = new Pattern(iconPath + "asterisk.png");
 			screen.click(asterisk);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			if(isElementFoundByImage(asterisk)) {
+				screen.click(asterisk);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			}
 			screen.type(titleName);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			
@@ -564,6 +592,22 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		}
 	}
 	
+	public void createSchedule(String network) {
+		try {
+			screen = new Screen();
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			if(!isElementFoundByText(network+"TestSchedule")) {
+				Pattern createSchedule = new Pattern(iconPath+"createschedule.png");
+				screen.click(createSchedule);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			} else {
+				System.out.println(network+"TestSchedule found");
+			}
+		} catch(FindFailed | InterruptedException e) {
+			;
+		}
+	}
+	
 	public String scheduleTitle(String scheduleName, String network, String titleType, String episodeOrTitleName, String statusMessage, int run) {
 		screen = new Screen();
 		try {
@@ -588,7 +632,12 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Match openSchedule = screen.findText("Open Schedule");
 			openSchedule.click();
-			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Pattern okonpopup = new Pattern(iconPath + "okonpopup.png");
+			if(isElementFoundByImage(okonpopup)) {
+				screen.click(okonpopup);
+			}
+			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
 			
 			Pattern nextWeek = new Pattern(iconPath+"nextweek.png");
 			screen.click(nextWeek);
@@ -596,13 +645,19 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			
 			Pattern emptyslot = new Pattern(iconPath+"emptyslot.png");
 			screen.rightClick(emptyslot);
+			
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern newIcon = new Pattern(iconPath+"newicon.png");
 			screen.click(newIcon);
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+			Location location = new Location(0, 0);
+			screen.click(location);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+
+			
 			Pattern whiteslot = new Pattern(iconPath+"whiteslot.png");
 			screen.rightClick(whiteslot);
-			screen.rightClick();
+			
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern applyEpisodes = new Pattern(iconPath+"applyepisodes.png");
 			screen.click(applyEpisodes);
@@ -630,7 +685,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern save = new Pattern(iconPath + "saveschedule.png");
 			screen.click(save);
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
 			Pattern closeSchedule = new Pattern(iconPath + "closeschedule.png");
 			screen.click(closeSchedule);
 			Thread.sleep(AmortTemplateConstants.THIRTYSECONDSWAITTIME);
@@ -639,9 +694,10 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern approve = new Pattern(iconPath + "approve.png");
 			screen.click(approve);
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			Pattern approvePopup = new Pattern(iconPath + "approvepopup.png");
 			screen.click(approvePopup);
+			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
 			return scheduleName;
 		} catch (InterruptedException | FindFailed e) {
 			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
@@ -688,9 +744,11 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		screen = new Screen();
 		try {
 			Pattern contractManagementNotSelected = new Pattern(iconPath + "contractmanagementnotselected.png");
-			Match contractManagementFound = screen.find(contractManagementNotSelected);
-			contractManagementFound.click();
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			if(isElementFoundByImage(contractManagementNotSelected)) {
+				Match contractManagementFound = screen.find(contractManagementNotSelected);
+				contractManagementFound.click();
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			}
 			Pattern expand = new Pattern(iconPath + "expand.png");
 			screen.doubleClick(expand);
 			Pattern selectAnAction = new Pattern(iconPath +"selectanaction.png");

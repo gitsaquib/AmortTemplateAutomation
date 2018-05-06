@@ -21,13 +21,14 @@ import nbcu.compass.amorttemplate.util.Log;
 import nbcu.compass.amorttemplate.util.SikuliAutomationAgent;
 import nbcu.compass.amorttemplate.util.TestData;
 import nbcu.compass.amorttemplate.util.User;
+import nbcu.compass.amorttemplate.util.WADAutomationAgent;
 
 @Listeners(EmailReport.class)
 public class AmortSikuliTestSchedule {
 
 	private static EnvironmentPropertiesReader configProperty = EnvironmentPropertiesReader.getInstance();
 	private static AmortExcelReader excelReader = null;
-	private SikuliAutomationAgent automationAgent = null;
+	private SikuliAutomationAgent sikuliAutomationAgent = null;
 	private Map<String, User> users = null;
 	private Map<String, License> licenses = null;
 	private Map<String, AmortTemplateGrid> amortTemplateGrids = null;
@@ -39,10 +40,9 @@ public class AmortSikuliTestSchedule {
 		testDatas = excelReader.readTestData();
 		licenses = excelReader.readLicense();
 		users = excelReader.readUser();
-		automationAgent = new SikuliAutomationAgent();
+		sikuliAutomationAgent = new SikuliAutomationAgent();
 	}
 	
-	@SuppressWarnings("static-access")
 	@Test(priority=1, description="Validating amort template", dataProviderClass=AmortDataProvider.class, dataProvider="amortDataProvider")
 	public void testAmortTemplate(String uniqueKey) {
 		String status = "";
@@ -71,29 +71,30 @@ public class AmortSikuliTestSchedule {
 			
 			User user = users.get("User1");
 			String episodeName = "";
+			SimpleDateFormat df = new SimpleDateFormat("YYYYMMDDHHmmss");
+			String titleName = uniqueKey + df.format(new Date());
 
-			automationAgent.launchAppUsingNativeWindowHandle(configProperty.getProperty("appPath"), 
+			sikuliAutomationAgent.launchAppUsingNativeWindowHandle(configProperty.getProperty("appPath"), 
 															 configProperty.getProperty("url"), 
 															 configProperty.getProperty("appName"),
 															 statusMessage);
-			automationAgent.loginCompass(user.getUsername(), 
+			sikuliAutomationAgent.loginCompass(user.getUsername(), 
 										 user.getPassword(), 
 										 user.getDisplayName(), 
 										 statusMessage);
 			
-			SimpleDateFormat df = new SimpleDateFormat("YYYYMMDDHHmmss");
-			String titleName = uniqueKey + df.format(new Date());
+			sikuliAutomationAgent.createContract(configProperty.getProperty("network"), testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), titleName, amortTemplateGrid.getTitleTypeName(), statusMessage);
 			
-			automationAgent.createContract(configProperty.getProperty("network"), testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), titleName, amortTemplateGrid.getTitleTypeName(), statusMessage);
-			automationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows(), statusMessage);
+			sikuliAutomationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows(), statusMessage);
 			
-			if(automationAgent.isEpisodicTitle()) {
+			if(sikuliAutomationAgent.isEpisodicTitle()) {
 				episodeName = "E-" + df.format(new Date());
-				automationAgent.addEpisode(statusMessage, episodeName);
+				sikuliAutomationAgent.addEpisode(statusMessage, episodeName);
 			}
+
+			Double amt = sikuliAutomationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName(), statusMessage);
 			
-			Double amt = automationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName(), statusMessage);
-			String scheduleName = "TelemundoTestSchedule";
+			String scheduleName = configProperty.getProperty("network")+"TestSchedule";
 			boolean overAllPassOrFail = true;
 			for(int run = 1; run <= amortTemplateGrid.getAmortSectionGrids().size(); run++) {
 				testData.setRun(run);
@@ -102,50 +103,50 @@ public class AmortSikuliTestSchedule {
 				for(Integer key:keys) {
 					System.out.println(key+") "+amortsFromCalculation.get(key));
 				}
-				if(automationAgent.isEpisodicTitle()) {
-					scheduleName = automationAgent.scheduleTitle(scheduleName, configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), episodeName, statusMessage, run);
+				if(sikuliAutomationAgent.isEpisodicTitle()) {
+					scheduleName = sikuliAutomationAgent.scheduleTitle(scheduleName, configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), episodeName, statusMessage, run);
 				} else {
-					scheduleName = automationAgent.scheduleTitle(scheduleName, configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), titleName, statusMessage, run);
+					scheduleName = sikuliAutomationAgent.scheduleTitle(scheduleName, configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), titleName, statusMessage, run);
 				}
-				automationAgent.openTitle(statusMessage);
+				sikuliAutomationAgent.openTitle(statusMessage);
 				if(null != amt) {
-					Map<Integer, String> amortsFromApplication = automationAgent.generateAmort(amt, statusMessage);
+					Map<Integer, String> amortsFromApplication = sikuliAutomationAgent.generateAmort(amt, statusMessage);
 					if(null != amortsFromApplication && amortsFromApplication.size() > 0) {
 						Set<Integer> dataKeys = amortsFromApplication.keySet();
 						
-						String reportStr = automationAgent.setTableStyleForExtentReport();
-						reportStr += automationAgent.openTable();
-						reportStr += automationAgent.addTableHeader();
+						String reportStr = sikuliAutomationAgent.setTableStyleForExtentReport();
+						reportStr += sikuliAutomationAgent.openTable();
+						reportStr += sikuliAutomationAgent.addTableHeader();
 						for(Integer key:dataKeys) {
-							reportStr += automationAgent.setTableBodyForExtentReport(key+"", amortsFromApplication.get(key), amortsFromCalculation.get(key));
+							reportStr += sikuliAutomationAgent.setTableBodyForExtentReport(key+"", amortsFromApplication.get(key), amortsFromCalculation.get(key));
 							if(!amortsFromApplication.get(key).replace(".00", "").equalsIgnoreCase(amortsFromCalculation.get(key))) {
 								overAllPassOrFail = false;
 							}
 						}
-						reportStr += automationAgent.closeTable();
+						reportStr += sikuliAutomationAgent.closeTable();
 						if(overAllPassOrFail) {
 							Log.pass(reportStr);
 						} else {
 							Log.fail(reportStr, new Screen());
 						}
 					} else {
-						automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
-						automationAgent.killApp();
+						sikuliAutomationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+						sikuliAutomationAgent.killApp();
 						Log.fail("Unable to read amorts");
 					}
 				} else {
-					automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
-					automationAgent.killApp();
+					sikuliAutomationAgent.writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);
+					sikuliAutomationAgent.killApp();
 					Log.fail("Unable to read amorts");
 				}
 			}
-			automationAgent.killApp();
+			sikuliAutomationAgent.killApp();
 			status = amortTemplateGrid.getAmortTemplateNo() 
 							+ "\t" + amortTemplateGrid.getAmortTemplateName() 
 							+ "\t" + amortTemplateGrid.getTitleTypeName()
 							+ "\t" + amortTemplateGrid.getFinanceTypeName()
 							+ "\t" + (overAllPassOrFail?"Pass":"Fail");
-			automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), status);
+			sikuliAutomationAgent.writeResultInTxtFile(configProperty.getProperty("network"), status);
 			Log.endTestCase();
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -154,8 +155,8 @@ public class AmortSikuliTestSchedule {
 					+ "\t" + amortTemplateGrid.getTitleTypeName()
 					+ "\t" + amortTemplateGrid.getFinanceTypeName()
 					+ "\t" + "Fail";
-			automationAgent.writeResultInTxtFile(configProperty.getProperty("network"), status);
-			automationAgent.killApp();
+			sikuliAutomationAgent.writeResultInTxtFile(configProperty.getProperty("network"), status);
+			sikuliAutomationAgent.killApp();
 			Log.fail(e.getMessage());
 		}
 	}

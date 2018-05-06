@@ -54,6 +54,10 @@ public class WADAutomationAgent extends AutomationAgent {
 	public static WindowsDriver getAppSession() {
 		return appSession;
 	}
+	
+	public void quitDriver() {
+		appSession.quit();
+	}
 
 	@SuppressWarnings("rawtypes")
 	public void launchApplicationFromBrowser(String url, String appWebUrl, String statusMessage) {
@@ -805,6 +809,15 @@ public class WADAutomationAgent extends AutomationAgent {
 			screen.type("Season1");
 			clickSaveButton(statusMessage);
 		} catch (IOException | FindFailed | InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void closeTitle() {
+		try {
+			appSession.findElementByName("CloseButton").click();
+			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 	}

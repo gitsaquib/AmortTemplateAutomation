@@ -290,6 +290,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 				screen.type(Key.TAB);
 				screen.type(window.getEndDate());
 				screen.type(Key.TAB);
+				screen.type(window.getDefinition());
 				screen.type(Key.TAB);
 				screen.type(window.getRunInPlayDay());
 				screen.type(Key.TAB);
@@ -639,9 +640,11 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			}
 			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
 			
-			Pattern nextWeek = new Pattern(iconPath+"nextweek.png");
-			screen.click(nextWeek);
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			for(int i=0; i<run; i++) {
+				Pattern nextWeek = new Pattern(iconPath+"nextweek.png");
+				screen.click(nextWeek);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			}
 			
 			Pattern emptyslot = new Pattern(iconPath+"emptyslot.png");
 			screen.rightClick(emptyslot);

@@ -22,6 +22,7 @@ import nbcu.compass.amorttemplate.util.SikuliAutomationAgent;
 import nbcu.compass.amorttemplate.util.TestData;
 import nbcu.compass.amorttemplate.util.User;
 import nbcu.compass.amorttemplate.util.WADAutomationAgent;
+import nbcu.compass.amorttemplate.util.Window;
 
 @Listeners(EmailReport.class)
 public class AmortSikuliTestSchedule {
@@ -85,6 +86,9 @@ public class AmortSikuliTestSchedule {
 			
 			sikuliAutomationAgent.createContract(configProperty.getProperty("network"), testData.getDistributor(), testData.getDealType(), testData.getNegotiatedBy(), titleName, amortTemplateGrid.getTitleTypeName(), statusMessage);
 			
+			for(Window window:testData.getWindows()) {
+				window.setDefinition("Runs");
+			}
 			sikuliAutomationAgent.openTitleAndWindow(amortTemplateGrid.getFinanceTypeName(), testData.getWindows(), statusMessage);
 			
 			if(sikuliAutomationAgent.isEpisodicTitle()) {

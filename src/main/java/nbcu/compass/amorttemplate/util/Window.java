@@ -6,6 +6,7 @@ public class Window {
 	private String endDate;
 	private String runInPlayDay;
 	private String runsPDAllowed;
+	private String definition;
 	
 	public String getStartDate() {
 		return startDate;
@@ -30,5 +31,11 @@ public class Window {
 	}
 	public void setRunsPDAllowed(String runsPDAllowed) {
 		this.runsPDAllowed = runsPDAllowed;
+	}
+	public String getDefinition() {
+		return definition;
+	}
+	public void setDefinition(String definition) {
+		this.definition = definition;
 	}
 }

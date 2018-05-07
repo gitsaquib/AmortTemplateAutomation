@@ -650,8 +650,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Pattern newIcon = new Pattern(iconPath+"newicon.png");
 			screen.click(newIcon);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-			Location location = new Location(0, 0);
-			screen.click(location);
+			screen.click(emptyslot);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 
 			

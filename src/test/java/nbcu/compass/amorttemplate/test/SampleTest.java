@@ -64,6 +64,7 @@ public class SampleTest {
 					System.out.println(key+") "+amortsFromCalculation.get(key));
 				}
 			}
+			String scheduleName = automationAgent.scheduleTitle(configProperty.getProperty("network")+"TestSchedule", configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), "E-", "", 1);
 		} catch(Exception e) {
 			e.printStackTrace();
 			status = amortTemplateGrid.getAmortTemplateNo() 

@@ -16,7 +16,6 @@ import nbcu.compass.amorttemplate.util.Log;
 import nbcu.compass.amorttemplate.util.SikuliAutomationAgent;
 import nbcu.compass.amorttemplate.util.TestData;
 import nbcu.compass.amorttemplate.util.User;
-import nbcu.compass.amorttemplate.util.WADAutomationAgent;
 
 public class SampleTest {
 
@@ -64,7 +63,6 @@ public class SampleTest {
 					System.out.println(key+") "+amortsFromCalculation.get(key));
 				}
 			}
-			String scheduleName = automationAgent.scheduleTitle(configProperty.getProperty("network")+"TestSchedule", configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), "E-", "", 1);
 		} catch(Exception e) {
 			e.printStackTrace();
 			status = amortTemplateGrid.getAmortTemplateNo() 

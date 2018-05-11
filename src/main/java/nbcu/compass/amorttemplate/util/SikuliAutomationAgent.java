@@ -21,7 +21,6 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.sikuli.basics.Settings;
 import org.sikuli.script.FindFailed;
 import org.sikuli.script.Key;
-import org.sikuli.script.Location;
 import org.sikuli.script.Match;
 import org.sikuli.script.Pattern;
 import org.sikuli.script.Screen;
@@ -290,7 +289,9 @@ public class SikuliAutomationAgent extends AutomationAgent {
 				screen.type(Key.TAB);
 				screen.type(window.getEndDate());
 				screen.type(Key.TAB);
-				screen.type(window.getDefinition());
+				if(null != window.getDefinition()) {
+					screen.type(window.getDefinition());
+				}
 				screen.type(Key.TAB);
 				screen.type(window.getRunInPlayDay());
 				screen.type(Key.TAB);
@@ -436,7 +437,6 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		try {
 			@SuppressWarnings("unused")
 			Match imageFound = screen.findText(text);
-			imageFound.highlight(2);
 			return true;
 		} catch (FindFailed e) {
 			;
@@ -597,13 +597,21 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		try {
 			screen = new Screen();
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			if(!isElementFoundByText(network+"TestSchedule")) {
-				Pattern createSchedule = new Pattern(iconPath+"createschedule.png");
-				screen.click(createSchedule);
-				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			} else {
-				System.out.println(network+"TestSchedule found");
+			Pattern createSchedule = new Pattern(iconPath+"createschedule.png");
+			screen.click(createSchedule);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			Match foundName = screen.findText("Name");
+			foundName.click();
+			screen.type(Key.TAB);
+			for(int i=0; i<10; i++) {
+				screen.type(Key.DELETE);
 			}
+			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
+			screen.type(network+"TestSchedule");
+			Thread.sleep(AmortTemplateConstants.TWOECONDSWAITTIME);
+			Pattern saveSchedule = new Pattern(iconPath+"saveschedule.png");
+			screen.click(saveSchedule);
+			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 		} catch(FindFailed | InterruptedException e) {
 			;
 		}
@@ -615,10 +623,13 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			Pattern schedulingTab = new Pattern(iconPath+"schedulingtab.png");
 			screen.click(schedulingTab);
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			Match networkFound = screen.findText(network);
-			networkFound.click();
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			
+			if(run == 1) {
+				Match networkFound = screen.findText(network);
+				networkFound.click();
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				//deleteSchedules(network, statusMessage);
+				//createSchedule(network);
+			}
 			Pattern approvedSchedule = new Pattern(iconPath + "approvedschedule.png");
 			if(isElementFoundByImage(approvedSchedule)) {
 				screen.click(approvedSchedule);
@@ -628,6 +639,10 @@ public class SikuliAutomationAgent extends AutomationAgent {
 				Pattern unapprove = new Pattern(iconPath + "unapprove.png");
 				screen.click(unapprove);
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+			}
+			if(isElementFoundByText("East Regular")) {
+				Match imageFound = screen.findText("East Regular");
+				screen.click(imageFound);
 			}
 			
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
@@ -646,25 +661,38 @@ public class SikuliAutomationAgent extends AutomationAgent {
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			}
 			
+			Pattern whiteslot = new Pattern(iconPath+"whiteslot.png");
 			Pattern emptyslot = new Pattern(iconPath+"emptyslot.png");
 			screen.rightClick(emptyslot);
-			
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern newIcon = new Pattern(iconPath+"newicon.png");
 			screen.click(newIcon);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			screen.click(emptyslot);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
-
-			
-			Pattern whiteslot = new Pattern(iconPath+"whiteslot.png");
 			screen.rightClick(whiteslot);
-			
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern applyEpisodes = new Pattern(iconPath+"applyepisodes.png");
 			screen.click(applyEpisodes);
 			Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+			
 			Pattern programType = new Pattern(iconPath + "programtype.png");
+			if(!isElementFoundByImage(programType)) {
+				if(!isElementFoundByImage(whiteslot)) {
+					screen.rightClick(emptyslot);
+					Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+					newIcon = new Pattern(iconPath+"newicon.png");
+					screen.click(newIcon);
+					Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+					screen.click(emptyslot);
+					Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
+				}
+				screen.rightClick(whiteslot);
+				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				applyEpisodes = new Pattern(iconPath+"applyepisodes.png");
+				screen.click(applyEpisodes);
+				Thread.sleep(AmortTemplateConstants.TWENTYSECONDSWAITTIME);
+			}
 			screen.type(programType, titleType);
 			Pattern episodeTitle = new Pattern(iconPath + "episodetitle.png");
 			screen.type(episodeTitle, episodeOrTitleName);
@@ -673,17 +701,17 @@ public class SikuliAutomationAgent extends AutomationAgent {
 			screen.click(searchBtn);
 			Thread.sleep(AmortTemplateConstants.TENSECONDSWAITTIME);
 			Pattern selectSearchedItem = new Pattern(iconPath+"selectsearcheditem.png");
-			screen.click(selectSearchedItem);
-			Pattern checkbox = new Pattern(iconPath+"checkbox.png");
-			screen.click(checkbox);
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			screen.type(Key.TAB);
-			screen.type(Key.TAB);
-			screen.type(Key.TAB);
-			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
-			screen.type(Key.SPACE);
+			if(isElementFoundByImage(selectSearchedItem)) {
+				screen.click(selectSearchedItem);
+			}
+			if(isElementFoundByText("10X10")) {
+				Match foundText= screen.findText("10X10");
+				screen.doubleClick(foundText);
+			}
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			screen.type(Key.SPACE);
+
+			
 			Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 			Pattern save = new Pattern(iconPath + "saveschedule.png");
 			screen.click(save);
@@ -709,7 +737,7 @@ public class SikuliAutomationAgent extends AutomationAgent {
 		return null;
 	}
 	
-	public void deleteSchedules(String statusMessage) {
+	public void deleteSchedules(String network, String statusMessage) {
 		screen = new Screen();
 		try {
 			Pattern approvedSchedule = new Pattern(iconPath + "approvedschedule.png");
@@ -733,6 +761,10 @@ public class SikuliAutomationAgent extends AutomationAgent {
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
 				clickYesOrNoOnPopup("Are you sure you want to delete selected schedule", "Yes");
 				Thread.sleep(AmortTemplateConstants.FIVESECONDSWAITTIME);
+				if(isElementFoundByText("Monthly")) {
+					Match foundText = screen.findText("Monthly");
+					foundText.click();
+				}
 			}
 		} catch (InterruptedException | FindFailed e) {
 			writeResultInTxtFile(configProperty.getProperty("network"), statusMessage);

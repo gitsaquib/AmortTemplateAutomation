@@ -316,6 +316,31 @@ public class AmortTemplateUtil {
 		return amorts;
 	}
 	
+	/*
+	private static Map<Integer, String> amortQuartile(Integer straightLineMonths, Double[] sectionPercentage,
+			Integer[] amortPeriods, String network, List<License> licenses) {
+		Double lineItemAmt[] = new Double[sectionPercentage.length];
+		int index  = 1;
+		double sumOfAmorts = 0.0;
+		int cnt = totalAmortPeriod/sectionPercentage.length;
+		for(int in = 0; in < sectionPercentage.length; in++) {
+			lineItemAmt[in] = ((licenseFee*sectionPercentage[in])/100)/cnt;
+			lineItemAmt[in] = convertToBigDecimal(lineItemAmt[in]);
+			lineItemAmt[in] = Double.valueOf(df.format(lineItemAmt[in]));
+			for(int month = 1; month <= cnt; month++) {
+				if(in == (sectionPercentage.length -1) && month == cnt) {
+					amorts.put(index, df2.format(licenseFee-sumOfAmorts));
+				} else {
+					sumOfAmorts += lineItemAmt[in];
+					amorts.put(index, df2.format(lineItemAmt[in]));
+				}
+				index++;
+			}
+		}
+		return null;
+	}
+	*/
+	
 	private static int calculateDaysBetweenDates(LocalDate localStartDate, LocalDate localEndDate) {
 		Calendar cal = Calendar.getInstance();
 

@@ -2,6 +2,7 @@ package nbcu.compass.amorttemplate.test;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -21,7 +22,6 @@ import nbcu.compass.amorttemplate.util.Log;
 import nbcu.compass.amorttemplate.util.SikuliAutomationAgent;
 import nbcu.compass.amorttemplate.util.TestData;
 import nbcu.compass.amorttemplate.util.User;
-import nbcu.compass.amorttemplate.util.WADAutomationAgent;
 import nbcu.compass.amorttemplate.util.Window;
 
 @Listeners(EmailReport.class)
@@ -100,6 +100,13 @@ public class AmortSikuliTestSchedule {
 			
 			String scheduleName = configProperty.getProperty("network")+"TestSchedule";
 			boolean overAllPassOrFail = true;
+			
+			if(null == amortTemplateGrid.getAmortSectionGrids() || amortTemplateGrid.getAmortSectionGrids().isEmpty()) {
+				Map<Integer, Double> sectionsGrid = new HashMap<Integer, Double>();
+				sectionsGrid.put(1, 100.0);
+				amortTemplateGrid.setAmortSectionGrids(sectionsGrid);
+			}
+			
 			for(int run = 1; run <= amortTemplateGrid.getAmortSectionGrids().size(); run++) {
 				testData.setRun(run);
 				Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);

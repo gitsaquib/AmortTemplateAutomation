@@ -55,13 +55,10 @@ public class SampleTest {
 			
 			amortTemplateGrids = excelReader.readAmortTemplateGrid(testData.getNetwork());
 			amortTemplateGrid = amortTemplateGrids.get(uniqueKey);
-			for(int run = 1; run <= amortTemplateGrid.getAmortSectionGrids().size(); run++) {
-				testData.setRun(run);
-				Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);
-				Set<Integer> keys = amortsFromCalculation.keySet();
-				for(Integer key:keys) {
-					System.out.println(key+") "+amortsFromCalculation.get(key));
-				}
+			Map<Integer, String> amortsFromCalculation = AmortTemplateUtil.calculateAmort(amortTemplateGrid, license.getLicenseAmount(), testData);
+			Set<Integer> keys = amortsFromCalculation.keySet();
+			for(Integer key:keys) {
+				System.out.println(key+") "+amortsFromCalculation.get(key));
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

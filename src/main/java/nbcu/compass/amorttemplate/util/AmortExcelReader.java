@@ -58,6 +58,7 @@ public class AmortExcelReader {
 					sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue(),
 					sheetRow.getCell(headerMap.get(HeaderEnum.TitleTypeName.toString())).getStringCellValue(),
 					sheetRow.getCell(headerMap.get(HeaderEnum.FinanceTypeName.toString())).getStringCellValue()));
+			amortTemplateGrid.setLicenses(readLicenses());
 			amortTemplateGridMap.put(uniqueKey, amortTemplateGrid);
 		}
 		return amortTemplateGridMap;
@@ -136,6 +137,31 @@ public class AmortExcelReader {
 			System.out.println(e.getMessage());
 		}
 		return licensesMap;
+	}
+	
+	public List<License> readLicenses() {
+		List<License> licensesList = new ArrayList<License>();
+		File inputFile = null;
+		XSSFWorkbook workbook = null;
+		try {
+			inputFile = new File(basePath() + File.separator + "TestData"+ File.separator + "TestCaseData.xlsx");
+			workbook = new XSSFWorkbook(inputFile);
+			XSSFSheet licenses = workbook.getSheet("License");
+			Map<String, Integer> headerMap = populateHeaderMap(licenses);
+			XSSFRow sheetRow;
+			for(int j = 1; j <= licenses.getLastRowNum(); j++) {
+				License license = new License();
+				sheetRow = licenses.getRow(j);
+				license.setTcId(sheetRow.getCell(headerMap.get(HeaderEnum.TcNo.toString())).getStringCellValue());
+				license.setLicenseType(sheetRow.getCell(headerMap.get(HeaderEnum.LicenseType.toString())).getStringCellValue());
+				Double licenseAmount = sheetRow.getCell(headerMap.get(HeaderEnum.LicenseAmount.toString())).getNumericCellValue();
+				license.setLicenseAmount(licenseAmount.doubleValue()+"");
+				licensesList.add(license);
+			}
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		return licensesList;
 	}
 
 	public Map<String, TestData> readTestData() {

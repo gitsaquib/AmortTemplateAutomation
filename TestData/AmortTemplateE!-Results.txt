@@ -1,1 +1,6 @@
-
+150	THS	Bio/Clip (E)	Bio/Clip (E)	Fail
+150	THS	Original Series	Bio/Clip (E)	Fail
+150	THS	Bio/Clip (E)	Bio/Clip (E)	Fail
+150	THS	Original Series	Bio/Clip (E)	Fail
+150	THS	Bio/Clip (E)	Bio/Clip (E)	Fail
+150	THS	Original Series	Bio/Clip (E)	Fail

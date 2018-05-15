@@ -14,6 +14,7 @@ import nbcu.compass.amorttemplate.util.AmortExcelReader;
 import nbcu.compass.amorttemplate.util.AmortTemplateGrid;
 import nbcu.compass.amorttemplate.util.AmortTemplateUtil;
 import nbcu.compass.amorttemplate.util.WADAutomationAgent;
+import nbcu.compass.amorttemplate.util.Window;
 import nbcu.compass.amorttemplate.util.EmailReport;
 import nbcu.compass.amorttemplate.util.EnvironmentPropertiesReader;
 import nbcu.compass.amorttemplate.util.License;
@@ -104,6 +105,7 @@ public class AmortWADTest {
 				String episodeName = "E-" + df.format(new Date());
 				automationAgent.addEpisode(statusMessage, episodeName);
 			}
+			
 			Double amt = automationAgent.setAllocationData(license.getLicenseType(), license.getLicenseAmount(), amortTemplateGrid.getAmortTemplateName(), statusMessage);
 			if(null != amt) {
 				Map<Integer, String> amortsFromApplication = automationAgent.generateAmort(amt, statusMessage);

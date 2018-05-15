@@ -1,5 +1,6 @@
 package nbcu.compass.amorttemplate.util;
 
+import java.util.List;
 import java.util.Map;
 
 public class AmortTemplateGrid {
@@ -17,7 +18,8 @@ public class AmortTemplateGrid {
 	private String projSchedFlag;
 	private String addEpisode;
 	private Map<Integer, Double> amortSectionGrids; 
-	
+	private List<License> licenses;
+		
 	public String getProjSchedFlag() {
 		return projSchedFlag;
 	}
@@ -97,5 +99,11 @@ public class AmortTemplateGrid {
 	}
 	public void setAddEpisode(String addEpisode) {
 		this.addEpisode = addEpisode;
+	}
+	public List<License> getLicenses() {
+		return licenses;
+	}
+	public void setLicenses(List<License> licenses) {
+		this.licenses = licenses;
 	}
 }

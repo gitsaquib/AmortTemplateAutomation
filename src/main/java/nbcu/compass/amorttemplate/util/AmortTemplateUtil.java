@@ -76,16 +76,16 @@ public class AmortTemplateUtil {
 			}
 		} else if(null != amortTemplateGrid.getStraightLineName() && amortTemplateGrid.getStraightLineName().equalsIgnoreCase(AmortTemplateConstants.MAX_QUARTILE)) {
 			return amortMaxQuartile(amortTemplateGrid.getFirstMonthAmortPercent(), amortTemplateGrid.getStraightLineMonths(), licenseFee, amortTemplateGrid.getIsMultipleWindowFlag(), sectionPercentage,
-					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods, amortTemplateGrid.getMaxMonths(), amortTemplateGrid.getProjSchedFlag(), startDateWindow1);
+					amortTemplateGrid.getTimePlayName(), totalAmortMonths, amortPeriods, amortTemplateGrid.getMaxMonths(), amortTemplateGrid.getProjSchedFlag(), startDateWindow1, amortTemplateGrid.getAmortTemplateName());
 		}
 		return null;
 	}
 
 	private static Map<Integer, String> amortMaxQuartile(double firstMonthPercent, Integer straightLineMonths, Double licenseFee,
 			String multipleWindow, Double[] sectionPercentages, String windowsBasedOrTimeBased, int totalAmortPeriod,
-			Integer[] amortPeriods, Integer maxMonths, String projSchedFlag, int startDateWindow1) {
+			Integer[] amortPeriods, Integer maxMonths, String projSchedFlag, int startDateWindow1, String templateName) {
 		Map<Integer, String> amorts = new LinkedHashMap<Integer, String>();
-		if(null != projSchedFlag && projSchedFlag.equalsIgnoreCase("N")) {
+		if(templateName.equalsIgnoreCase("THS")) {
 			int monthsInFirstInYr = 12-startDateWindow1+1;
 			Double sectionSplitsInMonths[] = new Double[maxMonths];
 			int in = 0;
@@ -129,29 +129,6 @@ public class AmortTemplateUtil {
 					monthIndex++;
 				}
 			}
-			/*
-			double lineItemAmt; double grandSec = 0; int monthIndex = 1;
-			lineItemAmt = (licenseFee*lineItemAmtSecs[0])/monthsInFirstInYr/100;
-			lineItemAmt = convertToBigDecimal(lineItemAmt);
-			lineItemAmt = Double.valueOf(df.format(lineItemAmt));
-			for(int month = 1; month <= monthsInFirstInYr; month++) {
-				grandSec += lineItemAmt;
-				amorts.put(monthIndex, df2.format(lineItemAmt));
-				monthIndex++;
-			}
-			lineItemAmt = ((licenseFee*lineItemAmtSecs[1])/(maxMonths-monthsInFirstInYr)/100);
-			lineItemAmt = convertToBigDecimal(lineItemAmt);
-			lineItemAmt = Double.valueOf(df.format(lineItemAmt));
-			for(int month = monthsInFirstInYr+1; month <= maxMonths; month++) {
-				if(monthIndex == maxMonths ) {
-					amorts.put(monthIndex, df2.format(licenseFee-grandSec));
-				} else {
-					grandSec += lineItemAmt;
-					amorts.put(monthIndex, df2.format(lineItemAmt));
-				}
-				monthIndex++;
-			}
-			*/
 		} else {
 			Double[] lineItemAmtSecs = new Double[sectionPercentages.length];
 			int index = 0;

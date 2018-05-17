@@ -32,5 +32,7 @@ public enum HeaderEnum {
 	LicenseType,
 	LicenseAmount,
 	AmortSectionNo,
-	AmortSectionPercent
+	AmortSectionPercent, 
+	Status,
+	Remarks
 }

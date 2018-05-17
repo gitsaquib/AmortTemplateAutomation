@@ -1,6 +1,8 @@
 package nbcu.compass.amorttemplate.util;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -221,6 +224,146 @@ public class AmortExcelReader {
 		
 		}
 		return windowsList;
+	}
+	
+	public List<Result> readAmortTemplateGridForMergedReport() {
+		XSSFWorkbook workbook = null;
+		try {
+			FilenameFilter filter = new FilenameFilter() {
+		        public boolean accept(File directory, String fileName) {
+		            return fileName.endsWith(".xlsx");
+		        }
+		    };
+		    List<Result> results = new ArrayList<Result>();
+			File rootFolder = new File(basePath() + File.separator + "MasterData");
+			for(File file:rootFolder.listFiles(filter)) {
+				workbook = new XSSFWorkbook(file);
+				XSSFRow sheetRow;
+				XSSFSheet templateGrid = workbook.getSheet("AmortTemplateGrid");
+				Map<String, Integer> headerMap = populateHeaderMap(templateGrid);
+				String network = getNetworkNameFromFileName(file);
+				for(int j = 1; j <= templateGrid.getLastRowNum(); j++) {
+					Result result = new Result();
+					sheetRow = templateGrid.getRow(j);
+					result.setNetwork(network);
+					result.setAmortTemplateNo((int) sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateNo.toString())).getNumericCellValue());
+					result.setAmortTemplateName(sheetRow.getCell(headerMap.get(HeaderEnum.AmortTemplateName.toString())).getStringCellValue());
+					result.setFinanceTypeName(sheetRow.getCell(headerMap.get(HeaderEnum.FinanceTypeName.toString())).getStringCellValue());
+					result.setAddEpisode(sheetRow.getCell(headerMap.get(HeaderEnum.AddEpisode.toString())).getStringCellValue());
+					result.setStatus(sheetRow.getCell(headerMap.get(HeaderEnum.Status.toString())).getStringCellValue());
+					if(null != sheetRow.getCell(headerMap.get(HeaderEnum.Remarks.toString()))) {
+						result.setRemarks(sheetRow.getCell(headerMap.get(HeaderEnum.Remarks.toString())).getStringCellValue());
+					} else {
+						result.setRemarks("");
+					}
+					results.add(result);
+				}
+			}
+			return results;
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static void generateReportXlsx(List<Result> results) {
+		try {
+			File rootFolder = new File(basePath() + File.separator + "MasterData");
+			String excelFileName = rootFolder + File.separator + "Merged. AmortTemplateAllNetworks.xlsx";
+			String sheetName = "Report";
+			XSSFWorkbook workBook = new XSSFWorkbook();
+			XSSFSheet sheet = workBook.createSheet(sheetName) ;
+			
+			int rowIndex = 0; int columnIndex = 0;
+			
+			XSSFRow row = sheet.createRow(rowIndex);
+			
+			XSSFCell cell = row.createCell(columnIndex);
+			cell.setCellValue("Network");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("AmortTemplateNo");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("AmortTemplateName");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("TitleTypeName");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("FinanceTypeName");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("AddEpisode");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("ExecutionStatus");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("Remarks");
+			columnIndex = 0;
+			
+			rowIndex++;
+			
+			for (Result result:results) {
+				row = sheet.createRow(rowIndex);
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getNetwork());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getAmortTemplateNo());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getAmortTemplateName());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getTitleTypeName());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getFinanceTypeName());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getAddEpisode());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getStatus());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getRemarks());
+				columnIndex = 0;
+				
+				rowIndex++;
+			}
+			FileOutputStream fileOut = new FileOutputStream(excelFileName);
+			workBook.write(fileOut);
+			fileOut.flush();
+			fileOut.close();
+		} catch(IOException e) {
+			System.out.println("Unable to generate report");
+		}
+	}
+	
+	private String getNetworkNameFromFileName(File file) {
+		String name = file.getName();
+		name = name.substring(name.indexOf("AmortTemplate"));
+		name = name.replaceAll("AmortTemplate","").replaceAll(".xlsx", "");
+		return name;
 	}
 	
 	private Map<String, Integer> populateHeaderMap(XSSFSheet headerRow) {

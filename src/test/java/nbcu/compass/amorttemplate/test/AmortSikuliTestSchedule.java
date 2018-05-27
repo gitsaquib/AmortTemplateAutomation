@@ -13,6 +13,7 @@ import org.testng.annotations.Test;
 
 import nbcu.compass.amorttemplate.util.AmortDataProvider;
 import nbcu.compass.amorttemplate.util.AmortExcelReader;
+import nbcu.compass.amorttemplate.util.AmortTemplateConstants;
 import nbcu.compass.amorttemplate.util.AmortTemplateGrid;
 import nbcu.compass.amorttemplate.util.AmortTemplateUtil;
 import nbcu.compass.amorttemplate.util.EmailReport;
@@ -114,12 +115,15 @@ public class AmortSikuliTestSchedule {
 				for(Integer key:keys) {
 					System.out.println(key+") "+amortsFromCalculation.get(key));
 				}
-				if(sikuliAutomationAgent.isEpisodicTitle()) {
-					scheduleName = sikuliAutomationAgent.scheduleTitle(scheduleName, configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), episodeName, statusMessage, run);
-				} else {
-					scheduleName = sikuliAutomationAgent.scheduleTitle(scheduleName, configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), titleName, statusMessage, run);
+				if(amortTemplateGrid.getTimePlayName().equalsIgnoreCase(AmortTemplateConstants.RUNBASEDNONEPISODIC) 
+						|| amortTemplateGrid.getTimePlayName().equalsIgnoreCase(AmortTemplateConstants.RUNBASEDEPISODIC)) {
+					if(sikuliAutomationAgent.isEpisodicTitle()) {
+						scheduleName = sikuliAutomationAgent.scheduleTitle(scheduleName, configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), episodeName, statusMessage, run);
+					} else {
+						scheduleName = sikuliAutomationAgent.scheduleTitle(scheduleName, configProperty.getProperty("network"), amortTemplateGrid.getTitleTypeName(), titleName, statusMessage, run);
+					}
+					sikuliAutomationAgent.openTitle(statusMessage);
 				}
-				sikuliAutomationAgent.openTitle(statusMessage);
 				if(null != amt) {
 					Map<Integer, String> amortsFromApplication = sikuliAutomationAgent.generateAmort(amt, statusMessage);
 					if(null != amortsFromApplication && amortsFromApplication.size() > 0) {

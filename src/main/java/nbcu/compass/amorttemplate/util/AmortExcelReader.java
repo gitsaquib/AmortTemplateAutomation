@@ -231,12 +231,13 @@ public class AmortExcelReader {
 		try {
 			FilenameFilter filter = new FilenameFilter() {
 		        public boolean accept(File directory, String fileName) {
-		            return fileName.endsWith(".xlsx");
+		            return fileName.endsWith(".xlsx") && !fileName.startsWith("Merged");
 		        }
 		    };
 		    List<Result> results = new ArrayList<Result>();
 			File rootFolder = new File(basePath() + File.separator + "MasterData");
 			for(File file:rootFolder.listFiles(filter)) {
+				System.out.println(file.getName());
 				workbook = new XSSFWorkbook(file);
 				XSSFRow sheetRow;
 				XSSFSheet templateGrid = workbook.getSheet("AmortTemplateGrid");
@@ -256,6 +257,14 @@ public class AmortExcelReader {
 					} else {
 						result.setRemarks("");
 					}
+					result.setFirstMonthAmortPercent(sheetRow.getCell(headerMap.get(HeaderEnum.FirstMonthAmortPercent.toString())).getNumericCellValue());
+					result.setIsMultipleWindowFlag(sheetRow.getCell(headerMap.get(HeaderEnum.IsMultipleWindowFlag.toString())).getStringCellValue());
+					result.setMaxMonths(sheetRow.getCell(headerMap.get(HeaderEnum.MaxMonths.toString())).getNumericCellValue());
+					result.setStraightLineMonths(sheetRow.getCell(headerMap.get(HeaderEnum.StraightLineMonths.toString())).getNumericCellValue());
+					result.setStraightLineName(sheetRow.getCell(headerMap.get(HeaderEnum.StraightLineName.toString())).getStringCellValue());
+					result.setTimePlayName(sheetRow.getCell(headerMap.get(HeaderEnum.TimePlayName.toString())).getStringCellValue());
+					result.setTitleTypeName(sheetRow.getCell(headerMap.get(HeaderEnum.TitleTypeName.toString())).getStringCellValue());
+					result.setProjSchedFlag(sheetRow.getCell(headerMap.get(HeaderEnum.ProjSchedFlag.toString())).getStringCellValue());
 					results.add(result);
 				}
 			}
@@ -270,8 +279,12 @@ public class AmortExcelReader {
 	public static void generateReportXlsx(List<Result> results) {
 		try {
 			File rootFolder = new File(basePath() + File.separator + "MasterData");
-			String excelFileName = rootFolder + File.separator + "Merged. AmortTemplateAllNetworks.xlsx";
+			SimpleDateFormat df = new SimpleDateFormat("YYYYMMDDHHmmss");
+			String newFileName = "Merged. AmortTemplateAllNetworks_" + df.format(new Date())+".xlsx";
+			String excelFileName = rootFolder + File.separator + newFileName;
+			
 			String sheetName = "Report";
+			@SuppressWarnings("resource")
 			XSSFWorkbook workBook = new XSSFWorkbook();
 			XSSFSheet sheet = workBook.createSheet(sheetName) ;
 			
@@ -297,6 +310,34 @@ public class AmortExcelReader {
 			
 			cell = row.createCell(columnIndex);
 			cell.setCellValue("FinanceTypeName");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("StraightLineName");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("StraightLineMonths");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("TimePlayName");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("MaxMonths");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("FirstMonthAmortPercent");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("IsMultipleWindowFlag");
+			columnIndex++;
+			
+			cell = row.createCell(columnIndex);
+			cell.setCellValue("ProjSchedFlag");
 			columnIndex++;
 			
 			cell = row.createCell(columnIndex);
@@ -334,6 +375,35 @@ public class AmortExcelReader {
 				
 				cell = row.createCell(columnIndex);
 				cell.setCellValue(result.getFinanceTypeName());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getStraightLineName());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getStraightLineMonths());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getTimePlayName());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getMaxMonths());
+				columnIndex++;
+				
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getFirstMonthAmortPercent());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getIsMultipleWindowFlag());
+				columnIndex++;
+				
+				cell = row.createCell(columnIndex);
+				cell.setCellValue(result.getProjSchedFlag());
 				columnIndex++;
 				
 				cell = row.createCell(columnIndex);

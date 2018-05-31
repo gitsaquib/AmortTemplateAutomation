@@ -8,6 +8,56 @@ public class Result {
 	private String titleTypeName;
 	private String financeTypeName;
 	private String addEpisode;
+	private String straightLineName;
+	private double straightLineMonths;
+	private String timePlayName;
+	private double maxMonths;
+	private double firstMonthAmortPercent;
+	private String isMultipleWindowFlag;
+	private String projSchedFlag;
+
+	public String getStraightLineName() {
+		return straightLineName;
+	}
+	public void setStraightLineName(String straightLineName) {
+		this.straightLineName = straightLineName;
+	}
+	public double getStraightLineMonths() {
+		return straightLineMonths;
+	}
+	public void setStraightLineMonths(double straightLineMonths) {
+		this.straightLineMonths = straightLineMonths;
+	}
+	public String getTimePlayName() {
+		return timePlayName;
+	}
+	public void setTimePlayName(String timePlayName) {
+		this.timePlayName = timePlayName;
+	}
+	public double getMaxMonths() {
+		return maxMonths;
+	}
+	public void setMaxMonths(double maxMonths) {
+		this.maxMonths = maxMonths;
+	}
+	public double getFirstMonthAmortPercent() {
+		return firstMonthAmortPercent;
+	}
+	public void setFirstMonthAmortPercent(double firstMonthAmortPercent) {
+		this.firstMonthAmortPercent = firstMonthAmortPercent;
+	}
+	public String getIsMultipleWindowFlag() {
+		return isMultipleWindowFlag;
+	}
+	public void setIsMultipleWindowFlag(String isMultipleWindowFlag) {
+		this.isMultipleWindowFlag = isMultipleWindowFlag;
+	}
+	public String getProjSchedFlag() {
+		return projSchedFlag;
+	}
+	public void setProjSchedFlag(String projSchedFlag) {
+		this.projSchedFlag = projSchedFlag;
+	}
 	private String status;
 	private String remarks;
 
